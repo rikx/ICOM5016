@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+
+		<title>RJN BAY</title>
+		<meta name="viewport" content="width=device-width; initial-scale=1.0" />
+		<link rel="stylesheet" href="css/jquery.mobile-1.3.1.css" />
+		<link rel="stylesheet" href="css/Juan-edit.css" />
+		<script src="js/jquery-1.10.2.js"></script>
+		<script src="js/jquery.mobile-1.3.1.js"></script>
+		<script src="js/accounting.js"></script>
+		<script src="appjs/app.js"></script>
+		
+	</head>
+	<body>
+		<div id ="categories" data-role="page">
+			<div data-role="header" data-theme="a" data-position="fixed">
+				<a data-role="button" data-icon="arrow-d" data-iconpos="notext" href="#login"></a>
+				<h1>RJN BAY</h1>
+				<a data-role="button" data-icon="add" data-iconpos="notext" href="#add-category"></a>
+			</div>
+			<div data-role="content">
+				<h3 align="center">Products for Sale</h3>	
+				<ul id="category-list" data-role="listview" data-inset="true">
+				</ul>
+			</div>
+		</div>
+
+		<!-- Rick Code -->
+		<div id="login" data-role="page">
+			<div data-role="header">
+				<a data-role="button" data-rel="back" href="#categories">Home</a>
+				<h1>Login</h1>
+			</div><!-- /header -->
+
+			<div data-role="content" data-theme="c">	
+				<p>Choose your power</p>
+				<a data-role="button" data-inline="true" onClick="GetUserAccount()">Regular User</a>
+				<a data-role="button" data-inline="true" data-theme="b" onClick="GetAdminAccount()" class="ui-disabled">Administrator</a>		
+			</div><!-- /content -->
+
+			<div data-role="footer">
+				<h4>Team NRJ productions</h4>
+			</div><!-- /footer -->
+		</div><!-- /page -->
+		<!-- End of Rick Code -->
+
+		<div id="add-category" data-role="page">
+			<div data-role="header" data-theme="b" data-position="fixed">
+				<a data-role="button" data-rel="back" href="#categories">Cancel</a>
+				<h1>New Category</h1>
+				<a data-role="button" data-rel="back" onclick="SaveCategory()">Save</a>
+			</div>
+				<h2 align="center">Enter the new category info</h2>
+			<form id="category-form">
+ 				<fieldset data-role="controlgroup">
+ 					<ul>
+  					<li><label for="name"> Name: <input id="name" name="name" type="text"/></label></li>
+  					<!-- Don't Delete -- ><li><label for="model"> Model: <input id="model" name="model" type="text"/></label></li>
+  					<li><label for="year"> Year: <input id="year" name="year" type="number"/></label></li>
+  					<li><label for="price"> Price $: <input id="price" name="price" type="number"/></label></li>
+  			  		<li><label for="description"> Description: <input id="description" name="description" type="text"/></label></li>
+  			  		</-->
+  			  	</ul>
+			 </fieldset>
+			</form>
+		</div>
+		<div id="category-view" data-role="page">
+			<div data-role="header" data-theme="e" data-position="fixed">
+				<a data-role="button" data-rel="back" href="#categories">Cancel</a>
+				<h1>Category Info</h1>
+				<a data-role="button" data-rel="back" onclick="UpdateCategory()">Save</a>
+			</div>
+				<h2 align="center">Enter new info</h2>
+			<form id="category-view-form">
+ 				<fieldset data-role="controlgroup">
+ 					<ul>
+  					<li><label for="upd-name"> Name: <input id="upd-name" name="name" type="text"/></label></li>
+  					<!-- Don't Delete -- ><li><label for="upd-model"> Model: <input id="upd-model" name="model" type="text"/></label></li>
+  					<li><label for="upd-year"> Year: <input id="upd-year" name="year" type="number"/></label></li>
+  					<li><label for="upd-price"> Price $: <input id="upd-price" name="price" type="number"/></label></li>
+  			  		<li><label for="upd-description"> Description: <input id="upd-description" name="description" type="text"/></label></li>
+  			  		</-->
+  			  	</ul>
+			 </fieldset>
+			</form>
+			<center>
+				<a id="Del-Button" data-icon="delete" data-role="button" data-inline="true" onclick="DeleteCategory()">Delete</a>
+			</center>
+		</div>
+
+		<div id="user-account" data-role="page">
+			<div data-role="header" data-theme="e" data-position="fixed">
+				<a data-role="button" data-rel="back" href="#cars">Home</a>
+				<h3 style="text-align: center">Your Account</h3>
+				<a data-role="button" data-icon="gear" data-iconpos="right" onclick="UpdateAccount()">Edit</a>	
+			</div>
+			<div data-role="content">
+				<h3>Your Profile Info</h3>
+				<h3 align="center">Products for Sale</h3>	
+				<ul id="user-info" data-role="listview" data-inset="true">
+				</ul>
+				<a href="#categories" data-role="button" data-inline="true">Logout</a>	
+			</div>
+			<div data-role="footer">
+				<p align="center">Regular User</p>
+			</div>
+		</div>
+
+		<div id="admin-account" data-role="page">
+			<div data-role="header" data-theme="e" data-position="fixed">
+				<a data-role="button" data-rel="back" href="#categories">Home</a>
+				<h3 style="text-align: center">Your Account</h3>
+				<a data-role="button" data-icon="gear" data-iconpos="right" onclick="UpdateAccount()">Edit</a>	
+			</div>
+			<div data-role="content">
+				<h3>Admin Tools</h3>
+				<a href="category-view" data-role="button">Manage Categories</a>
+				<a onClick="ViewReports()" data-role="button">View Reports</a>
+				<a href="#categories" data-role="button" data-inline="true">Logout</a>	
+			</div>
+			<div data-role="footer">
+				<p align="center">Administrator</p>
+			</div>
+		</div>
+	</body>
+</html>

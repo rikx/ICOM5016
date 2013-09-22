@@ -1,0 +1,17 @@
+
+#Del-Button{
+font-family: Helvetica, Arial, sans-serif /*{global-font-family}*/;
+border: 1px solid 		#111111 /*{a-bup-border}*/;
+	background: 			#333333 /*{a-bup-background-color}*/;
+	font-weight: bold;
+	color: 					#ffffff /*{a-bup-color}*/;
+	text-shadow: 0 /*{a-bup-shadow-x}*/ 1px /*{a-bup-shadow-y}*/ 0 /*{a-bup-shadow-radius}*/ #111111 /*{a-bup-shadow-color}*/;
+	background-image: -webkit-gradient(linear, left top, left bottom, from( #DC0000 /*{a-bup-background-start}*/), to( #B50000 /*{a-bup-background-end}*/)); /* Saf4+, Chrome */
+	background-image: -webkit-linear-gradient( #DC0000 /*{a-bup-background-start}*/, #B50000 /*{a-bup-background-end}*/); /* Chrome 10+, Saf5.1+ */
+	background-image:    -moz-linear-gradient( #DC0000 /*{a-bup-background-start}*/, #B50000 /*{a-bup-background-end}*/); /* FF3.6 */
+	background-image:     -ms-linear-gradient( #DC0000 /*{a-bup-background-start}*/, #B50000 /*{a-bup-background-end}*/); /* IE10 */
+	background-image:      -o-linear-gradient( #DC0000 /*{a-bup-background-start}*/, #B50000 /*{a-bup-background-end}*/); /* Opera 11.10+ */
+	background-image:         linear-gradient( #DC0000 /*{a-bup-background-start}*/, #B50000 /*{a-bup-background-end}*/);
+
+
+}
