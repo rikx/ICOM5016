@@ -12,9 +12,11 @@ $(document).on('pagebeforeshow', "#categories", function( event, ui ) {
 			list.empty();
 			var category;
 			for (var i=0; i < len; ++i){
-				category = categoryList[i];
-				list.append("<li><h2>" + category.name + "</h2></li><li><a data-role='button' data-inline='true' onclick=GetCategory(" + category.id + ")><h2> Edit </h2></a></li>");				
-				//list.append("<li><a onclick=GetCategory(" + category.id + ")>" +"<h2>" + "Edit" + "</h2>"+"</a></li>");
+				category = categoryList[i];		
+				list.append("<li><a><h2>"+category.name+"</h2></a>"+
+				"<a onclick=GetCategory("+category.id+") data-icon='gear' >Edit</a></li>");
+			
+	
 					/*
 					 * DON'T DELETE
 					 ("<li><a onclick=GetCategory(" + category.id + ")>" + 
