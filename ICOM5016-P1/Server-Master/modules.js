@@ -9,6 +9,23 @@ module.exports =  {
 		this.description = description;
 		this.price = price;*/
 	},
+	
+	Subcategory:function(name){
+		this.id="";
+		this.name = name;
+	},
+	
+	Product:function(name,instantPrice,bidPrice,description,model,brand,dimensions){
+		this.id="";
+		this.name = name;
+		this.instantPrice = instantPrice;
+		this.bidPrice = bidPrice;
+		this.description = description;
+		this.model = model;
+		this.brand = brand;
+		this.dimensions= dimensions;
+	},
+	
 	User: function (name, type, username, password, description){
 		this.id = "";
 		this.name = name;
