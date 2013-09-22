@@ -24,6 +24,7 @@ app.use(express.bodyParser());
 
 var modules = require("./modules.js");
 var Category = modules.Category;
+var User = modules.User;
 
 var categoryList = new Array(
 	new Category("Books"),
@@ -41,12 +42,10 @@ var categoryList = new Array(
 );*/
  var categoryNextId = 0;
  
-// Rick code begins
-var User = modules.User;
 
 var userList = new Array(
-	new User("Gustavo", "user"),
-	new User("Nelson", "user")
+	new User("Gustavo", "user", "heoro", "serrano", "Qui a coupe le fromage?"),
+	new User("Nelson", "user", "nelsongo", "reyes", "Stuff and things.")
 	);
  var userNextId = 0;
 /*
@@ -59,7 +58,6 @@ var adminNextId = 0;*/
 for (var i=0; i < userList.length;++i){
 	userList[i].id = userNextId++;
 }
-// Rick code ends
 
 for (var i=0; i < categoryList.length;++i){
 	categoryList[i].id = categoryNextId++;
@@ -77,7 +75,7 @@ for (var i=0; i < categoryList.length;++i){
 // REST Operation - HTTP GET to read all categories
 app.get('/Server-Master/home', function(req, res) {
 	console.log("GET");
-	var response = {"categories" : categoryList, "userBtnName" : req.body.username};
+	var response = {"categories" : categoryList, "userBtnName" : req.body.name};
   	res.json(response);
 });
 
@@ -110,8 +108,6 @@ app.get('/Server-Master/home/:id', function(req, res) {
   		}	
 	}
 });
-
-// Rick code begins
 
 // REST Operation - HTTP GET to read a user account based on its id
 app.get('/Server-Master/account/:id', function(req, res) {
@@ -178,36 +174,6 @@ app.put('/Server-Master/account/:id', function(req, res) {
   		}
 	}
 });
-
-// REST Operation - HTTP DELETE to delete a category based on its id
-/*app.del('/Server-Master/account/:id', function(req, res) {
-	var id = req.params.id;
-		console.log("DELETE user account: " + id);
-
-	if ((id < 0) || (id >= userNextId)){
-		// not found
-		res.statusCode = 404;
-		res.send("User not found.");
-	}
-	else {
-		var target = -1;
-		for (var i=0; i < userList.length; ++i){
-			if (userList[i].id == id){
-				target = i;
-				break;	
-			}
-		}
-		if (target == -1){
-			res.statusCode = 404;
-			res.send("User not found.");			
-		}	
-		else {
-			userList.splice(target, 1);
-  			res.json(true);
-  		}		
-	}
-});*/
-// Rick code ends
 
 // REST Operation - HTTP PUT to updated a category based on its id
 app.put('/Server-Master/home/:id', function(req, res) {
@@ -294,6 +260,8 @@ app.post('/Server-Master/home', function(req, res) {
   	categoryList.push(newCategory);
   	res.json(true);
 });
+
+// REST Operation - HTTP POST to login user
 
 
 // Server starts running when listen is called.

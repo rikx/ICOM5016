@@ -50,7 +50,7 @@ $(document).on('pagebeforeshow', "#user-account", function( event, ui ) {
 	var list = $("#user-info");
 	list.empty();
 	var user = currentUser;
-	list.append("<li><h2>" + user.name + "</h2></li><li><strong>Account ID: </strong>" + user.id + "</li>");
+	list.append("<li><h2>" + user.username + "</h2></li><li><strong>Account ID: </strong>" + user.id + "</li><li>Name: "+ user.name+"</li>");
 	list.listview("refresh");	
 });
 
@@ -76,7 +76,7 @@ function LogIn(){
 	var userLoginJSON = JSON.stringify(userLogin);
 	$.ajax({
 		url : "http://localhost:3412/Server-Master/home/",
-		method: 'get',
+		method: 'post',
 		data : userLoginJSON,
 		contentType: "application/json",
 		dataType:"json",
@@ -103,7 +103,6 @@ function GetUserAccount(id){
 		success : function(data, textStatus, jqXHR){
 			currentUser = data.user;
 			$.mobile.loading("hide");
-			alert("Current user is: " + currentUser.name);
 			$.mobile.navigate("#user-account");
 		},
 		error: function(data, textStatus, jqXHR){
