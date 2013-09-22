@@ -34,12 +34,67 @@ var categoryList = new Array(
 	new Category("Shoes"),
 	new Category("Sports")
 	);
-	/*new Category("Ford", "Escape", "2013", "V4 engine, 30mpg, Gray", "18000"),
-	new Category("BMW", "323", "2013", "V6 engine, 22mpg, White", "35000"),
-	new Category("Toyota", "Corolla", "2012", "V4 engine, 32mpg, Black", "16000"),
-	new Category("Ford", "F-150", "2013", "V8 engine, 18mpg, Charcoal", "24000"),
-	new Category("Nissan", "Pathfinder", "2012", "V6 engine, 20mpg, Pearl", "32000")	
-);*/
+
+var booksCategoryList = new Array(
+	new Category("Children"),
+	new Category("Fiction"),
+	new Category("Technology"),
+	new Category("Business"),
+	);
+
+var electronicsCategoryList = new Array(
+	new Category("TV"),
+	new Category("Audio"),
+	new Category("Phones"),
+	new Category("Cameras"),
+	new Category("Video"),
+	);
+
+var computersCategoryList = new Array(
+	new Category("Laptops"),
+	new Category("Desktops"),
+	new Category("Tablets"),
+	new Category("Printers"),
+	);
+
+var clothingCategoryList = new Array(
+	new Category("Children"),
+	new Category("Men"),
+	new Category("Women"),
+	);
+
+var shoesCategoryList = new Array(
+	new Category("Children"),
+	new Category("Men"),
+	new Category("Women"),
+	);
+
+var sportsCategoryList = new Array(
+	new Category("Bicycles"),
+	new Category("Fishing"),
+	new Category("Baseball"),
+	new Category("Gulf"),
+	new Category("Basketball"),
+	);
+
+var menClothingCategoryList = new Array(
+	new Category("Shirts"),
+	new Category("Pants"),
+	new Category("Socks"),
+	);
+
+var womenClothingCategoryList = new Array(
+	new Category("Shirts"),
+	new Category("Pants"),
+	new Category("Dresses"),
+	);
+
+var bicyclesSportsCategoryList = new Array(
+	new Category("Frames"),
+	new Category("Wheels"),
+	new Category("Helmet"),
+	new Category("Parts"),)
+
  var categoryNextId = 0;
 
 for (var i=0; i < categoryList.length;++i){
