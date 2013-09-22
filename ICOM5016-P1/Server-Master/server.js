@@ -22,8 +22,8 @@ app.configure(function () {
 
 app.use(express.bodyParser());
 
-var category = require("./category.js");
-var Category = category.Category;
+var modules = require("./modules.js");
+var Category = modules.Category;
 
 var categoryList = new Array(
 	new Category("Books"),
@@ -42,7 +42,7 @@ var categoryList = new Array(
  var categoryNextId = 0;
  
 // Rick code begins
-var User = category.User;
+var User = modules.User;
 
 var userList = new Array(
 	new User("Gustavo", "user"),
@@ -50,7 +50,7 @@ var userList = new Array(
 	);
  var userNextId = 0;
 /*
-var Admin = category.Admin;
+var Admin = modules.Admin;
 var adminList = new Array(
 	new Admin("Rick", "admin");
 	);
