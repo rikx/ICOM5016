@@ -44,6 +44,15 @@ $(document).on('pagebeforeshow', "#category-view", function( event, ui ) {
 	*/
 });
 
+$(document).on('pagebeforeshow', "#user-account", function( event, ui ) {
+	// currentUser has been set at this point
+	var list = $("#user-info");
+	list.empty();
+	var user = currentUser;
+	list.append("<li><h2>" + user.name + "</h2></li><li><strong>Account ID: </strong>" + user.id + "</li>");
+	list.listview("refresh");	
+});
+
 ////////////////////////////////////////////////////////////////////////////////////////////////
 /// Functions Called Directly from Buttons ///////////////////////
 
@@ -57,7 +66,7 @@ function ConverToJSON(formData){
 }
 // Rick Code
 
-var currentUsers = {};
+var currentUser = {};
 function GetUserAccount(id){
 	$.mobile.loading("show");
 	$.ajax({
@@ -66,15 +75,10 @@ function GetUserAccount(id){
 		contentType: "application/json",
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
+			currentUser = data.user;
 			$.mobile.loading("hide");
-			//$.mobile.navigate("#user-account");
-			currentUser = data.users;
-			var len = currentUser.length;
-			var list = $("#user-info");
-			list.empty();
-			var user = currentUser[0];
-				list.append("<li><h2>" + user.name + "</h2>"+ "<p><strong> Account ID: " + user.id + "</strong></p>"+"</a></li>");
-			list.listview("refresh");	
+			alert("Current user is: " + currentUser.name);
+			$.mobile.navigate("#user-account");
 		},
 		error: function(data, textStatus, jqXHR){
 			console.log("textStatus: " + textStatus);

@@ -78,7 +78,7 @@ for (var i=0; i < categoryList.length;++i){
 app.get('/Server-Master/home', function(req, res) {
 	console.log("GET");
 
-	var response = {"categories" : categoryList, "users": userList};
+	var response = {"categories" : categoryList};
   	res.json(response);
 });
 
@@ -180,7 +180,7 @@ app.put('/Server-Master/account/:id', function(req, res) {
 });
 
 // REST Operation - HTTP DELETE to delete a category based on its id
-app.del('/Server-Master/account/:id', function(req, res) {
+/*app.del('/Server-Master/account/:id', function(req, res) {
 	var id = req.params.id;
 		console.log("DELETE user account: " + id);
 
@@ -206,7 +206,7 @@ app.del('/Server-Master/account/:id', function(req, res) {
   			res.json(true);
   		}		
 	}
-});
+});*/
 // Rick code ends
 
 // REST Operation - HTTP PUT to updated a category based on its id
