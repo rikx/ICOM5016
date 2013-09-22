@@ -9,10 +9,13 @@ module.exports =  {
 		this.description = description;
 		this.price = price;*/
 	},
-	User: function (name, type){
+	User: function (name, type, username, password, description){
 		this.id = "";
 		this.name = name;
 		this.type = type;
+		this.username = username;
+		this.password = password;
+		this.description = description;
 	}
 };
 

@@ -77,10 +77,10 @@ for (var i=0; i < categoryList.length;++i){
 // REST Operation - HTTP GET to read all categories
 app.get('/Server-Master/home', function(req, res) {
 	console.log("GET");
-
-	var response = {"categories" : categoryList};
+	var response = {"categories" : categoryList, "userBtnName" : req.body.username};
   	res.json(response);
 });
+
 
 // REST Operation - HTTP GET to read a category based on its id
 app.get('/Server-Master/home/:id', function(req, res) {

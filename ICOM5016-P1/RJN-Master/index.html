@@ -15,7 +15,7 @@
 	<body>
 		<div id ="categories" data-role="page">
 			<div data-role="header" data-theme="a" data-position="fixed">
-				<a data-role="button" data-icon="arrow-d" data-iconpos="notext" href="#login"></a>
+				<a id="userBtn" data-role="button" data-icon="arrow-d" href="#login">Sign In</a>
 				<h1>RJN BAY</h1>
 				<a data-role="button" data-icon="add" data-iconpos="notext" href="#add-category"></a>
 			</div>
@@ -36,7 +36,16 @@
 			<div data-role="content" data-theme="c">	
 				<p>Choose your power</p>
 				<a data-role="button" data-inline="true" onClick="GetUserAccount(0)">Regular User</a>
-				<a data-role="button" data-inline="true" data-theme="b" onClick="GetAdminAccount()" class="ui-disabled">Administrator</a>		
+				<a data-role="button" data-inline="true" data-theme="b" onClick="GetAdminAccount()" class="ui-disabled">Administrator</a>	
+					<form id="login-form">
+						<fieldset data-role="controlgroup">
+						<ul>
+						<li><label for="username"> Name: <input id="username" name="username" type="text"/></label></li>
+						<li><label for="password"> Password: <input id="password" name="password" type="password"/></label></li>
+						<li><a data-role="button" onclick="LogIn()">LogIn</a>
+						</ul>
+						</fieldset>
+					</form>	
 			</div><!-- /content -->
 
 			<div data-role="footer">
@@ -91,7 +100,7 @@
 
 		<div id="user-account" data-role="page">
 			<div data-role="header" data-theme="e" data-position="fixed">
-				<a data-role="button" data-rel="back" href="#cars">Home</a>
+				<a data-role="button" data-rel="back" href="#categories">Home</a>
 				<h3 style="text-align: center">Your Account</h3>
 				<a data-role="button" data-icon="gear" data-iconpos="right" onclick="UpdateAccount()">Edit</a>	
 			</div>

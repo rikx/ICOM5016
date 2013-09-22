@@ -6,6 +6,7 @@ $(document).on('pagebeforeshow', "#categories", function( event, ui ) {
 		contentType: "application/json",
 		success : function(data, textStatus, jqXHR){
 			var categoryList = data.categories;
+			document.getElementById("userBtn").innerHTML="" + data.userBtnName;
 			var len = categoryList.length;
 			var list = $("#category-list");
 			list.empty();
@@ -65,6 +66,31 @@ function ConverToJSON(formData){
 	return result;
 }
 // Rick Code
+function LogIn(){
+	$.mobile.loading("show");
+	var form = $("#login-form");
+	var formData = form.serializeArray();
+	console.log("form Data: " + formData);
+	var userLogin = ConverToJSON(formData);
+	console.log("User Login: " + JSON.stringify(userLogin));
+	var userLoginJSON = JSON.stringify(userLogin);
+	$.ajax({
+		url : "http://localhost:3412/Server-Master/home/",
+		method: 'get',
+		data : userLoginJSON,
+		contentType: "application/json",
+		dataType:"json",
+		success : function(data, textStatus, jqXHR){
+			$.mobile.loading("hide");
+			$.mobile.navigate("#categories");
+		},
+		error: function(data, textStatus, jqXHR){
+			console.log("textStatus: " + textStatus);
+			$.mobile.loading("hide");
+			alert("User data could not be sent!");
+		}
+	});
+}
 
 var currentUser = {};
 function GetUserAccount(id){
