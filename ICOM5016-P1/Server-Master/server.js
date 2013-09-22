@@ -41,23 +41,6 @@ var categoryList = new Array(
 	new Category("Nissan", "Pathfinder", "2012", "V6 engine, 20mpg, Pearl", "32000")	
 );*/
  var categoryNextId = 0;
- 
-
-var userList = new Array(
-	new User("Gustavo", "user", "heoro", "serrano", "Qui a coupe le fromage?"),
-	new User("Nelson", "user", "nelsongo", "reyes", "Stuff and things.")
-	);
- var userNextId = 0;
-/*
-var Admin = modules.Admin;
-var adminList = new Array(
-	new Admin("Rick", "admin");
-	);
-var adminNextId = 0;*/
-
-for (var i=0; i < userList.length;++i){
-	userList[i].id = userNextId++;
-}
 
 for (var i=0; i < categoryList.length;++i){
 	categoryList[i].id = categoryNextId++;
@@ -106,72 +89,6 @@ app.get('/Server-Master/home/:id', function(req, res) {
 			var response = {"category" : categoryList[target]};
   			res.json(response);	
   		}	
-	}
-});
-
-// REST Operation - HTTP GET to read a user account based on its id
-app.get('/Server-Master/account/:id', function(req, res) {
-	var id = req.params.id;
-		console.log("GET user account: " + id);
-
-	if ((id < 0) || (id >= userNextId)){
-		// not found
-		res.statusCode = 404;
-		res.send("User not found.");
-	}
-	else {
-		var target = -1;
-		for (var i=0; i < userList.length; ++i){
-			if (userList[i].id == id){
-				target = i;
-				break;	
-			}
-		}
-		if (target == -1){
-			res.statusCode = 404;
-			res.send("User not found.");
-		}
-		else {
-			var response = {"user" : userList[target]};
-  			res.json(response);	
-  		}	
-	}
-});
-
-// REST Operation - HTTP PUT to updated an account based on its id
-app.put('/Server-Master/account/:id', function(req, res) {
-	var id = req.params.id;
-		console.log("PUT user account: " + id);
-
-	if ((id < 0) || (id >= userNextId)){
-		// not found
-		res.statusCode = 404;
-		res.send("User not found.");
-	}
-	else if(!req.body.hasOwnProperty('name') || !req.body.hasOwnProperty('type')){
-    	res.statusCode = 400;
-    	return res.send('Error: Missing fields for user account.');
-  	}
-	else {
-		var target = -1;
-		for (var i=0; i < userList.length; ++i){
-			if (userList[i].id == id){
-				target = i;
-				break;	
-			}
-		}
-		if (target == -1){
-			res.statusCode = 404;
-			res.send("User not found.");			
-		}	
-		else {
-			var theUser= userList[target];
-			theUser.name = req.body.name;
-			theUser.type = req.body.type;
-
-			var response = {"user" : theUser};
-  			res.json(response);		
-  		}
 	}
 });
 
@@ -259,6 +176,82 @@ app.post('/Server-Master/home', function(req, res) {
   	newCategory.id = categoryNextId++;
   	categoryList.push(newCategory);
   	res.json(true);
+});
+
+var userList = new Array(
+	new User("Gustavo", "user", "heoro", "serrano", "Qui a coupe le fromage?"),
+	new User("Nelson", "user", "nelsongo", "reyes", "Stuff and things.")
+	);
+ var userNextId = 0;
+
+for (var i=0; i < userList.length;++i){
+	userList[i].id = userNextId++;
+}
+
+// REST Operation - HTTP GET to read a user account based on its id
+app.get('/Server-Master/account/:id', function(req, res) {
+	var id = req.params.id;
+		console.log("GET user account: " + id);
+
+	if ((id < 0) || (id >= userNextId)){
+		// not found
+		res.statusCode = 404;
+		res.send("User not found.");
+	}
+	else {
+		var target = -1;
+		for (var i=0; i < userList.length; ++i){
+			if (userList[i].id == id){
+				target = i;
+				break;	
+			}
+		}
+		if (target == -1){
+			res.statusCode = 404;
+			res.send("User not found.");
+		}
+		else {
+			var response = {"user" : userList[target]};
+  			res.json(response);	
+  		}	
+	}
+});
+
+// REST Operation - HTTP PUT to updated an account based on its id
+app.put('/Server-Master/account/:id', function(req, res) {
+	var id = req.params.id;
+		console.log("PUT user account: " + id);
+
+	if ((id < 0) || (id >= userNextId)){
+		// not found
+		res.statusCode = 404;
+		res.send("User not found.");
+	}
+	else if(!req.body.hasOwnProperty('name') || !req.body.hasOwnProperty('type')){
+    	res.statusCode = 400;
+    	return res.send('Error: Missing fields for user account.');
+  	}
+	else {
+		var target = -1;
+		for (var i=0; i < userList.length; ++i){
+			if (userList[i].id == id){
+				target = i;
+				break;	
+			}
+		}
+		if (target == -1){
+			res.statusCode = 404;
+			res.send("User not found.");			
+		}	
+		else {
+			var theUser= userList[target];
+			theUser.name = req.body.name;
+			theUser.type = req.body.type;
+
+			var response = {"user" : theUser};
+  			res.json(response);		
+  		}
+	}
 });
 
 // REST Operation - HTTP POST to login user

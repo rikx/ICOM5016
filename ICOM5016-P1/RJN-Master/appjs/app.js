@@ -66,92 +66,6 @@ function ConverToJSON(formData){
 	});
 	return result;
 }
-// Rick Code
-function LogIn(){
-	$.mobile.loading("show");
-	var form = $("#login-form");
-	var formData = form.serializeArray();
-	console.log("form Data: " + formData);
-	var userLogin = ConverToJSON(formData);
-	console.log("User Login: " + JSON.stringify(userLogin));
-	var userLoginJSON = JSON.stringify(userLogin);
-	$.ajax({
-		url : "http://localhost:3412/Server-Master/home/",
-		method: 'post',
-		data : userLoginJSON,
-		contentType: "application/json",
-		dataType:"json",
-		success : function(data, textStatus, jqXHR){
-			$.mobile.loading("hide");
-			$.mobile.navigate("#categories");
-		},
-		error: function(data, textStatus, jqXHR){
-			console.log("textStatus: " + textStatus);
-			$.mobile.loading("hide");
-			alert("User data could not be sent!");
-		}
-	});
-}
-
-var currentUser = {};
-function GetUserAccount(id){
-	$.mobile.loading("show");
-	$.ajax({
-		url : "http://localhost:3412/Server-Master/account/" + id,
-		method: 'get',
-		contentType: "application/json",
-		dataType:"json",
-		success : function(data, textStatus, jqXHR){
-			currentUser = data.user;
-			$.mobile.loading("hide");
-			$.mobile.navigate("#user-account");
-		},
-		error: function(data, textStatus, jqXHR){
-			console.log("textStatus: " + textStatus);
-			$.mobile.loading("hide");
-			if (data.status == 404){
-				alert("User not found.");
-			}
-			else {
-				alert("Internal Server Error.");
-			}
-		}
-	});
-}
-
-//NOT finished yet
-/*function UpdateAccount(){
-	$.mobile.loading("show");
-	var form = $("#account-view-form");
-	var formData = form.serializeArray();
-	console.log("form Data: " + formData);
-	var updCategory = ConverToJSON(formData);
-	updCategory.id = currentCategory.id;
-	console.log("Updated Category: " + JSON.stringify(updCategory));
-	var updCategoryJSON = JSON.stringify(updCategory);
-	$.ajax({
-		url : "http://localhost:3412/Server-Master/account/" + updCategory.id,
-		method: 'put',
-		data : updCategoryJSON,
-		contentType: "application/json",
-		dataType:"json",
-		success : function(data, textStatus, jqXHR){
-			$.mobile.loading("hide");
-			$.mobile.navigate("#categories");
-		},
-		error: function(data, textStatus, jqXHR){
-			console.log("textStatus: " + textStatus);
-			$.mobile.loading("hide");
-			if (data.status == 404){
-				alert("Data could not be updated!");
-			}
-			else {
-				alert("Internal Error.");		
-			}
-		}
-	});
-}*/
-// End of Rick Code
 
 function SaveCategory(){
 	$.mobile.loading("show");
@@ -262,5 +176,90 @@ function DeleteCategory(){
 				alert("Internal Server Error.");
 			}
 		}
+	});	
+}
+
+function LogIn(){
+	$.mobile.loading("show");
+	var form = $("#login-form");
+	var formData = form.serializeArray();
+	console.log("form Data: " + formData);
+	var userLogin = ConverToJSON(formData);
+	console.log("User Login: " + JSON.stringify(userLogin));
+	var userLoginJSON = JSON.stringify(userLogin);
+	$.ajax({
+		url : "http://localhost:3412/Server-Master/home/",
+		method: 'post',
+		data : userLoginJSON,
+		contentType: "application/json",
+		dataType:"json",
+		success : function(data, textStatus, jqXHR){
+			$.mobile.loading("hide");
+			$.mobile.navigate("#categories");
+		},
+		error: function(data, textStatus, jqXHR){
+			console.log("textStatus: " + textStatus);
+			$.mobile.loading("hide");
+			alert("User data could not be sent!");
+		}
 	});
 }
+
+var currentUser = {};
+function GetUserAccount(id){
+	$.mobile.loading("show");
+	$.ajax({
+		url : "http://localhost:3412/Server-Master/account/" + id,
+		method: 'get',
+		contentType: "application/json",
+		dataType:"json",
+		success : function(data, textStatus, jqXHR){
+			currentUser = data.user;
+			$.mobile.loading("hide");
+			$.mobile.navigate("#user-account");
+		},
+		error: function(data, textStatus, jqXHR){
+			console.log("textStatus: " + textStatus);
+			$.mobile.loading("hide");
+			if (data.status == 404){
+				alert("User not found.");
+			}
+			else {
+				alert("Internal Server Error.");
+			}
+		}
+	});
+}
+
+//NOT finished yet
+/*function UpdateAccount(){
+	$.mobile.loading("show");
+	var form = $("#account-view-form");
+	var formData = form.serializeArray();
+	console.log("form Data: " + formData);
+	var updCategory = ConverToJSON(formData);
+	updCategory.id = currentCategory.id;
+	console.log("Updated Category: " + JSON.stringify(updCategory));
+	var updCategoryJSON = JSON.stringify(updCategory);
+	$.ajax({
+		url : "http://localhost:3412/Server-Master/account/" + updCategory.id,
+		method: 'put',
+		data : updCategoryJSON,
+		contentType: "application/json",
+		dataType:"json",
+		success : function(data, textStatus, jqXHR){
+			$.mobile.loading("hide");
+			$.mobile.navigate("#categories");
+		},
+		error: function(data, textStatus, jqXHR){
+			console.log("textStatus: " + textStatus);
+			$.mobile.loading("hide");
+			if (data.status == 404){
+				alert("Data could not be updated!");
+			}
+			else {
+				alert("Internal Error.");		
+			}
+		}
+	});
+}*/
