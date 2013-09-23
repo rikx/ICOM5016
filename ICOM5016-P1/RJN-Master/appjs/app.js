@@ -6,7 +6,7 @@ $(document).on('pagebeforeshow', "#categories", function( event, ui ) {
 		contentType: "application/json",
 		success : function(data, textStatus, jqXHR){
 			var categoryList = data.categories;
-			document.getElementById("userBtn").innerHTML="" + data.userBtnName;
+			document.getElementById("userBtn").innerHTML="" + currentUser.username;
 			var len = categoryList.length;
 			var list = $("#category-list");
 			list.empty();
@@ -93,7 +93,6 @@ function SaveCategory(){
 			alert("Data could not be added!");
 		}
 	});
-
 
 }
 
@@ -190,24 +189,25 @@ function LogIn(){
 	console.log("User Login: " + JSON.stringify(userLogin));
 	var userLoginJSON = JSON.stringify(userLogin);
 	$.ajax({
-		url : "http://localhost:3412/Server-Master/home/",
+		url : "http://localhost:3412/Server-Master/home/" + userLogin.username,
 		method: 'post',
 		data : userLoginJSON,
 		contentType: "application/json",
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
 			$.mobile.loading("hide");
+			currentUser = data.user;
 			$.mobile.navigate("#categories");
 		},
 		error: function(data, textStatus, jqXHR){
 			console.log("textStatus: " + textStatus);
 			$.mobile.loading("hide");
-			alert("User data could not be sent!");
+			alert("Username and password match could not be found. Please try again!");
 		}
 	});
 }
 
-var currentUser = {};
+var currentUser = {"username" : "Sign In"};
 function GetUserAccount(id){
 	$.mobile.loading("show");
 	$.ajax({
