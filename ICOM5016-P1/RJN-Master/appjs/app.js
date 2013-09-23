@@ -285,4 +285,11 @@ function GetUserAccount(id){
 		}
 	});
 }*/
-//Log Out function
+//Log Out function - Not working.
+function LogOut(){
+	$.mobile.loading("show");
+	currentUser = {"id" : "-1", "username" : "Sign In"};
+	userBtn.attr("onClick", "GetUserAccount('-1')");
+	$.mobile.loading("hide");
+	$.mobile.navigate("#categories");
+}
