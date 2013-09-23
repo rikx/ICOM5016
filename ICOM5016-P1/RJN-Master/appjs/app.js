@@ -6,7 +6,13 @@ $(document).on('pagebeforeshow', "#categories", function( event, ui ) {
 		contentType: "application/json",
 		success : function(data, textStatus, jqXHR){
 			var categoryList = data.categories;
-			document.getElementById("userBtn").innerHTML="" + currentUser.username;
+			var userBtn = $("#userBtn");
+
+			userBtn.html(currentUser.username);
+			
+			if(currentUser.id != "-1")
+				userBtn.attr("onClick", "GetUserAccount(" + currentUser.id + ")");
+
 			var len = categoryList.length;
 			var list = $("#category-list");
 			list.empty();
@@ -207,30 +213,44 @@ function LogIn(){
 	});
 }
 
-var currentUser = {"username" : "Sign In"};
+//initial value is set to Sign In for home page
+var currentUser = {"id" : "-1", "username" : "Sign In"};
+
 function GetUserAccount(id){
 	$.mobile.loading("show");
-	$.ajax({
-		url : "http://localhost:3412/Server-Master/account/" + id,
-		method: 'get',
-		contentType: "application/json",
-		dataType:"json",
-		success : function(data, textStatus, jqXHR){
-			currentUser = data.user;
-			$.mobile.loading("hide");
-			$.mobile.navigate("#user-account");
-		},
-		error: function(data, textStatus, jqXHR){
-			console.log("textStatus: " + textStatus);
-			$.mobile.loading("hide");
-			if (data.status == 404){
-				alert("User not found.");
+	if(id == "-1"){
+		$.mobile.loading("hide");
+		$.mobile.navigate("#login");
+	}
+	else {
+		$.ajax({
+			url : "http://localhost:3412/Server-Master/account/" + id,
+			method: 'get',
+			contentType: "application/json",
+			dataType:"json",
+			success : function(data, textStatus, jqXHR){
+				if(currentUser.username = "Sign In") {
+					$.mobile.loading("hide");
+					$.mobile.navigate("#user-account");
+				}
+				else {
+					currentUser = data.user;
+					$.mobile.loading("hide");
+					$.mobile.navigate("#user-account");
+				}
+			},
+			error: function(data, textStatus, jqXHR){
+				console.log("textStatus: " + textStatus);
+				$.mobile.loading("hide");
+				if (data.status == 404){
+					alert("User not found.");
+				}
+				else {
+					alert("Internal Server Error.");
+				}
 			}
-			else {
-				alert("Internal Server Error.");
-			}
-		}
-	});
+		});
+	}
 }
 
 //NOT finished yet
@@ -265,3 +285,4 @@ function GetUserAccount(id){
 		}
 	});
 }*/
+//Log Out function
