@@ -15,7 +15,7 @@
 	<body>
 		<div id ="categories" data-role="page">
 			<div data-role="header" data-theme="a" data-position="fixed">
-				<a id="userBtn" data-role="button" data-icon="arrow-d" href="#login">Sign In</a>
+				<a id="userBtn" data-role="button" data-icon="arrow-d" href="#login"></a>
 				<h1>RJN BAY</h1>
 				<a data-role="button" data-icon="add" data-iconpos="notext" href="#add-category"></a>
 			</div>
@@ -42,8 +42,9 @@
 						<ul>
 						<li><label for="username"> Name: <input id="username" name="username" type="text"/></label></li>
 						<li><label for="password"> Password: <input id="password" name="password" type="password"/></label></li>
-						<li><a data-role="button" onclick="LogIn()">LogIn</a>
-					    <input type="submit" value="Submit Button" />
+						<li><a data-role="button" onclick="LogIn()">Log In</a>
+					    <!-- <input type="submit" value="Submit Button" onclick="LogIn(); return false;"/> --></li>
+					    <li><a data-role="button" href="#registration">New User? Register here</a></li>
 						</ul>
 						</fieldset>
 					</form>	

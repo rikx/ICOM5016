@@ -39,7 +39,7 @@ var booksCategoryList = new Array(
 	new Category("Children"),
 	new Category("Fiction"),
 	new Category("Technology"),
-	new Category("Business"),
+	new Category("Business")
 	);
 
 var electronicsCategoryList = new Array(
@@ -47,26 +47,26 @@ var electronicsCategoryList = new Array(
 	new Category("Audio"),
 	new Category("Phones"),
 	new Category("Cameras"),
-	new Category("Video"),
+	new Category("Video")
 	);
 
 var computersCategoryList = new Array(
 	new Category("Laptops"),
 	new Category("Desktops"),
 	new Category("Tablets"),
-	new Category("Printers"),
+	new Category("Printers")
 	);
 
 var clothingCategoryList = new Array(
 	new Category("Children"),
 	new Category("Men"),
-	new Category("Women"),
+	new Category("Women")
 	);
 
 var shoesCategoryList = new Array(
 	new Category("Children"),
 	new Category("Men"),
-	new Category("Women"),
+	new Category("Women")
 	);
 
 var sportsCategoryList = new Array(
@@ -74,26 +74,27 @@ var sportsCategoryList = new Array(
 	new Category("Fishing"),
 	new Category("Baseball"),
 	new Category("Gulf"),
-	new Category("Basketball"),
+	new Category("Basketball")
 	);
 
 var menClothingCategoryList = new Array(
 	new Category("Shirts"),
 	new Category("Pants"),
-	new Category("Socks"),
+	new Category("Socks")
 	);
 
 var womenClothingCategoryList = new Array(
 	new Category("Shirts"),
 	new Category("Pants"),
-	new Category("Dresses"),
+	new Category("Dresses")
 	);
 
 var bicyclesSportsCategoryList = new Array(
 	new Category("Frames"),
 	new Category("Wheels"),
 	new Category("Helmet"),
-	new Category("Parts"),)
+	new Category("Parts")
+	);
 
  var categoryNextId = 0;
 
@@ -113,7 +114,7 @@ for (var i=0; i < categoryList.length;++i){
 // REST Operation - HTTP GET to read all categories
 app.get('/Server-Master/home', function(req, res) {
 	console.log("GET");
-	var response = {"categories" : categoryList, "userBtnName" : req.body.name};
+	var response = {"categories" : categoryList};
   	res.json(response);
 });
 
@@ -310,6 +311,32 @@ app.put('/Server-Master/account/:id', function(req, res) {
 });
 
 // REST Operation - HTTP POST to login user
+app.post('/Server-Master/home/:userNameLogin', function(req, res) {
+	console.log("POST user login: " + req.params.userNameLogin);
+
+  	if(!req.body.hasOwnProperty('username') || !req.body.hasOwnProperty('password') ) {/*
+  	|| !req.body.hasOwnProperty('year') || !req.body.hasOwnProperty('price') || !req.body.hasOwnProperty('description')) {*/
+    	res.statusCode = 400;
+    	return res.send('Error: Missing fields for user login.');
+  	}
+  	else {
+  		var userName = req.body.username;
+  		var passWord = req.body.password;
+  		var target; 
+  		for (var i=0; i < userList.length;++i){
+			if(userList[i].username == userName && userList[i].password == passWord){	
+				target = i;
+				console.log("Succesful login: " + userName);
+				break;  	
+  			}
+  			else
+  				res.statusCode = 400;
+		}
+	  	//create global userCount variable and add userCount++ here to see how many users are currently logged in
+	  	var response = {"user" : userList[target]};
+  		res.json(response);	
+  	}
+});
 
 
 // Server starts running when listen is called.
