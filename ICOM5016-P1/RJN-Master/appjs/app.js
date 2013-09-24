@@ -59,7 +59,7 @@ $(document).on('pagebeforeshow', "#user-account", function( event, ui ) {
 	var list = $("#user-info");
 	list.empty();
 	var user = currentUser;
-	list.append("<li><h2>" + user.username + "</h2></li><li><strong>Account ID: </strong>" + user.id + "</li><li>Name: "+ user.name+"</li>");
+	list.append("<li><h2>" + user.username + "</h2></li><li><strong>Account ID: </strong>" + user.id + "</li><li>Name: "+ user.name+"</li><li><strong>Description: </strong>"+ user.description +"</li>");
 	list.listview("refresh");	
 });
 
@@ -229,9 +229,9 @@ function GetUserAccount(id){
 			contentType: "application/json",
 			dataType:"json",
 			success : function(data, textStatus, jqXHR){
-				if(currentUser.username = "Sign In") {
+				if(currentUser.username == "Sign In") {
 					$.mobile.loading("hide");
-					$.mobile.navigate("#user-account");
+					$.mobile.navigate("#login");
 				}
 				else {
 					currentUser = data.user;
@@ -289,7 +289,7 @@ function GetUserAccount(id){
 function LogOut(){
 	$.mobile.loading("show");
 	currentUser = {"id" : "-1", "username" : "Sign In"};
-	userBtn.attr("onClick", "GetUserAccount('-1')");
+	$("#userBtn").attr("onClick", "GetUserAccount(-1)");
 	$.mobile.loading("hide");
 	$.mobile.navigate("#categories");
 }

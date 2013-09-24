@@ -236,7 +236,8 @@ app.post('/Server-Master/home', function(req, res) {
 
 var userList = new Array(
 	new User("Gustavo", "user", "heoro", "serrano", "Qui a coupe le fromage?"),
-	new User("Nelson", "user", "nelsongo", "reyes", "Stuff and things.")
+	new User("Nelson", "user", "nelsongo", "reyes", "Stuff and things."),
+	new User("Juan", "user", "kylar", "7", "Karate Chop!")
 	);
  var userNextId = 0;
 
@@ -273,8 +274,40 @@ app.get('/Server-Master/account/:id', function(req, res) {
 	}
 });
 
+// REST Operation - HTTP POST to login user
+app.post('/Server-Master/home/:userNameLogin', function(req, res) {
+	console.log("POST user login: " + req.params.userNameLogin);
+
+  	if(!req.body.hasOwnProperty('username') || !req.body.hasOwnProperty('password') ) {/*
+  	|| !req.body.hasOwnProperty('year') || !req.body.hasOwnProperty('price') || !req.body.hasOwnProperty('description')) {*/
+    	res.statusCode = 400;
+    	return res.send('Error: Missing fields for user login.');
+  	}
+  	else {
+  		var userName = req.body.username;
+  		var passWord = req.body.password;
+  		var target = -1; 
+  		for (var i=0; i < userList.length;++i){
+			if(userList[i].username == userName && userList[i].password == passWord){	
+				target = i;
+				console.log("Succesful login of user id: " + userList[i].id + " of type: " + userList[i].type);
+				break;  	
+			}
+		}
+		if (target == -1){
+			res.statusCode = 404;
+			res.send("User not found.");
+		}
+		else {
+			//create global userCount variable and add userCount++ here to see how many users are currently logged in
+			var response = {"user" : userList[target]};
+  			res.json(response);	
+  		}	 	
+  	}
+});
+
 // REST Operation - HTTP PUT to updated an account based on its id
-app.put('/Server-Master/account/:id', function(req, res) {
+/*app.put('/Server-Master/account/:id', function(req, res) {
 	var id = req.params.id;
 		console.log("PUT user account: " + id);
 
@@ -308,35 +341,7 @@ app.put('/Server-Master/account/:id', function(req, res) {
   			res.json(response);		
   		}
 	}
-});
-
-// REST Operation - HTTP POST to login user
-app.post('/Server-Master/home/:userNameLogin', function(req, res) {
-	console.log("POST user login: " + req.params.userNameLogin);
-
-  	if(!req.body.hasOwnProperty('username') || !req.body.hasOwnProperty('password') ) {/*
-  	|| !req.body.hasOwnProperty('year') || !req.body.hasOwnProperty('price') || !req.body.hasOwnProperty('description')) {*/
-    	res.statusCode = 400;
-    	return res.send('Error: Missing fields for user login.');
-  	}
-  	else {
-  		var userName = req.body.username;
-  		var passWord = req.body.password;
-  		var target; 
-  		for (var i=0; i < userList.length;++i){
-			if(userList[i].username == userName && userList[i].password == passWord){	
-				target = i;
-				console.log("Succesful login: " + userName);
-				break;  	
-  			}
-  			else
-  				res.statusCode = 400;
-		}
-	  	//create global userCount variable and add userCount++ here to see how many users are currently logged in
-	  	var response = {"user" : userList[target]};
-  		res.json(response);	
-  	}
-});
+});*/
 
 
 // Server starts running when listen is called.
