@@ -249,8 +249,12 @@ for (var i=0; i < userList.length;++i){
 app.get('/Server-Master/account/:id', function(req, res) {
 	var id = req.params.id;
 		console.log("GET user account: " + id);
-
-	if ((id < 0) || (id >= userNextId)){
+	var response = {};
+	if (id == -1){
+		response = {"user" : {"id" : "-1", "username" : "Sign In"}};
+		res.json(response);
+	}
+	else if ((id < 0) || (id >= userNextId)){
 		// not found
 		res.statusCode = 404;
 		res.send("User not found.");
@@ -268,7 +272,7 @@ app.get('/Server-Master/account/:id', function(req, res) {
 			res.send("User not found.");
 		}
 		else {
-			var response = {"user" : userList[target]};
+			response = {"user" : userList[target]};
   			res.json(response);	
   		}	
 	}
