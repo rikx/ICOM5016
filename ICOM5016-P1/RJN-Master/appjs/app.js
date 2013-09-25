@@ -6,10 +6,7 @@ $(document).on('pagebeforeshow', "#categories", function( event, ui ) {
 		contentType: "application/json",
 		success : function(data, textStatus, jqXHR){
 			var categoryList = data.categories;
-			var userBtn = $("#userBtn");
-			userBtn.html(currentUser.username);
-/*			if(currentUser.id != "-1")
-				userBtn.attr("onClick", "GetUserAccount(" + currentUser.id + ")");*/
+			$("#userBtn").html(currentUser.username);
 
 			var len = categoryList.length;
 			var list = $("#category-list");
@@ -59,6 +56,11 @@ $(document).on('pagebeforeshow', "#user-account", function( event, ui ) {
 	var user = currentUser;
 	list.append("<li><h2>" + user.username + "</h2></li><li><strong>Account ID: </strong>" + user.id + "</li><li>Name: "+ user.name+"</li><li><strong>Description: </strong>"+ user.description +"</li>");
 	list.listview("refresh");	
+});
+
+$(document).on('pagebeforeshow', "edit-account", function(event, ui){
+	$("#acc-name").val(currentUser.name);
+	$("#acc-lastname").val(currentUser.name);
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -283,7 +285,6 @@ function GetUserAccount(){
 function LogOut(){
 	$.mobile.loading("show");
 	currentUser = {"id" : "-1", "username" : "Sign In"};
-/*	$("#userBtn").attr("onClick", "GetUserAccount(-1)");*/
 	$.mobile.loading("hide");
 	$.mobile.navigate("#categories");
 }

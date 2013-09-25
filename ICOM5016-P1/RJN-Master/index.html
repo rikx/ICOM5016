@@ -23,16 +23,19 @@
 				<h3 align="center">Products for Sale</h3>	
 				<ul id="category-list" data-role="listview" data-inset="true">
 				</ul>
+			</div><!-- /content -->
+			<div data-role="footer">
+				<div data-role="controlgroup" data-type="horizontal" align="center">
+					<a data-role="button" data-inline="true" data-icon="home" data-iconpos="top" href="#categories">Home</a>
+					<a data-role="button" data-inline="true" data-icon="star" data-iconpos="top" onClick="GetUserAccount()">Profile</a>
+				</div>
 			</div>
-		</div>
-
+		</div><!-- /page -->
 
 		<div id="login" data-role="page">
 			<div data-role="header">
-				<a data-role="button" data-rel="back" href="#categories">Home</a>
 				<h1>Login</h1>
 			</div>
-
 			<div data-role="content" data-theme="c">	
 				<form id="login-form">
 					<fieldset data-role="controlgroup">
@@ -46,12 +49,12 @@
 					</fieldset>
 				</form>	
 			</div><!-- /content -->
-
 			<div data-role="footer">
-				<h4>A Team RJN project</h4>
+				<div data-role="controlgroup" data-type="horizontal" align="center">
+					<a data-role="button" data-rel="back" data-icon="home" data-iconpos="top" href="#categories">Home</a>
+				</div>
 			</div><!-- /footer -->
 		</div><!-- /page -->
-		
 
 		<div id="add-category" data-role="page">
 			<div data-role="header" data-theme="b" data-position="fixed">
@@ -59,50 +62,65 @@
 				<h1>New Category</h1>
 				<a data-role="button" data-rel="back" onclick="SaveCategory()">Save</a>
 			</div>
+			<div data-role="content">
 				<h2 align="center">Enter the new category info</h2>
-			<form id="category-form">
- 				<fieldset data-role="controlgroup">
- 					<ul>
-  					<li><label for="name"> Name: <input id="name" name="name" type="text"/></label></li>
-  					<!-- Don't Delete -- ><li><label for="model"> Model: <input id="model" name="model" type="text"/></label></li>
-  					<li><label for="year"> Year: <input id="year" name="year" type="number"/></label></li>
-  					<li><label for="price"> Price $: <input id="price" name="price" type="number"/></label></li>
-  			  		<li><label for="description"> Description: <input id="description" name="description" type="text"/></label></li>
-  			  		</-->
-  			  	</ul>
-			 </fieldset>
-			</form>
-		</div>
+				<form id="category-form">
+	 				<fieldset data-role="controlgroup">
+	 					<ul>
+	  					<li><label for="name"> Name: <input id="name" name="name" type="text"/></label></li>
+	  					<!-- Don't Delete -- ><li><label for="model"> Model: <input id="model" name="model" type="text"/></label></li>
+	  					<li><label for="year"> Year: <input id="year" name="year" type="number"/></label></li>
+	  					<li><label for="price"> Price $: <input id="price" name="price" type="number"/></label></li>
+	  			  		<li><label for="description"> Description: <input id="description" name="description" type="text"/></label></li>
+	  			  		</-->
+	  			  	</ul>
+				 </fieldset>
+				</form>
+			</div><!-- /content -->
+			<div data-role="footer">
+				<div data-role="controlgroup" data-type="horizontal" align="center">
+					<a data-role="button" data-inline="true" data-icon="home" data-iconpos="top" href="#categories">Home</a>
+					<a data-role="button" data-inline="true" data-icon="star" data-iconpos="top" onClick="GetUserAccount()">Admin</a>
+				</div>
+			</div><!-- /footer -->
+		</div><!-- /page -->
+
 		<div id="category-view" data-role="page">
 			<div data-role="header" data-theme="e" data-position="fixed">
 				<a data-role="button" data-rel="back" href="#categories">Cancel</a>
 				<h1>Category Info</h1>
 				<a data-role="button" data-rel="back" onclick="UpdateCategory()">Save</a>
-				
 			</div>
+			<div data-role="content">
 				<h2 align="center">Enter new info</h2>
-			<form id="category-view-form">
- 				<fieldset data-role="controlgroup">
- 					<ul>
-  					<li><label for="upd-name"> Name: <input id="upd-name" name="name" type="text"/></label></li>
-  					<!-- Don't Delete -- ><li><label for="upd-model"> Model: <input id="upd-model" name="model" type="text"/></label></li>
-  					<li><label for="upd-year"> Year: <input id="upd-year" name="year" type="number"/></label></li>
-  					<li><label for="upd-price"> Price $: <input id="upd-price" name="price" type="number"/></label></li>
-  			  		<li><label for="upd-description"> Description: <input id="upd-description" name="description" type="text"/></label></li>
-  			  		</-->
-  			  	</ul>
-			 </fieldset>
-			</form>
-			<center>
-				<a id="Del-Button" data-icon="delete" data-role="button" data-inline="true" onclick="DeleteCategory()">Delete</a>
-			</center>
-		</div>
+				<form id="category-view-form">
+	 				<fieldset data-role="controlgroup">
+	 					<ul>
+	  					<li><label for="upd-name"> Name: <input id="upd-name" name="name" type="text"/></label></li>
+	  					<!-- Don't Delete -- ><li><label for="upd-model"> Model: <input id="upd-model" name="model" type="text"/></label></li>
+	  					<li><label for="upd-year"> Year: <input id="upd-year" name="year" type="number"/></label></li>
+	  					<li><label for="upd-price"> Price $: <input id="upd-price" name="price" type="number"/></label></li>
+	  			  		<li><label for="upd-description"> Description: <input id="upd-description" name="description" type="text"/></label></li>
+	  			  		</-->
+	  			  	</ul>
+				 </fieldset>
+				</form>
+				<center>
+					<a id="Del-Button" data-icon="delete" data-role="button" data-inline="true" onclick="DeleteCategory()">Delete</a>
+				</center>
+			</div>
+			<div data-role="footer">
+				<div data-role="controlgroup" data-type="horizontal" align="center">
+					<a data-role="button" data-inline="true" data-icon="home" data-iconpos="top" href="#categories">Home</a>
+					<a data-role="button" data-inline="true" data-icon="star" data-iconpos="top" onClick="GetUserAccount()">Admin</a>
+				</div>
+			</div><!-- /footer -->
+		</div><!-- /page -->
 
 		<div id="user-account" data-role="page">
 			<div data-role="header" data-theme="e" data-position="fixed">
-				<a data-role="button" data-rel="back" href="#categories">Home</a>
 				<h3 style="text-align: center">Your Account</h3>
-				<a data-role="button" data-icon="gear" data-iconpos="right" onclick="UpdateAccount()">Edit</a>	
+				<a data-role="button" data-icon="gear" data-iconpos="right" href="#update-account">Edit</a>	
 			</div>
 			<div data-role="content">
 				<h3>Your Profile Info</h3>
@@ -111,15 +129,17 @@
 				<a data-role="button" data-inline="true" onClick="LogOut()">Logout</a>	
 			</div>
 			<div data-role="footer">
-				<p align="center">Regular User</p>
+				<div data-role="controlgroup" data-type="horizontal" align="center">
+					<a data-role="button" data-inline="true" data-icon="home" data-iconpos="top" href="#categories">Home</a>
+					<a data-role="button" data-inline="true" data-icon="star" data-iconpos="top" onClick="GetUserAccount()">Profile</a>
+				</div>
 			</div>
 		</div>
 
 		<div id="admin-account" data-role="page">
 			<div data-role="header" data-theme="e" data-position="fixed">
-				<a data-role="button" data-rel="back" href="#categories">Home</a>
 				<h3 style="text-align: center">Your Account</h3>
-				<a data-role="button" data-icon="gear" data-iconpos="right" onclick="UpdateAccount()">Edit</a>	
+				<!-- <a data-role="button" data-icon="gear" data-iconpos="right" onclick="UpdateAccount()">Edit</a>	 -->
 			</div>
 			<div data-role="content">
 				<h3>Admin Tools</h3>
@@ -128,7 +148,46 @@
 				<a data-role="button" data-inline="true" onClick="LogOut()">Logout</a>	
 			</div>
 			<div data-role="footer">
-				<p align="center">Administrator</p>
+				<div data-role="controlgroup" data-type="horizontal" align="center">
+					<a data-role="button" data-inline="true" data-icon="home" data-iconpos="top" href="#categories">Home</a>
+					<a data-role="button" data-inline="true" data-icon="star" data-iconpos="top" onClick="GetUserAccount()">Admin</a>
+				</div>
+			</div>
+		</div>
+
+		<div id="update-account" data-role="page">
+			<div data-role="header" data-theme="e" data-position="fixed">
+				<a data-role="button" data-inline="true" onClick="LogOut()">Logout</a>	
+				<h3 align="center">Account Settings</h3>
+				<a data-role="button" data-inline="true" data-icon="gear" data-iconpos="left" onclick="UpdateAccount()">Save</a>
+			</div>
+			<div data-role="content">
+				<h3 align="center">Edit Profile Info</h3>
+				<form id="category-view-form">
+	 				<fieldset data-role="controlgroup">
+	 					<ul>
+	 					<h4>Account settings</h4>
+	 					<li><label for="acc-username"> Username: <input id="upd-name" name="name" type="text"/></label></li>
+	 					<li><label for="acc-email"> Email: <input id="upd-year" name="year" type="text"/></label></li>
+	 					<li><label for="acc-password"> Old Password: <input id="upd-year" name="year" type="password"/></label></li>
+	 					<li><label for="acc-newpassword"> New Password: <input id="upd-year" name="year" type="password"/></label></li>
+	 					<li><label for="acc-confirmpassword"> Confirm Password: <input id="upd-year" name="year" type="password"/></label></li>
+	 					<h4>Profile Information</h4>
+	  					<li><label for="acc-name"> First Name: <input id="upd-name" name="name" type="text"/></label></li>
+	  					<li><label for="acc-lastname"> Last Name: <input id="upd-model" name="model" type="text"/></label></li>
+	  			  		<li><label for="acc-description"> Description: <input id="upd-description" name="description" type="text"/></label></li>
+	  			  	</ul>
+				 	</fieldset>
+				</form>
+				<center>
+					<a data-icon="delete" data-role="button" data-inline="true" onclick="DeleteAccount()">Delete Account?</a>
+				</center>
+			</div>
+			<div data-role="footer">
+				<div data-role="controlgroup" data-type="horizontal" align="center">
+					<a data-role="button" data-inline="true" data-icon="home" data-iconpos="top" href="#categories">Home</a>
+					<a data-role="button" data-inline="true" data-icon="star" data-iconpos="top" onClick="GetUserAccount()">Profile</a>
+				</div>
 			</div>
 		</div>
 	</body>
