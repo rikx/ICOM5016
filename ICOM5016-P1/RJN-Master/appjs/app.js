@@ -212,7 +212,7 @@ function LogIn(){
 }
 
 //initial value is set to Sign In for home page
-var currentUser = {"id" : "-1", "username" : "Sign In"};
+var currentUser = {"id" : "-1", "type": "foobar", "username" : "Sign In"};
 
 function GetUserAccount(){
 	$.mobile.loading("show");
@@ -223,12 +223,14 @@ function GetUserAccount(){
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
 			currentUser = data.user;
-			if(currentUser.id == "-1") {
-				$.mobile.loading("hide");
+			$.mobile.loading("hide");
+			if(currentUser.id == "-1"){
 				$.mobile.navigate("#login");
 			}
+			else if(currentUser.type == "admin"){
+				$.mobile.navigate("#admin-account");
+			}
 			else {
-				$.mobile.loading("hide");
 				$.mobile.navigate("#user-account");
 			}
 		},

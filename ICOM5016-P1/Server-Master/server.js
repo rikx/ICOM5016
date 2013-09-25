@@ -237,7 +237,7 @@ app.post('/Server-Master/home', function(req, res) {
 var userList = new Array(
 	new User("Gustavo", "user", "heoro", "serrano", "Qui a coupe le fromage?"),
 	new User("Nelson", "user", "nelsongo", "reyes", "Stuff and things."),
-	new User("Juan", "user", "kylar", "7", "Karate Chop!")
+	new User("Juan", "admin", "kylar", "7", "Karate Chop!")
 	);
  var userNextId = 0;
 
@@ -251,7 +251,7 @@ app.get('/Server-Master/account/:id', function(req, res) {
 		console.log("GET user account: " + id);
 	var response = {};
 	if (id == -1){
-		response = {"user" : {"id" : "-1", "username" : "Sign In"}};
+		response = {"user" : {"id" : "-1", "type": "foobar", "username" : "Sign In"}};
 		res.json(response);
 	}
 	else if ((id < 0) || (id >= userNextId)){
