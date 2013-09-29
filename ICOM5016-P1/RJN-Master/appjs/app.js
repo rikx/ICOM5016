@@ -37,6 +37,21 @@ $(document).on('pagebeforeshow', "#categories", function( event, ui ) {
 	});
 });
 
+//Test - Juan
+$(document).ready(function(){
+    $("#upd-name").keypress(function(e){
+      if(e.keyCode==13)
+      $("#SaveNewInfo").click();
+    });
+});
+	
+$(document).ready(function(){
+    $("#name").keypress(function(e){
+      if(e.keyCode==13)
+      $("#SaveNewCategory").click();
+    });
+});
+//End Test - Juan
 $(document).on('pagebeforeshow', "#category-view", function( event, ui ) {
 	// currentCategory has been set at this point
 	$("#upd-name").val(currentCategory.name);
