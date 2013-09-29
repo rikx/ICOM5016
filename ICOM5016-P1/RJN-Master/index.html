@@ -15,20 +15,46 @@
 	<body>
 		<div id ="categories" data-role="page">
 			<div data-role="header" data-theme="a" data-position="fixed">
-				<a id="userBtn" data-role="button" data-icon="arrow-d" onClick="GetUserAccount()" data-ajax="false"></a>
-				<h1>RJN BAY</h1>
+				<div class="ui-grid-b" align="center">
+					<div class="ui-block-a"><h3>RJN Bay</h3></div>
+					<div class="ui-block-b"></div>
+					<div class="ui-block-c">
+						<div data-role="controlgroup" data-type="horizontal">
+							<a href="index.html" data-role="button" data-icon="home" data-iconpos="top">Home</a>
+							<a href="" data-role="button" data-icon="search" data-iconpos="top">Browse</a>
+							<a data-role="button" data-icon="info" data-iconpos="top" onClick="GetUserAccount()">Account</a>
+							<!-- <a data-role="button" data-inline="true" onClick="LogOut()">Logout</a> --> <!-- Add this dynamically later -->
+						</div>
+					</div>
+				</div><!-- /grid-b -->
 			</div>
 			<div data-role="content">
 				<h3 align="center">Products for Sale</h3>	
 				<ul id="category-list" data-role="listview" data-inset="true">
 				</ul>
 			</div><!-- /content -->
-			<div data-role="footer" data-position="fixed">
-				<div data-role="controlgroup" data-type="horizontal" align="center">
-					<a data-role="button" data-inline="true" data-icon="home" data-iconpos="top" href="#categories">Home</a>
-					<a data-role="button" data-inline="true" data-icon="star" data-iconpos="top" onClick="GetUserAccount()">Profile</a>
-				</div>
+		</div><!-- /page -->
+
+		<div id ="subCategories" data-role="page">
+			<div data-role="header" data-theme="a" data-position="fixed">
+				<div class="ui-grid-b" align="center">
+					<div class="ui-block-a"><h3>RJN Bay</h3></div>
+					<div class="ui-block-b"></div>
+					<div class="ui-block-c">
+						<div data-role="controlgroup" data-type="horizontal">
+							<a href="index.html" data-role="button" data-icon="home" data-iconpos="top">Home</a>
+							<a href="" data-role="button" data-icon="search" data-iconpos="top">Browse</a>
+							<a data-role="button" data-icon="info" data-iconpos="top" onClick="GetUserAccount()">Account</a>
+							<!-- <a data-role="button" data-inline="true" onClick="LogOut()">Logout</a> --> <!-- Add this dynamically later -->
+						</div>
+					</div>
+				</div><!-- /grid-b -->
 			</div>
+			<div data-role="content">
+				<h3 align="center">Products for Sale</h3>	<!-- Add title dynamically later -->
+				<ul id="subCategory-list" data-role="listview" data-inset="true">
+				</ul>
+			</div><!-- /content -->
 		</div><!-- /page -->
 
 		<div id="login" data-role="page">

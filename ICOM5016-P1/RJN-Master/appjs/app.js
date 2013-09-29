@@ -5,9 +5,8 @@ $(document).on('pagebeforeshow', "#categories", function( event, ui ) {
 		url : "http://localhost:3412/Server-Master/home",
 		contentType: "application/json",
 		success : function(data, textStatus, jqXHR){
-			
 			var categoryList = data.categories;
-			$("#userBtn").html(currentUser.username);
+			//$("#userBtn").html(currentUser.username);
 
 			var len = categoryList.length;
 			var list = $("#category-list");
@@ -15,7 +14,7 @@ $(document).on('pagebeforeshow', "#categories", function( event, ui ) {
 			var category;
 			for (var i=0; i < len; ++i){
 				category = categoryList[i];
-				if(category.parent) {	
+				if(!category.parent) {	
 					list.append("<li><a><h2>"+category.name+"</h2></a>"+
 					"<a onclick=GetCategory("+category.id+") data-icon='gear' >Edit</a></li>");
 				}
@@ -46,27 +45,16 @@ $(document).on('pagebeforeshow', "#subCategories", function( event, ui ) {
 		url : "http://localhost:3412/Server-Master/home" + data.urlhistory + "/" + data.subCategory.id,
 		contentType: "application/json",
 		success : function(data, textStatus, jqXHR){
-			var subCategoryList = data.subCategory;
+			var subCategoriesList = data.subCategories;
 
-			var len = categoryList.length;
+			var len = subCategoryList.length;
 			var list = $("#subCategory-list");
 			list.empty();
 			var category;
 			for (var i=0; i < len; ++i){
-				category = subCategoryList[i];		
-				list.append("<li><a><h2>"+category.name+"</h2></a>"+
-				"<a onclick=GetCategory("+category.id+") data-icon='gear' >Edit</a></li>");
-			
-	
-					/*
-					 * DON'T DELETE
-					 ("<li><a onclick=GetCategory(" + category.id + ")>" + 
-					"<h2>" + category.name + " " + category.model +  "</h2>" + 
-					"<p><strong> Year: " + category.year + "</strong></p>" + 
-					"<p>" + category.description + "</p>" +
-					"<p class=\"ui-li-aside\">" + accounting.formatMoney(category.price) + "</p>" +
-					"</a></li>");*/
-				
+				subCategory = subCategoriesList[i];		
+				list.append("<li><a><h2>"+subCategory.name+"</h2></a>"+
+				"<a onclick=GetCategory("+subCategory.id+") data-icon='gear' >Edit</a></li>");	
 			}
 			list.listview("refresh");	
 		},
@@ -92,6 +80,7 @@ $(document).ready(function(){
     });
 });
 //End Test - Juan
+
 $(document).on('pagebeforeshow', "#category-view", function( event, ui ) {
 	// currentCategory has been set at this point
 	$("#upd-name").val(currentCategory.name);
@@ -208,7 +197,7 @@ function GetSubCategories(id){
 		success : function(data, textStatus, jqXHR){
 			currentCategory = data.category;
 			$.mobile.loading("hide");
-			$.mobile.navigate("#category-view");
+			$.mobile.navigate("#subCategory-view");
 		},
 		error: function(data, textStatus, jqXHR){
 			console.log("textStatus: " + textStatus);

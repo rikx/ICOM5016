@@ -32,62 +32,63 @@ var Category = modules.Category;
 var categoryList = modules.categoryList;
 
 var categoryList = new Array(
-	new Category(0, "Books", null),
-	new Category(1, "Electronics", null),
-	new Category(2, "Computers", null),
-	new Category(3, "Clothing", null),
-	new Category(4, "Shoes", null),
-	new Category(5, "Sports", null),
+	new Category(1, "Books", null),
+	new Category(2, "Electronics", null),
+	new Category(3, "Computers", null),
+	new Category(4, "Clothing", null),
+	new Category(5, "Shoes", null),
+	new Category(6, "Sports", null),
 
-	new Category(6, "Children", 0),
-	new Category(7, "Fiction", 0),
-	new Category(8, "Technology", 0),
-	new Category(9, "Business", 0),
+	new Category(7, "Children", 1),
+	new Category(8, "Fiction", 1),
+	new Category(9, "Technology", 1),
+	new Category(10, "Business", 1),
 
-	new Category(10, "TV", 1),
-	new Category(11, "Audio", 1),
-	new Category(12, "Phones", 1),
-	new Category(13, "Cameras", 1),
-	new Category(14, "Video", 1),
+	new Category(11, "TV", 2),
+	new Category(12, "Audio", 2),
+	new Category(13, "Phones", 2),
+	new Category(14, "Cameras", 2),
+	new Category(15, "Video", 2),
 
-	new Category(15, "Laptops", 2),
-	new Category(16, "Desktops", 2),
-	new Category(17, "Tablets", 2),
-	new Category(18, "Printers", 2),
+	new Category(16, "Laptops", 3),
+	new Category(17, "Desktops", 3),
+	new Category(18, "Tablets", 3),
+	new Category(19, "Printers", 3),
 	
-	new Category(19, "Children",3),
-	new Category(20, "Men", 3),
-	new Category(21, "Women", 3),
+	new Category(20, "Children",4),
+	new Category(21, "Men", 4),
+	new Category(22, "Women", 4),
 
-	new Category(22, "Children", 4),
-	new Category(23, "Men", 4),
-	new Category(24, "Women", 4),
+	new Category(23, "Children", 5),
+	new Category(24, "Men", 5),
+	new Category(25, "Women", 5),
 
-	new Category(25, "Bicycles" 5),
-	new Category(26, "Fishing", 5),
-	new Category(27, "Baseball", 5),
-	new Category(28, "Gulf", 5),
-	new Category(29, "Basketball", 5),
+	new Category(26, "Bicycles", 6),
+	new Category(27, "Fishing", 6),
+	new Category(28, "Baseball", 6),
+	new Category(29, "Gulf", 6),
+	new Category(30, "Basketball", 6),
 
-	new Category(30, "Shirts", 20),
-	new Category(31, "Pants", 20),
-	new Category(32, "Socks", 20),
+	new Category(31, "Shirts", 21),
+	new Category(32, "Pants", 21),
+	new Category(33, "Socks", 21),
 
-	new Category(33, "Shirts", 21),
-	new Category(34, "Pants", 21),
-	new Category(35, "Dresses", 21),
+	new Category(34, "Shirts", 22),
+	new Category(35, "Pants", 22),
+	new Category(36, "Dresses", 22),
 
-	new Category(36, "Frames", 5),
-	new Category(37, "Wheels", 5),
-	new Category(38, "Helmet", 5),
-	new Category(39, "Parts", 5)
+	new Category(37, "Frames", 6),
+	new Category(38, "Wheels", 6),
+	new Category(39, "Helmet", 6),
+	new Category(40, "Parts", 6)
 	);
 
-var categoryNextId = 39; //ponle el id de la subcategory "Parts"
+var categoryNextId = 40; //ponle el id de la subcategory "Parts"
 
 /*for (var i=0; i < categoryList.length;++i){
 	categoryList[i].id = categoryNextId++;
 }*/
+
 // REST Operations
 // Idea: Data is created, read, updated, or deleted through a URL that 
 // identifies the resource to be created, read, updated, or deleted.
@@ -220,6 +221,37 @@ app.post('/Server-Master/home', function(req, res) {
   	newCategory.id = categoryNextId++;
   	categoryList.push(newCategory);
   	res.json(true);
+});
+
+// REST Operation - HTTP GET to get subcategories
+app.get('/Server-Master/home/:urlhistory', function(req, res) {
+
+	var urlhistory = req.params.urlhistory;
+
+	console.log("GET categoryId: " + productId);
+
+	if ((productId < 0) || (id >= productNextId)){
+		// not found
+		res.statusCode = 404;
+		res.send("Product not found.");
+	}
+	else {
+		var target = -1;
+		for (var i=0; i < categoryList.length; ++i){
+			if (categoryList[i].id == id){
+				target = i;
+				break;	
+			}
+		}
+		if (target == -1){
+			res.statusCode = 404;
+			res.send("Product not found.");
+		}
+		else {
+			var response = {"subCategory" : List[target]};
+  			res.json(response);	
+  		}	
+	}
 });
 
 /*==================================================================*/
@@ -360,36 +392,6 @@ for (var i=0; i < productList.length;++i){
 	productList[i].id = "p"+productNextId++;
 }
 
-// REST Operation - HTTP GET to get subcategories
-app.get('/Server-Master/home/:urlhistory', function(req, res) {
-
-	var urlhistory = req.params.urlhistory;
-
-	console.log("GET categoryId: " + productId);
-
-	if ((productId < 0) || (id >= productNextId)){
-		// not found
-		res.statusCode = 404;
-		res.send("Product not found.");
-	}
-	else {
-		var target = -1;
-		for (var i=0; i < categoryList.length; ++i){
-			if (categoryList[i].id == id){
-				target = i;
-				break;	
-			}
-		}
-		if (target == -1){
-			res.statusCode = 404;
-			res.send("Product not found.");
-		}
-		else {
-			var response = {"subCategory" : List[target]};
-  			res.json(response);	
-  		}	
-	}
-});
 
 // Server starts running when listen is called.
 app.listen(process.env.PORT || 3412);
