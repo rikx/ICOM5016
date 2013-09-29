@@ -1,7 +1,8 @@
 module.exports =  { 
-	Category: function (name){//, model, year, description, price){
+	Category: function (name, parent){//, model, year, description, price){
 		this.id = "";
 		this.name = name;
+		this.parent = parent;
 		/*
 		 * DON'T DELETE
 		this.model = model;

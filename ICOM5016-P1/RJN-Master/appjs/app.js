@@ -5,6 +5,7 @@ $(document).on('pagebeforeshow', "#categories", function( event, ui ) {
 		url : "http://localhost:3412/Server-Master/home",
 		contentType: "application/json",
 		success : function(data, textStatus, jqXHR){
+			
 			var categoryList = data.categories;
 			$("#userBtn").html(currentUser.username);
 
@@ -14,6 +15,43 @@ $(document).on('pagebeforeshow', "#categories", function( event, ui ) {
 			var category;
 			for (var i=0; i < len; ++i){
 				category = categoryList[i];		
+				list.append("<li><a><h2>"+category.name+"</h2></a>"+
+				"<a onclick=GetCategory("+category.id+") data-icon='gear' >Edit</a></li>");
+			
+	
+					/*
+					 * DON'T DELETE
+					 ("<li><a onclick=GetCategory(" + category.id + ")>" + 
+					"<h2>" + category.name + " " + category.model +  "</h2>" + 
+					"<p><strong> Year: " + category.year + "</strong></p>" + 
+					"<p>" + category.description + "</p>" +
+					"<p class=\"ui-li-aside\">" + accounting.formatMoney(category.price) + "</p>" +
+					"</a></li>");*/
+				
+			}
+			list.listview("refresh");	
+		},
+		error: function(data, textStatus, jqXHR){
+			
+			console.log("textStatus: " + textStatus);
+			alert("Data not found!");
+		}
+	});
+});
+
+$(document).on('pagebeforeshow', "#subCategories", function( event, ui ) {
+	$.ajax({
+		url : "http://localhost:3412/Server-Master/home" + data.urlhistory + "/" + data.subCategory.id,
+		contentType: "application/json",
+		success : function(data, textStatus, jqXHR){
+			var subCategoryList = data.subCategory;
+
+			var len = categoryList.length;
+			var list = $("#subCategory-list");
+			list.empty();
+			var category;
+			for (var i=0; i < len; ++i){
+				category = subCategoryList[i];		
 				list.append("<li><a><h2>"+category.name+"</h2></a>"+
 				"<a onclick=GetCategory("+category.id+") data-icon='gear' >Edit</a></li>");
 			
@@ -117,12 +155,39 @@ function SaveCategory(){
 var currentCategory = {};
 
 function GetCategory(id){
+
 	$.mobile.loading("show");
 	$.ajax({
 		url : "http://localhost:3412/Server-Master/home/" + id,
 		method: 'get',
 		contentType: "application/json",
 		dataType:"json",
+		success : function(data, textStatus, jqXHR){
+			currentCategory = data.category;
+			$.mobile.loading("hide");
+			$.mobile.navigate("#category-view");
+		},
+		error: function(data, textStatus, jqXHR){
+			console.log("textStatus: " + textStatus);
+			$.mobile.loading("hide");
+			if (data.status == 404){
+				alert("Category not found.");
+			}
+			else {
+				alert("Internal Server Error.");
+			}
+		}
+	});
+}
+
+function GetSubCategories(id){
+	$.mobile.loading("show");
+	$.ajax({
+		url : "http://localhost:3412/Server-Master/home/" + id,
+		method: 'get',
+		contentType: "application/json",
+		dataType:"json",
+
 		success : function(data, textStatus, jqXHR){
 			currentCategory = data.category;
 			$.mobile.loading("hide");

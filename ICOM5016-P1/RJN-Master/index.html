@@ -15,9 +15,8 @@
 	<body>
 		<div id ="categories" data-role="page">
 			<div data-role="header" data-theme="a" data-position="fixed">
-				<a id="userBtn" data-role="button" data-icon="arrow-d" onClick="GetUserAccount()"></a>
+				<a id="userBtn" data-role="button" data-icon="arrow-d" onClick="GetUserAccount()" data-ajax="false"></a>
 				<h1>RJN BAY</h1>
-				<a data-role="button" data-icon="add" data-iconpos="notext" href="#add-category"></a>
 			</div>
 			<div data-role="content">
 				<h3 align="center">Products for Sale</h3>	
@@ -135,6 +134,35 @@
 				</div>
 			</div>
 		</div>
+
+		<div id="admin-account" data-role="page">
+			<div data-role="header" data-theme="e" data-position="fixed">
+				<div class="ui-grid-b" align="center">
+					<div class="ui-block-a"><h3>RJN Bay</h3></div>
+					<div class="ui-block-b"></div>
+					<div class="ui-block-c">
+						<div data-role="controlgroup" data-type="horizontal">
+							<a href="index.html" data-role="button" data-icon="home" data-iconpos="top">Home</a>
+							<a href="" data-role="button" data-icon="search" data-iconpos="top">Browse</a>
+							<a data-role="button" data-icon="info" data-iconpos="top" onClick="GetUserAccount()">Account</a>
+							<a data-role="button" data-inline="true" onClick="LogOut()">Logout</a>
+						</div>
+					</div>
+				</div><!-- /grid-b -->
+			</div>
+			<div data-role="content">
+				<h3>Admin Tools</h3>
+				<div class="ui-grid-b" align="center">
+					<div class="ui-block-a"><a href="category-view" data-role="button">Manage Categories</a></div>
+					<div class="ui-block-b"><a href="category-view" data-role="button">Manage Users</a></div>
+					<div class="ui-block-c"><a onClick="ViewReports()" data-role="button">View Reports</a></div>
+				</div>
+				
+			</div>
+			<div data-role="footer">
+				<h1>Admin Page</h1>
+			</div>
+		</div><!-- /page -->
 
 		<div id="update-account" data-role="page">
 			<div data-role="header" data-theme="e" data-position="fixed">
