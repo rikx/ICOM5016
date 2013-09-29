@@ -34,7 +34,6 @@ module.exports =  {
 		this.password = password;
 		this.description = description;
 	}
+
 };
-
-
 

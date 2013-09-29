@@ -63,6 +63,18 @@ $(document).on('pagebeforeshow', "edit-account", function(event, ui){
 	$("#acc-lastname").val(currentUser.name);
 });
 
+$(document).on('pagebeforeshow', "#product-view", function( event, ui ) {
+	// currentCategory has been set at this point
+	$("#prod-name").val(currentCategory.name);
+	/*
+	 * DON'T DELETE
+	$("#upd-model").val(currentCategory.model);
+	$("#upd-year").val(currentCategory.year);
+	$("#upd-price").val(currentCategory.price);
+	$("#upd-description").val(currentCategory.description);
+	*/
+});
+
 ////////////////////////////////////////////////////////////////////////////////////////////////
 /// Functions Called Directly from Buttons ///////////////////////
 

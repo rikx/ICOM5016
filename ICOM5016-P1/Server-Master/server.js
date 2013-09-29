@@ -23,8 +23,12 @@ app.configure(function () {
 app.use(express.bodyParser());
 
 var modules = require("./modules.js");
+
+/*==================================================================*/
+/*								Categories							*/
+/*==================================================================*/
 var Category = modules.Category;
-var User = modules.User;
+var categoryList = modules.categoryList;
 
 var categoryList = new Array(
 	new Category("Books"),
@@ -96,7 +100,7 @@ var bicyclesSportsCategoryList = new Array(
 	new Category("Parts")
 	);
 
- var categoryNextId = 0;
+var categoryNextId = 0;
 
 for (var i=0; i < categoryList.length;++i){
 	categoryList[i].id = categoryNextId++;
@@ -234,12 +238,19 @@ app.post('/Server-Master/home', function(req, res) {
   	res.json(true);
 });
 
+/*==================================================================*/
+/*								Users								*/
+/*==================================================================*/
+var User = modules.User;
+
+//name, type, username, password, description
 var userList = new Array(
 	new User("Gustavo", "user", "heoro", "serrano", "Qui a coupe le fromage?"),
 	new User("Nelson", "user", "nelsongo", "reyes", "Stuff and things."),
 	new User("Juan", "admin", "kylar", "7", "Karate Chop!")
 	);
- var userNextId = 0;
+
+var userNextId = 0;
 
 for (var i=0; i < userList.length;++i){
 	userList[i].id = userNextId++;
@@ -347,6 +358,60 @@ app.post('/Server-Master/home/:userNameLogin', function(req, res) {
 	}
 });*/
 
+/*==================================================================*/
+/*								Products							*/
+/*==================================================================*/
+
+var Product = modules.Product;
+
+//name,instantPrice,bidPrice,description,model,brand,dimensions
+var productList = new Array(
+	new Product("MyPhone", 500, 400, "Brand new, still in box Myphone.", "MyPhone5X", "Mapple", '10"x8"x0.5"'),
+	new Product("Viperus", 9001, 7000, "1969 Honyota Viperus. Its so fast your skin flies off.", "Viperus XLR", "Honyota", "20feetx6feetx5feet")
+	);
+
+var productNextId = 0;
+
+for (var i=0; i < productList.length;++i){
+	productList[i].id = productNextId++;
+}
+
+// REST Operation - HTTP GET to get a product based on its id
+app.get('/Server-Master/:catId/:subCat1id/:subCat2id/:prodId', function(req, res) {
+	var productId = req.params.prodId;
+	var subCatId = req.params.subCat1id;
+	var subCat2Id;
+
+	if(req.params.subCat2id != "")
+		subCat2Id = req.params.subCat2id;
+	else
+		subCat2Id = "N/A";
+
+	console.log("GET product: " + productId);
+
+	if ((productId < 0) || (id >= productNextId)){
+		// not found
+		res.statusCode = 404;
+		res.send("Product not found.");
+	}
+	else {
+		var target = -1;
+		for (var i=0; i < categoryList.length; ++i){
+			if (categoryList[i].id == id){
+				target = i;
+				break;	
+			}
+		}
+		if (target == -1){
+			res.statusCode = 404;
+			res.send("Product not found.");
+		}
+		else {
+			var response = {"product" : productList[target]};
+  			res.json(response);	
+  		}	
+	}
+});
 
 // Server starts running when listen is called.
 app.listen(process.env.PORT || 3412);
