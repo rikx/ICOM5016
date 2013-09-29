@@ -1,6 +1,6 @@
 module.exports =  { 
-	Category: function (name, parent){//, model, year, description, price){
-		this.id = "";
+	Category: function (id, name, parent){//, model, year, description, price){
+		this.id = id;
 		this.name = name;
 		this.parent = parent;
 		/*
@@ -9,11 +9,6 @@ module.exports =  {
 		this.year = year;
 		this.description = description;
 		this.price = price;*/
-	},
-	
-	Subcategory:function(name){
-		this.id="";
-		this.name = name;
 	},
 	
 	Product:function(name,instantPrice,bidPrice,description,model,brand,dimensions){

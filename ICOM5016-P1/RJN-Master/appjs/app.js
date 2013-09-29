@@ -14,9 +14,11 @@ $(document).on('pagebeforeshow', "#categories", function( event, ui ) {
 			list.empty();
 			var category;
 			for (var i=0; i < len; ++i){
-				category = categoryList[i];		
-				list.append("<li><a><h2>"+category.name+"</h2></a>"+
-				"<a onclick=GetCategory("+category.id+") data-icon='gear' >Edit</a></li>");
+				category = categoryList[i];
+				if(category.parent) {	
+					list.append("<li><a><h2>"+category.name+"</h2></a>"+
+					"<a onclick=GetCategory("+category.id+") data-icon='gear' >Edit</a></li>");
+				}
 			
 	
 					/*

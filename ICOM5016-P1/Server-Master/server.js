@@ -26,6 +26,7 @@ var modules = require("./modules.js");
 
 /*==================================================================*/
 /*								Categories							*/
+/* This array emulates the category entity in the database.
 /*==================================================================*/
 var Category = modules.Category;
 var categoryList = modules.categoryList;
@@ -36,60 +37,53 @@ var categoryList = new Array(
 	new Category(2, "Computers", null),
 	new Category(3, "Clothing", null),
 	new Category(4, "Shoes", null),
-	new Category(5, "Sports", null)
-	);
+	new Category(5, "Sports", null),
 
-var subCategoryList = new Array(
-	new Category(6, "Children", "books"),
-	new Category("Fiction", "books"),
-	new Category("Technology", "books"),
-	new Category("Business","books"),
+	new Category(6, "Children", 0),
+	new Category(7, "Fiction", 0),
+	new Category(8, "Technology", 0),
+	new Category(9, "Business", 0),
 
-	new Category("TV", "electronics"),
-	new Category("Audio", "electronics"),
-	new Category("Phones", "electronics"),
-	new Category("Cameras", "electronics"),
-	new Category("Video", "electronics"),
+	new Category(10, "TV", 1),
+	new Category(11, "Audio", 1),
+	new Category(12, "Phones", 1),
+	new Category(13, "Cameras", 1),
+	new Category(14, "Video", 1),
 
-	new Category("Laptops", "computers"),
-	new Category("Desktops", "computers"),
-	new Category("Tablets", "computers"),
-	new Category("Printers", "computers"),
+	new Category(15, "Laptops", 2),
+	new Category(16, "Desktops", 2),
+	new Category(17, "Tablets", 2),
+	new Category(18, "Printers", 2),
 	
-	new Category("Children","clothing"),
-	new Category("Men", "clothing"),
-	new Category("Women", "clothing"),
+	new Category(19, "Children",3),
+	new Category(20, "Men", 3),
+	new Category(21, "Women", 3),
 
-	new Category("Children", "shoes"),
-	new Category("Men", "shoes"),
-	new Category("Women", "shoes"),
+	new Category(22, "Children", 4),
+	new Category(23, "Men", 4),
+	new Category(24, "Women", 4),
 
-	new Category("Bicycles" "sports"),
-	new Category("Fishing", "sports"),
-	new Category("Baseball", "sports"),
-	new Category("Gulf", "sports"),
-	new Category("Basketball", "sports")
+	new Category(25, "Bicycles" 5),
+	new Category(26, "Fishing", 5),
+	new Category(27, "Baseball", 5),
+	new Category(28, "Gulf", 5),
+	new Category(29, "Basketball", 5),
 
-var menClothingCategoryList = new Array(
-	new Category("Shirts", "menClothing"),
-	new Category("Pants", ""),
-	new Category("Socks")
+	new Category(30, "Shirts", 20),
+	new Category(31, "Pants", 20),
+	new Category(32, "Socks", 20),
+
+	new Category(33, "Shirts", 21),
+	new Category(34, "Pants", 21),
+	new Category(35, "Dresses", 21),
+
+	new Category(36, "Frames", 5),
+	new Category(37, "Wheels", 5),
+	new Category(38, "Helmet", 5),
+	new Category(39, "Parts", 5)
 	);
 
-var womenClothingCategoryList = new Array(
-	new Category("Shirts"),
-	new Category("Pants"),
-	new Category("Dresses")
-	);
-
-var bicyclesSportsCategoryList = new Array(
-	new Category("Frames"),
-	new Category("Wheels"),
-	new Category("Helmet"),
-	new Category("Parts")
-	);
-
-var categoryNextId = 0; //ponle el id de la subcategory "Parts"
+var categoryNextId = 39; //ponle el id de la subcategory "Parts"
 
 /*for (var i=0; i < categoryList.length;++i){
 	categoryList[i].id = categoryNextId++;
