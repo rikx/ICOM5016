@@ -69,7 +69,7 @@
 					<li><label for="password"> Password: <input id="password" name="password" type="password"/></label></li>
 					<li><a data-role="button" onclick="LogIn()">Log In</a>
 				    <!-- <input type="submit" value="Submit Button" onclick="LogIn(); return false;"/> --></li>
-				    <li><a data-role="button" href="#registration" rel="external">New User? Register here</a></li>
+				    <li><a data-role="button" href="#register-account" rel="external">New User? Register here</a></li>
 					</ul>
 					</fieldset>
 				</form>	
@@ -190,27 +190,54 @@
 			</div>
 		</div><!-- /page -->
 
+		<div id="register-account" data-role="page">
+			<div data-role="header" data-theme="e" data-position="fixed">
+				<h3 align="center">Register New Account</h3>
+				<a data-role="button" class="ui-btn-right" data-inline="true" onclick="RegisterAccount()">Submit</a>
+			</div>
+			<div data-role="content">
+				<h3 align="center">Create your personal account</h3>
+				<form id="category-view-form">
+	 				<fieldset data-role="controlgroup">
+	 					<ul>
+	 					<li><label for="acc-firstname"> First Name: <input id="upd-fname" name="fname" type="text"/></label></li>
+	  					<li><label for="acc-lastname"> Last Name: <input id="upd-lname" name="lname" type="text"/></label></li>
+	 					<li><label for="acc-username"> Username: <input id="upd-name" name="uname" type="text"/></label></li>
+	 					<li><label for="acc-email"> Email: <input id="upd-email" name="email" type="text"/></label></li>
+	 					<li><label for="acc-newpassword"> Password: <input id="upd-password" name="newpassword" type="password"/></label></li>
+	 					<li><label for="acc-confirmpassword"> Confirm Password: <input id="upd-confirmpassword" name="confirmpassword" type="password"/></label></li>
+	  			  	</ul>
+				 	</fieldset>
+				</form>
+				<center>
+					<a data-icon="delete" data-role="button" data-inline="true" onclick="DeleteAccount()">Delete Account?</a>
+				</center>
+			</div>
+			<div data-role="footer">
+				<div data-role="controlgroup" data-type="horizontal" align="center">
+					<a data-role="button" data-inline="true" data-icon="home" data-iconpos="top" href="#categories">Home</a>
+					<a data-role="button" data-inline="true" data-icon="star" data-iconpos="top" onClick="GetUserAccount()">Profile</a>
+				</div>
+			</div>
+		</div>
+
 		<div id="update-account" data-role="page">
 			<div data-role="header" data-theme="e" data-position="fixed">
-				<a data-role="button" data-inline="true" onClick="LogOut()">Logout</a>	
+				<a data-role="button" data-inline="true" onClick="LogOut()">Logout</a>
 				<h3 align="center">Account Settings</h3>
 				<a data-role="button" data-inline="true" data-icon="gear" data-iconpos="left" onclick="UpdateAccount()">Save</a>
 			</div>
 			<div data-role="content">
-				<h3 align="center">Edit Profile Info</h3>
+				<h3 align="center">Edit Profile Information</h3>
 				<form id="category-view-form">
 	 				<fieldset data-role="controlgroup">
 	 					<ul>
-	 					<h4>Account settings</h4>
-	 					<li><label for="acc-username"> Username: <input id="upd-name" name="name" type="text"/></label></li>
-	 					<li><label for="acc-email"> Email: <input id="upd-year" name="year" type="text"/></label></li>
-	 					<li><label for="acc-password"> Old Password: <input id="upd-year" name="year" type="password"/></label></li>
-	 					<li><label for="acc-newpassword"> New Password: <input id="upd-year" name="year" type="password"/></label></li>
-	 					<li><label for="acc-confirmpassword"> Confirm Password: <input id="upd-year" name="year" type="password"/></label></li>
-	 					<h4>Profile Information</h4>
-	  					<li><label for="acc-name"> First Name: <input id="upd-name" name="name" type="text"/></label></li>
-	  					<li><label for="acc-lastname"> Last Name: <input id="upd-model" name="model" type="text"/></label></li>
-	  			  		<li><label for="acc-description"> Description: <input id="upd-description" name="description" type="text"/></label></li>
+	 					<li><label for="acc-firstname"> First Name: <input id="upd-fname" name="fname" type="text"/></label></li>
+	  					<li><label for="acc-lastname"> Last Name: <input id="upd-lname" name="lname" type="text"/></label></li>
+	 					<li><label for="acc-email"> Email: <input id="upd-email" name="email" type="text"/></label></li>
+	 					<li><label for="acc-oldpassword"> Old Password: <input id="verify-password" name="oldpassword" type="password"/></label></li>
+	 					<li><label for="acc-newpassword"> New Password: <input id="upd-password" name="newpassword" type="password"/></label></li>
+	 					<li><label for="acc-confirmpassword"> Confirm Password: <input id="upd-confirmpassword" name="confirmpassword" type="password"/></label></li>
 	  			  	</ul>
 				 	</fieldset>
 				</form>
