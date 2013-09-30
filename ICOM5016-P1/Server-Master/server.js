@@ -250,7 +250,7 @@ app.post('/Server-Master/home/categories/:urlhistory', function(req, res) {
 			res.statusCode = 404;
 			res.send("Parent category not found.");			
 		}	
-		else if (theChildren.length == 0){
+		else if (theChildren.length <1){
 			res.statusCode = 404;
 			res.send("Category has no children");	
 			}	
