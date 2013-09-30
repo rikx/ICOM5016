@@ -11,8 +11,9 @@ module.exports =  {
 		this.price = price;*/
 	},
 	
-	Product:function(name,instantPrice,bidPrice,description,model,brand,dimensions){
+	Product:function(name,parent,instantPrice,bidPrice,description,model,brand,dimensions){
 		this.id="";
+		this.parent=parent;
 		this.name = name;
 		this.instantPrice = instantPrice;
 		this.bidPrice = bidPrice;

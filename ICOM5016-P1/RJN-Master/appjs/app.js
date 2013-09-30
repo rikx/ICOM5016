@@ -16,10 +16,10 @@ $(document).on('pagebeforeshow', "#categories", function( event, ui ) {
 			for (var i=0; i < len; ++i){
 				category = categoryList[i];
 
-				//when home, print parent==null else print children
+				//when home, print parent==null
 				if(!category.parent) {	
 					list.append("<li><a onclick=GetSubCategory("+category.id+")><h2>"+category.name+"</h2></a>"+
-					"<a onclick=GetCategory("+category.id+") data-icon='gear' >Edit</a></li>");
+					"<a onclick=editCategory("+category.id+") data-icon='gear' >Edit</a></li>");
 				}
 			
 	
@@ -43,7 +43,7 @@ $(document).on('pagebeforeshow', "#categories", function( event, ui ) {
 	});
 });
 
-$(document).on('pagebeforeshow', "#subCategories", function( event, ui ) {
+$(document).on('pagebeforeshow', "#children", function( event, ui ) {
 	currentHistory = currentHistory + "/" + currentCategory.id;
 	$.ajax({
 		url : "http://localhost:3412/Server-Master/home/categories" + currentHistory,
@@ -52,15 +52,27 @@ $(document).on('pagebeforeshow', "#subCategories", function( event, ui ) {
 		contentType: "application/json",
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
-			var subCategoriesList = data.children;
-			var len = subCategoriesList.length;
-			var list = $("#subCategory-list");
+			var childrenList = data.children;
+			var len = childrenList.length;
+			var list = $("#children-list");
 			list.empty();
-			var subCategory;
-			for (var i=0; i < len; ++i){
-				subCategory = subCategoriesList[i];		
-				list.append("<li><a onclick=GetSubCategory("+subCategory.id+")><h2>"+subCategory.name+"</h2></a>"+
-				"<a onclick=GetCategory("+subCategory.id+") data-icon='gear' >Edit</a></li>");	
+			var child;
+			//when childrenList contains sub-categories
+			if(data.childType == true){
+				for (var i=0; i < len; ++i){
+					child = childrenList[i];		
+					list.append("<li><a onclick=GetSubCategory("+child.id+")><h2>"+child.name+"</h2></a>"+
+					'<a onclick=editCategory('+child.id+') data-icon="gear">Edit</a></li>');	
+				}
+			}
+			//when childrenList contains products
+			else{
+				for (var i=0; i < len; ++i){
+					child = childrenList[i];	
+					list.append('<li><a onclick=GetProduct('+child.id+')><h2>'+child.name+'</h2></a>'+
+					'<h4>'+child.bidPrice+'</h4><a data-role="button" data-mini="true">Bid</a><h4>'+child.instantPrice+'</h4><a data-role="button" data-mini="true">Buyout</a>'+
+					'<a onclick=editProduct("+child.id+") data-icon="gear" Edit</a></li>');	
+				} //JUAN FIX THE LOOK OF THIS PRINTOUT.
 			}
 			list.listview("refresh");	
 		},
@@ -167,7 +179,7 @@ function SaveCategory(){
 
 var currentCategory = {};
 var currentHistory = "";
-/*function GetCategory(id){
+function editCategory(id){
 	$.mobile.loading("show");
 	$.ajax({
 		url : "http://localhost:3412/Server-Master/home/" + id,
@@ -190,7 +202,7 @@ var currentHistory = "";
 			}
 		}
 	});
-}*/
+}
 
 function GetSubCategory(id){
 	$.mobile.loading("show");
@@ -202,7 +214,7 @@ function GetSubCategory(id){
 		success : function(data, textStatus, jqXHR){
 			currentCategory = data.parent;
 			$.mobile.loading("hide");
-			$.mobile.navigate("#subCategories");
+			$.mobile.navigate("#children");
 		},
 		error: function(data, textStatus, jqXHR){
 			console.log("textStatus: " + textStatus);

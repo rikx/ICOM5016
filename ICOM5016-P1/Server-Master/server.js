@@ -38,6 +38,7 @@ var categoryList = new Array(
 	new Category(4, "Clothing", null),
 	new Category(5, "Shoes", null),
 	new Category(6, "Sports", null),
+	new Category(41, "Other", null),
 
 	new Category(7, "Children", 1),
 	new Category(8, "Fiction", 1),
@@ -83,7 +84,7 @@ var categoryList = new Array(
 	new Category(40, "Parts", 26)
 	);
 
-var categoryNextId = 40; //ponle el id de la subcategory "Parts"
+var categoryNextId = 42; 
 
 /*for (var i=0; i < categoryList.length;++i){
 	categoryList[i].id = categoryNextId++;
@@ -238,6 +239,7 @@ app.post('/Server-Master/home/categories/:urlhistory', function(req, res) {
 	else {
 		var theChildren = new Array();
 		var target = -1;
+		var theType = true; //content of theChildren are subcategories
 		for (var i=0; i < categoryList.length; ++i){
 			if (categoryList[i].id == id){
 				target = i;
@@ -250,14 +252,18 @@ app.post('/Server-Master/home/categories/:urlhistory', function(req, res) {
 			res.statusCode = 404;
 			res.send("Parent category not found.");			
 		}	
-		else if (theChildren.length <1){
-			res.statusCode = 404;
-			res.send("Category has no children");	
-			}	
 		else {
-			var response = {"children" : theChildren, "parent" : categoryList[target]};
+			if (theChildren.length <1){
+				theType = false; //content of theChildren are products
+				for (var i=0; i < productList.length; ++i){
+					if (productList[i].parent == id){
+						theChildren.push(productList[i]);
+					}
+				}		
+			}
+			var response = {"children" : theChildren, "parent" : categoryList[target], "childType" : theType};
 			console.log("History is: " + urlHistory);
-  			res.json(response);
+			res.json(response);
 		}
 	}
 });
@@ -418,8 +424,9 @@ var Product = modules.Product;
 
 //name,instantPrice,bidPrice,description,model,brand,dimensions
 var productList = new Array(
-	new Product("MyPhone", 500, 400, "Brand new, still in box Myphone.", "MyPhone5X", "Mapple", '10"x8"x0.5"'),
-	new Product("Viperus", 9001, 7000, "1969 Honyota Viperus. Its so fast your skin flies off.", "Viperus XLR", "Honyota", "20feetx6feetx5feet")
+	new Product("MyPhone", 13, 500, 400, "Brand new, still in box Myphone.", "MyPhone5X", "Mapple", '10"x8"x0.5"'),
+	new Product("Viperus", 38, 901, 700, "Honyota Viperus Wheels. Its so fast your skin flies off.", "Viperus XLR", "Honyota", '15" diameter with 2" thickness'),
+	new Product("Othertest", 41, 9001, 42, "Test of product printing", "description", "model", "brand", "dimensions")
 	);
 
 var productNextId = 0;
