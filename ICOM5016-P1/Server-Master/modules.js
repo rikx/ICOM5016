@@ -23,9 +23,9 @@ module.exports =  {
 		this.dimensions= dimensions;
 	},
 	
-	User: function (name, type, username, password, description){
+	User: function (type, username, password, description){
 		this.id = "";
-		this.name = name;
+		//this.name = name;
 		this.type = type;
 		this.username = username;
 		this.password = password;
