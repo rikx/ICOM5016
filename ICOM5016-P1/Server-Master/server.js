@@ -77,10 +77,10 @@ var categoryList = new Array(
 	new Category(35, "Pants", 22),
 	new Category(36, "Dresses", 22),
 
-	new Category(37, "Frames", 6),
-	new Category(38, "Wheels", 6),
-	new Category(39, "Helmet", 6),
-	new Category(40, "Parts", 6)
+	new Category(37, "Frames", 26),
+	new Category(38, "Wheels", 26),
+	new Category(39, "Helmet", 26),
+	new Category(40, "Parts", 26)
 	);
 
 var categoryNextId = 40; //ponle el id de la subcategory "Parts"
@@ -101,7 +101,7 @@ var categoryNextId = 40; //ponle el id de la subcategory "Parts"
 
 // REST Operation - HTTP GET to read all categories
 app.get('/Server-Master/home', function(req, res) {
-	console.log("GET");
+	console.log("GET categories");
 
 	var response = {"categories" : categoryList};
   	res.json(response);
@@ -111,7 +111,7 @@ app.get('/Server-Master/home', function(req, res) {
 // REST Operation - HTTP GET to read a category based on its id
 app.get('/Server-Master/home/:id', function(req, res) {
 	var id = req.params.id;
-		console.log("GET category: " + id);
+	console.log("GET category: " + id);
 
 	if ((id < 0) || (id >= categoryNextId)){
 		// not found
@@ -125,6 +125,7 @@ app.get('/Server-Master/home/:id', function(req, res) {
 				target = i;
 				break;	
 			}
+
 		}
 		if (target == -1){
 			res.statusCode = 404;
@@ -223,34 +224,69 @@ app.post('/Server-Master/home', function(req, res) {
   	res.json(true);
 });
 
-// REST Operation - HTTP GET to get subcategories
-app.get('/Server-Master/home/:urlhistory', function(req, res) {
+// REST Operation - HTTP GET to read all children (if they exist)
+app.post('/Server-Master/home/categories/:urlhistory', function(req, res) {
+	var id = req.body.id;
+	var urlHistory = req.params.urlhistory;
+	console.log("GET subcategories of " + id);
 
-	var urlhistory = req.params.urlhistory;
-
-	console.log("GET categoryId: " + productId);
-
-	if ((productId < 0) || (id >= productNextId)){
+	if ((id < 0) || (id >= categoryNextId)){
 		// not found
 		res.statusCode = 404;
-		res.send("Product not found.");
+		res.send("Category not found.");
+	}
+	else {
+		var theChildren = new Array();
+		var target = -1;
+		for (var i=0; i < categoryList.length; ++i){
+			if (categoryList[i].id == id){
+				target = i;
+			}
+			if (categoryList[i].parent == id){
+				theChildren.push(categoryList[i]);
+			}		
+		}
+		if (target == -1){
+			res.statusCode = 404;
+			res.send("Parent category not found.");			
+		}	
+		else if (theChildren.length == 0){
+			res.statusCode = 404;
+			res.send("Category has no children");	
+			}	
+		else {
+			var response = {"children" : theChildren, "parent" : categoryList[target]};
+			console.log("History is: " + urlHistory);
+  			res.json(response);
+		}
+	}
+});
+
+// REST Operation - HTTP GET to get category's children
+app.get('/Server-Master/subCategory/:id', function(req, res) {
+	var id = req.params.id;
+	console.log("GET subCategory: " + id);
+	
+	if ((id < 0) || (id >= categoryNextId)){
+		// not found
+		res.statusCode = 404;
+		res.send("Category not found.");
 	}
 	else {
 		var target = -1;
 		for (var i=0; i < categoryList.length; ++i){
 			if (categoryList[i].id == id){
 				target = i;
-				break;	
-			}
+			}	
 		}
 		if (target == -1){
 			res.statusCode = 404;
-			res.send("Product not found.");
-		}
+			res.send("Parent category not found.");			
+		}	
 		else {
-			var response = {"subCategory" : List[target]};
-  			res.json(response);	
-  		}	
+			var response = {"parent" : categoryList[target]};
+  			res.json(response);
+		}
 	}
 });
 

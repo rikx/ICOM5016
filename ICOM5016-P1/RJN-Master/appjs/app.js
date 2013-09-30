@@ -1,6 +1,7 @@
 
 
 $(document).on('pagebeforeshow', "#categories", function( event, ui ) {
+	currentHistory = "";
 	$.ajax({
 		url : "http://localhost:3412/Server-Master/home",
 		contentType: "application/json",
@@ -14,8 +15,10 @@ $(document).on('pagebeforeshow', "#categories", function( event, ui ) {
 			var category;
 			for (var i=0; i < len; ++i){
 				category = categoryList[i];
+
+				//when home, print parent==null else print children
 				if(!category.parent) {	
-					list.append("<li><a><h2>"+category.name+"</h2></a>"+
+					list.append("<li><a onclick=GetSubCategory("+category.id+")><h2>"+category.name+"</h2></a>"+
 					"<a onclick=GetCategory("+category.id+") data-icon='gear' >Edit</a></li>");
 				}
 			
@@ -41,19 +44,22 @@ $(document).on('pagebeforeshow', "#categories", function( event, ui ) {
 });
 
 $(document).on('pagebeforeshow', "#subCategories", function( event, ui ) {
+	currentHistory = currentHistory + "/" + currentCategory.id;
 	$.ajax({
-		url : "http://localhost:3412/Server-Master/home" + data.urlhistory + "/" + data.subCategory.id,
+		url : "http://localhost:3412/Server-Master/home/categories" + currentHistory,
+		method: 'post',
+		data : JSON.stringify(currentCategory),
 		contentType: "application/json",
+		dataType:"json",
 		success : function(data, textStatus, jqXHR){
-			var subCategoriesList = data.subCategories;
-
-			var len = subCategoryList.length;
+			var subCategoriesList = data.children;
+			var len = subCategoriesList.length;
 			var list = $("#subCategory-list");
 			list.empty();
-			var category;
+			var subCategory;
 			for (var i=0; i < len; ++i){
 				subCategory = subCategoriesList[i];		
-				list.append("<li><a><h2>"+subCategory.name+"</h2></a>"+
+				list.append("<li><a onclick=GetSubCategory("+subCategory.id+")><h2>"+subCategory.name+"</h2></a>"+
 				"<a onclick=GetCategory("+subCategory.id+") data-icon='gear' >Edit</a></li>");	
 			}
 			list.listview("refresh");	
@@ -105,6 +111,7 @@ $(document).on('pagebeforeshow', "#user-account", function( event, ui ) {
 $(document).on('pagebeforeshow', "edit-account", function(event, ui){
 	$("#acc-name").val(currentUser.name);
 	$("#acc-lastname").val(currentUser.name);
+	//not finished
 });
 
 $(document).on('pagebeforeshow', "#product-view", function( event, ui ) {
@@ -159,9 +166,8 @@ function SaveCategory(){
 }
 
 var currentCategory = {};
-
-function GetCategory(id){
-
+var currentHistory = "";
+/*function GetCategory(id){
 	$.mobile.loading("show");
 	$.ajax({
 		url : "http://localhost:3412/Server-Master/home/" + id,
@@ -184,20 +190,19 @@ function GetCategory(id){
 			}
 		}
 	});
-}
+}*/
 
-function GetSubCategories(id){
+function GetSubCategory(id){
 	$.mobile.loading("show");
 	$.ajax({
-		url : "http://localhost:3412/Server-Master/home/" + id,
+		url : "http://localhost:3412/Server-Master/subCategory/" + id,
 		method: 'get',
 		contentType: "application/json",
 		dataType:"json",
-
 		success : function(data, textStatus, jqXHR){
-			currentCategory = data.category;
+			currentCategory = data.parent;
 			$.mobile.loading("hide");
-			$.mobile.navigate("#subCategory-view");
+			$.mobile.navigate("#subCategories");
 		},
 		error: function(data, textStatus, jqXHR){
 			console.log("textStatus: " + textStatus);
