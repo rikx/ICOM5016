@@ -303,9 +303,9 @@ var User = modules.User;
 
 //name, type, username, password, description
 var userList = new Array(
-	new User("user", "heoro", "serrano", "Qui a coupe le fromage?"),
-	new User("user", "nelsongo", "reyes", "Stuff and things."),
-	new User("admin", "kylar", "7", "Karate Chop!")
+	new User("user", "user1", "password", "Test", "User1", "user1@rjn.com"),
+	new User("user", "user2", "password", "Test", "User2", "user2@rjn.com"),
+	new User("admin", "admin1", "password", "Test", "Admin1", "admin1@rjn.com")
 	);
 
 var userNextId = 0;

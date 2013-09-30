@@ -116,7 +116,7 @@ $(document).on('pagebeforeshow', "#user-account", function( event, ui ) {
 	var list = $("#user-info");
 	list.empty();
 	var user = currentUser;
-	list.append("<li><h2>" + user.username + "</h2></li><li><strong>Account ID: </strong>" + user.id + "</li><li><strong>Description: </strong>"+ user.description +"</li>");
+	list.append("<li><h2>" + user.username + "</h2></li><li><strong>Account ID: </strong>" + user.id + "</li></li><li><strong>First Name: </strong>" + user.firstname + "</li></li><li><strong>Last Name: </strong>" + user.lastname + "</li></li><li><strong>Email: </strong>" + user.email + "</li>");
 	list.listview("refresh");	
 });
 
