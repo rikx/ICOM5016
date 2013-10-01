@@ -314,39 +314,44 @@ function LogIn(){
 }
 
 //initial value is set to Sign In for home page
-var currentUser = {"id" : "-1", "type": "foobar", "username" : "Sign In"};
+var currentUser = {"id": null};
 
 function GetUserAccount(){
 	$.mobile.loading("show");
-	$.ajax({
-		url : "http://localhost:3412/Server-Master/account/" + currentUser.id,
-		method: 'get',
-		contentType: "application/json",
-		dataType:"json",
-		success : function(data, textStatus, jqXHR){
-			currentUser = data.user;
-			$.mobile.loading("hide");
-			if(currentUser.id == "-1"){
-				$.mobile.navigate("#login");
+	if(currentUser.id == null){
+		$.mobile.navigate("#login");
+	}
+	else{
+		$.ajax({
+			url : "http://localhost:3412/Server-Master/account/" + currentUser.id,
+			method: 'get',
+			contentType: "application/json",
+			dataType:"json",
+			success : function(data, textStatus, jqXHR){
+				currentUser = data.user;
+				$.mobile.loading("hide");
+				if(currentUser.type == "user"){
+					$.mobile.navigate("#user-account");
+				}
+				else if(currentUser.type == "admin"){
+					$.mobile.navigate("#admin-account");
+				}
+				else {
+					$.mobile.navigate("#login");
+				}
+			},
+			error: function(data, textStatus, jqXHR){
+				console.log("textStatus: " + textStatus);
+				$.mobile.loading("hide");
+				if (data.status == 404){
+					alert("User not found.");
+				}
+				else {
+					alert("Internal Server Error.");
+				}
 			}
-			else if(currentUser.type == "admin"){
-				$.mobile.navigate("#admin-account");
-			}
-			else {
-				$.mobile.navigate("#user-account");
-			}
-		},
-		error: function(data, textStatus, jqXHR){
-			console.log("textStatus: " + textStatus);
-			$.mobile.loading("hide");
-			if (data.status == 404){
-				alert("User not found.");
-			}
-			else {
-				alert("Internal Server Error.");
-			}
-		}
-	});
+		});
+	}
 }
 
 //NOT finished yet
@@ -381,10 +386,10 @@ function GetUserAccount(){
 		}
 	});
 }*/
-//Log Out function - Not working.
+//Log Out function
 function LogOut(){
 	$.mobile.loading("show");
-	currentUser = {"id" : "-1", "username" : "Sign In"};
+	currentUser = {"id": null};
 	$.mobile.loading("hide");
 	$.mobile.navigate("#categories");
 }
