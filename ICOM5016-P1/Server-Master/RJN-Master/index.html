@@ -258,9 +258,9 @@
 				<form id="category-view-form">
 	 				<fieldset data-role="controlgroup">
 	 					<ul>
-	 					<li><label for="acc-firstname"> First Name: <input id="upd-fname" name="fname" type="text"/></label></li>
-	  					<li><label for="acc-lastname"> Last Name: <input id="upd-lname" name="lname" type="text"/></label></li>
-	 					<li><label for="acc-email"> Email: <input id="upd-email" name="email" type="text"/></label></li>
+	 					<li><label for="acc-firstname"> First Name: <input id="acc-fname" name="fname" type="text"/></label></li>
+	  					<li><label for="acc-lastname"> Last Name: <input id="acc-lname" name="lname" type="text"/></label></li>
+	 					<li><label for="acc-email"> Email: <input id="acc-email" name="email" type="text"/></label></li>
 	 					<li><label for="acc-oldpassword"> Old Password: <input id="verify-password" name="oldpassword" type="password"/></label></li>
 	 					<li><label for="acc-newpassword"> New Password: <input id="upd-password" name="newpassword" type="password"/></label></li>
 	 					<li><label for="acc-confirmpassword"> Confirm Password: <input id="upd-confirmpassword" name="confirmpassword" type="password"/></label></li>
@@ -289,11 +289,13 @@
 			</div><!-- /header -->
 			<div data-role="content">
 				<div class="ui-grid-a">
-					<div class="ui-block-a"><h3 align="center">Product Details</h3>
+					<div class="ui-block-a">
+						<h3 align="center">Product Details</h3>
 						<ul id="prod-details" data-role="listview" data-inset="true">
 						</ul>
 					</div>
 					<div class="ui-block-b">
+						<h3 align="center">Options</h3>
 						<a data-role="button" href="#thePanel">Seller Details</a>
 						<a data-role="button" onclick="addToCart()">Add to Cart</a>
 						<a id="bidButton" data-role="button">Bid</a>
