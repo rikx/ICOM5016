@@ -25,7 +25,7 @@
 							<a href="" data-role="button" data-icon="search" data-iconpos="top">Browse</a>
 							<a data-role="button" data-icon="user" data-iconpos="top" onClick="GetUserAccount()">Account</a>
 							<!-- <a data-role="button" data-inline="true" onClick="LogOut()">Logout</a> --> <!-- Add this dynamically later -->
-							<a data-role="button" data-icon="shopping-cart" data-iconpos="top" onClick="GetCart()">ShoppingCart</a>
+							<a data-role="button" data-icon="shopping-cart" data-iconpos="top" onClick="GetCart()">Cart</a>
 						</div>
 					</div>
 				</div><!-- /grid-b -->
@@ -48,7 +48,7 @@
 							<a href="" data-role="button" data-icon="search" data-iconpos="top">Browse</a>
 							<a data-role="button" data-icon="user" data-iconpos="top" onClick="GetUserAccount()">Account</a>
 							<!-- <a data-role="button" data-inline="true" onClick="LogOut()">Logout</a> --> <!-- Add this dynamically later -->
-							<a data-role="button" data-icon="shopping-cart" data-iconpos="top" onClick="GetCart()">ShoppingCart</a>
+							<a data-role="button" data-icon="shopping-cart" data-iconpos="top" onClick="GetCart()">Cart</a>
 						</div>
 					</div>
 				</div><!-- /grid-b -->
@@ -270,6 +270,41 @@
 				<center>
 					<a data-icon="delete" data-role="button" data-inline="true" onclick="DeleteAccount()">Delete Account?</a>
 				</center>
+			</div>
+		</div><!-- /page -->
+		<div id="product-view" data-role="page">
+			<div data-role="header" data-theme="a" data-position="fixed">
+				<div class="ui-grid-b" align="center">
+					<div class="ui-block-a"><h3 id="productTitle"></h3></div>
+					<div class="ui-block-b"></div>
+					<div class="ui-block-c">
+						<div data-role="controlgroup" data-type="horizontal">
+							<a href="#categories" data-role="button" data-icon="home" data-iconpos="top">Home</a>
+							<a data-role="button" data-icon="search" data-iconpos="top" href="">Browse</a>
+							<a data-role="button" data-icon="info" data-iconpos="top" onClick="GetUserAccount()">Account</a>
+							<a data-role="button" data-icon="shopping-cart" data-iconpos="top" onClick="GetCart()">Cart</a>
+						</div>
+					</div>
+				</div><!-- /grid-b -->
+			</div><!-- /header -->
+			<div data-role="content">
+				<div class="ui-grid-a">
+					<div class="ui-block-a"><h3 align="center">Product Details</h3>
+						<ul id="prod-details" data-role="listview" data-inset="true">
+						</ul>
+					</div>
+					<div class="ui-block-b">
+						<a data-role="button" href="#thePanel">Seller Details</a>
+						<a data-role="button" onclick="addToCart()">Add to Cart</a>
+						<a id="bidButton" data-role="button">Bid</a>
+						<a id="buyoutButton" data-role="button">Buyout</a>
+					</div>
+				</div>
+			</div><!-- /content -->
+
+			<div id="thePanel" data-role="panel" data-position="left" data-display="overlay">
+				<h2>Seller Details</h2>
+				<a href="" data-role="button" data-rel="close">Close panel</a>
 			</div>
 		</div><!-- /page -->
 	</body>

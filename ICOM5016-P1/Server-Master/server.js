@@ -427,9 +427,36 @@ var productList = new Array(
 var productNextId = 0;
 
 for (var i=0; i < productList.length;++i){
-	productList[i].id = "p"+productNextId++;
+	productList[i].id = productNextId++;
 }
 
+// REST Operation - HTTP GET to read a product based on its id
+app.get('/Server-Master/product/:id', function(req, res) {
+	var id = req.params.id;
+		console.log("GET product: " + id);
+	if ((id < 0) || (id >= productNextId)){
+		// not found
+		res.statusCode = 404;
+		res.send("Product not found.");
+	}
+	else {
+		var target = -1;
+		for (var i=0; i < productList.length; ++i){
+			if (productList[i].id == id){
+				target = i;
+				break;	
+			}
+		}
+		if (target == -1){
+			res.statusCode = 404;
+			res.send("Product not found.");
+		}
+		else {
+			var response = {"product" : productList[target]};
+  			res.json(response);	
+  		}	
+	}
+});
 
 // Server starts running when listen is called.
 app.use(express.static(__dirname + '/RJN-Master'));

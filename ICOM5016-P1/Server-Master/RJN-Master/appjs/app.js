@@ -114,10 +114,10 @@ $(document).on('pagebeforeshow', "#category-view", function( event, ui ) {
 
 $(document).on('pagebeforeshow', "#user-account", function( event, ui ) {
 	// currentUser has been set at this point
+	var user = currentUser;
+	$("#userTitle").html(user.username);
 	var list = $("#user-info");
 	list.empty();
-	var user = currentUser;
-	$("#userTitle").html(currentUser.username);
 	list.append("<li><h2>" + user.username + "</h2></li><li><strong>Account ID: </strong>" + user.id + "</li></li><li><strong>First Name: </strong>" + user.firstname + "</li></li><li><strong>Last Name: </strong>" + user.lastname + "</li></li><li><strong>Email: </strong>" + user.email + "</li>");
 	list.listview("refresh");	
 });
@@ -129,15 +129,13 @@ $(document).on('pagebeforeshow', "edit-account", function(event, ui){
 });
 
 $(document).on('pagebeforeshow', "#product-view", function( event, ui ) {
-	// currentCategory has been set at this point
-	$("#prod-name").val(currentCategory.name);
-	/*
-	 * DON'T DELETE
-	$("#upd-model").val(currentCategory.model);
-	$("#upd-year").val(currentCategory.year);
-	$("#upd-price").val(currentCategory.price);
-	$("#upd-description").val(currentCategory.description);
-	*/
+	// currentProduct has been set at this point
+	var product = currentProduct;
+	$("#productTitle").html(product.name);
+	var list = $("#prod-details");
+	list.empty();
+	list.append("<li><strong>Account ID: </strong>" + product.id + "</li></li><li><strong>Brand: </strong>" + product.brand + "</li></li><li><strong>Model: </strong>" + product.model + "</li></li><li><strong>Description: </strong>" + product.description + "</li>");
+	list.listview("refresh");	
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -181,6 +179,7 @@ function SaveCategory(){
 
 var currentCategory = {};
 var currentHistory = "";
+
 function editCategory(id){
 	$.mobile.loading("show");
 	$.ajax({
@@ -400,4 +399,32 @@ function LogOut(){
 	else{
 		$.mobile.loading("hide");
 	}
+}
+
+var currentProduct = {};
+
+//Get product by ID
+function GetProduct(id){
+	$.mobile.loading("show");
+	$.ajax({
+		url : "http://localhost:3412/Server-Master/product/" + id,
+		method: 'get',
+		contentType: "application/json",
+		dataType:"json",
+		success : function(data, textStatus, jqXHR){
+			currentProduct = data.product;
+			$.mobile.loading("hide");
+			$.mobile.navigate("#product-view");
+		},
+		error: function(data, textStatus, jqXHR){
+			console.log("textStatus: " + textStatus);
+			$.mobile.loading("hide");
+			if (data.status == 404){
+				alert("Product not found.");
+			}
+			else {
+				alert("Internal Server Error.");
+			}
+		}
+	});
 }
