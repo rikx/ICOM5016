@@ -52,6 +52,7 @@ $(document).on('pagebeforeshow', "#children", function( event, ui ) {
 		contentType: "application/json",
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
+			$("#childTitle").html(data.parent.name);
 			var childrenList = data.children;
 			var len = childrenList.length;
 			var list = $("#children-list");
