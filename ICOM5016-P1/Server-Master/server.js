@@ -437,5 +437,6 @@ for (var i=0; i < productList.length;++i){
 
 
 // Server starts running when listen is called.
-app.listen(process.env.PORT || 3412);
+app.use(express.static(__dirname + '/RJN-Master'));
+app.listen(process.env.PORT || 80);
 console.log("server listening");
