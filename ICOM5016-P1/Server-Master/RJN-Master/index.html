@@ -21,7 +21,7 @@
 					<div class="ui-block-b"></div>
 					<div class="ui-block-c">
 						<div data-role="controlgroup" data-type="horizontal">
-							<a href="index.html" data-role="button" data-icon="home" data-iconpos="top">Home</a>
+							<a href="#categories" data-role="button" data-icon="home" data-iconpos="top">Home</a>
 							<a href="" data-role="button" data-icon="search" data-iconpos="top">Browse</a>
 							<a data-role="button" data-icon="user" data-iconpos="top" onClick="GetUserAccount()">Account</a>
 							<!-- <a data-role="button" data-inline="true" onClick="LogOut()">Logout</a> --> <!-- Add this dynamically later -->
@@ -44,7 +44,7 @@
 					<div class="ui-block-b"></div>
 					<div class="ui-block-c">
 						<div data-role="controlgroup" data-type="horizontal">
-							<a href="index.html" data-role="button" data-icon="home" data-iconpos="top">Home</a>
+							<a href="#categories" data-role="button" data-icon="home" data-iconpos="top">Home</a>
 							<a href="" data-role="button" data-icon="search" data-iconpos="top">Browse</a>
 							<a data-role="button" data-icon="user" data-iconpos="top" onClick="GetUserAccount()">Account</a>
 							<!-- <a data-role="button" data-inline="true" onClick="LogOut()">Logout</a> --> <!-- Add this dynamically later -->
@@ -67,7 +67,7 @@
 					<div class="ui-block-b"></div>
 					<div class="ui-block-c">
 						<div data-role="controlgroup" data-type="horizontal">
-							<a href="index.html" data-role="button" data-icon="home" data-iconpos="top">Home</a>
+							<a href="#categories" data-role="button" data-icon="home" data-iconpos="top">Home</a>
 							<a href="" data-role="button" data-icon="search" data-iconpos="top">Browse</a>
 						</div>
 					</div>
@@ -156,7 +156,7 @@
 					<div class="ui-block-b"></div>
 					<div class="ui-block-c">
 						<div data-role="controlgroup" data-type="horizontal">
-							<a href="index.html" data-role="button" data-icon="home" data-iconpos="top">Home</a>
+							<a href="#categories" data-role="button" data-icon="home" data-iconpos="top">Home</a>
 							<a href="" data-role="button" data-icon="search" data-iconpos="top">Browse</a>
 							<a data-role="button" data-icon="gear" data-iconpos="top" href="#update-account">Edit</a>	
 							<a data-role="button" data-inline="true" data-icon="" data-iconpos="top" onClick="LogOut()">Logout</a>
@@ -178,7 +178,7 @@
 					<div class="ui-block-b"></div>
 					<div class="ui-block-c">
 						<div data-role="controlgroup" data-type="horizontal">
-							<a href="index.html" data-role="button" data-icon="home" data-iconpos="top">Home</a>
+							<a href="#categories" data-role="button" data-icon="home" data-iconpos="top">Home</a>
 							<a href="" data-role="button" data-icon="search" data-iconpos="top">Browse</a>
 							<a data-role="button" data-icon="gear" data-iconpos="top" href="#update-account">Edit</a>	
 							<a data-role="button" data-inline="true" data-icon="" data-iconpos="top" onClick="LogOut()">Logout</a>
@@ -193,8 +193,7 @@
 					<div class="ui-block-b"><a href="ViewUsers()" data-role="button">Manage Users</a></div>
 					<div class="ui-block-c"><a onClick="ViewReports()" data-role="button">View Reports</a></div>
 				</div>
-				
-			</div>
+			</div><!-- /content -->
 			<div data-role="footer">
 				<h1>Admin Page</h1>
 			</div>
@@ -202,8 +201,16 @@
 
 		<div id="register-account" data-role="page">
 			<div data-role="header" data-theme="e" data-position="fixed">
-				<h3 align="center">Register New Account</h3>
-				<a data-role="button" class="ui-btn-right" data-inline="true" onclick="RegisterAccount()">Submit</a>
+				<div class="ui-grid-b" align="center">
+					<div class="ui-block-a"><h3>Register</h3></div>
+					<div class="ui-block-b"></div>
+					<div class="ui-block-c">
+						<div data-role="controlgroup" data-type="horizontal">
+							<a href="#categories" data-role="button" data-icon="home" data-iconpos="top">Home</a>
+							<a data-role="button" class="ui-btn-right" data-inline="true" onclick="RegisterAccount()">Submit</a>
+						</div>
+					</div>
+				</div><!-- /grid-b -->
 			</div>
 			<div data-role="content">
 				<h3 align="center">Create your personal account</h3>
@@ -233,9 +240,18 @@
 
 		<div id="update-account" data-role="page">
 			<div data-role="header" data-theme="e" data-position="fixed">
-				<a data-role="button" data-inline="true" onClick="LogOut()">Logout</a>
-				<h3 align="center">Account Settings</h3>
-				<a data-role="button" data-inline="true" data-icon="gear" data-iconpos="left" onclick="UpdateAccount()">Save</a>
+				<div class="ui-grid-b" align="center">
+					<div class="ui-block-a"><h3>Account Settings</h3></div>
+					<div class="ui-block-b"></div>
+					<div class="ui-block-c">
+						<div data-role="controlgroup" data-type="horizontal">
+							<a href="#categories" data-role="button" data-icon="home" data-iconpos="top">Home</a>
+							<a href="" data-role="button" data-icon="search" data-iconpos="top">Browse</a>
+							<a data-role="button" data-inline="true" data-icon="gear" data-iconpos="left" onclick="UpdateAccount()">Save</a>	
+							<a data-role="button" data-inline="true" data-icon="" data-iconpos="top" onClick="LogOut()">Logout</a>
+						</div>
+					</div>
+				</div><!-- /grid-b -->
 			</div>
 			<div data-role="content">
 				<h3 align="center">Edit Profile Information</h3>
