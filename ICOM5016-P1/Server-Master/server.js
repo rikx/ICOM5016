@@ -423,11 +423,11 @@ app.post('/Server-Master/home/:userNameLogin', function(req, res) {
 
 var Product = modules.Product;
 
-//name,instantPrice,bidPrice,description,model,brand,dimensions
+//Product:function(name,parent,instantPrice,bidPrice,description,model,brand,dimensions)
 var productList = new Array(
 	new Product("MyPhone", 13, 500, 400, "Brand new, still in box Myphone.", "MyPhone5X", "Mapple", '10"x8"x0.5"'),
 	new Product("Viperus", 38, 901, 700, "Honyota Viperus Wheels. Its so fast your skin flies off.", "Viperus XLR", "Honyota", '15" diameter with 2" thickness'),
-	new Product("Othertest", 41, 9001, 42, "Test of product printing", "description", "model", "brand", "dimensions")
+	new Product("Othertest", 41, 9001, 42, "Test of product printing", "model", "brand", "dimensions")
 	);
 
 var productNextId = 0;
