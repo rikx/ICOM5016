@@ -1,14 +1,8 @@
 module.exports =  { 
-	Category: function (id, name, parent){//, model, year, description, price){
+	Category: function (id, name, parent){
 		this.id = id;
 		this.name = name;
 		this.parent = parent;
-		/*
-		 * DON'T DELETE
-		this.model = model;
-		this.year = year;
-		this.description = description;
-		this.price = price;*/
 	},
 	
 	Product:function(name,parent,instantPrice,bidPrice,description,model,brand,dimensions){
