@@ -119,7 +119,11 @@ $(document).on('pagebeforeshow', "#user-account", function( event, ui ) {
 	$("#userTitle").html(user.username);
 	var list = $("#user-info");
 	list.empty();
-	list.append("<li><h2>" + user.username + "</h2></li><li><strong>Account ID: </strong>" + user.id + "</li></li><li><strong>First Name: </strong>" + user.firstname + "</li></li><li><strong>Last Name: </strong>" + user.lastname + "</li></li><li><strong>Email: </strong>" + user.email + "</li>");
+	list.append("<li><h2>" + user.username + "</h2></li><li><strong>Account ID: </strong>" + user.id + '</li></li>'+
+		'<li><strong>First Name: </strong>' + user.firstname + '</li></li><li><strong>Last Name: </strong>' + user.lastname + 
+		'</li></li><li><strong>Email: </strong>' + user.email + '</li><li><strong>Shipping Address: </strong>' + user.shipAddress+'</li>'+
+		'<li><strong>Billing Address </strong>' + user.billAddress + '</li><li><strong>Credit Card: </strong>' + user.ccInfo +'</li>'
+	);
 	list.listview("refresh");	
 });
 
@@ -219,7 +223,6 @@ function GetSubCategory(id){
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
 			currentCategory = data.parent;
-			alert(JSON.stringify(currentCategory));
 			$.mobile.loading("hide");
 			$.mobile.navigate("#children");
 		},

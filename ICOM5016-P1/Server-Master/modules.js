@@ -23,7 +23,7 @@ module.exports =  {
 		this.dimensions= dimensions;
 	},
 	
-	User: function (type, username, password, firstname, lastname, email){
+	User: function (type, username, password, firstname, lastname, email, shipAddress, billAddress, ccInfo){
 		this.id = "";
 		this.type = type;
 		this.username = username;
@@ -31,6 +31,9 @@ module.exports =  {
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.email = email;
+		this.shipAddress = shipAddress;
+		this.billAddress = billAddress;
+		this.ccInfo = ccInfo;
 	}
 
 };

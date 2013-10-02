@@ -304,11 +304,10 @@ app.get('/Server-Master/subCategory/:id', function(req, res) {
 /*==================================================================*/
 var User = modules.User;
 
-//name, type, username, password, description
+//type, username, password, firstname, lastname, email, shipAddress, billAddress, ccInfo
 var userList = new Array(
-	new User("user", "user1", "password", "Test", "User1", "user1@rjn.com"),
-	new User("user", "user2", "password", "Test", "User2", "user2@rjn.com"),
-	new User("admin", "admin1", "password", "Test", "Admin1", "admin1@rjn.com")
+	new User("user", "user1", "password", "FirstName", "LastName", "user1@rjn.com", "wat 123 Guaynabo, PR", "wat 123 Guaynabo, PR", "0123-4567-89AB-CDEF"),
+	new User("admin", "admin1", "password", "FirstName", "LastName", "admin1@rjn.com")
 	);
 
 var userNextId = 0;
