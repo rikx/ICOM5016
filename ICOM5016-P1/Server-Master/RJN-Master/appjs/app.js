@@ -44,13 +44,14 @@ $(document).on('pagebeforeshow', "#categories", function( event, ui ) {
 });
 
 $(document).on('pagebeforeshow', "#children", function( event, ui ) {
-	currentHistory = currentHistory + "/" + currentCategory.id;
+	//currentHistory = currentHistory + "/" + currentCategory.id;
 	$.ajax({
-		url : "http://localhost:3412/Server-Master/home/categories" + currentHistory,
-		method: 'post',
-		data : JSON.stringify(currentCategory),
+		url : "http://localhost:3412/Server-Master/home/categories/" + currentCategory.id,
+		method: 'get',
+		//method: 'post',
+		//data : JSON.stringify({"urlhistory": currentHistory}),
 		contentType: "application/json",
-		dataType:"json",
+		//dataType:"json",
 		success : function(data, textStatus, jqXHR){
 			$("#childTitle").html(data.parent.name);
 			var childrenList = data.children;
@@ -72,7 +73,7 @@ $(document).on('pagebeforeshow', "#children", function( event, ui ) {
 					child = childrenList[i];	
 					list.append('<li><a onclick=GetProduct('+child.id+')><h2>'+child.name+'</h2></a>'+
 					'<h4>'+child.bidPrice+'</h4><a data-role="button" data-mini="true">Bid</a><h4>'+child.instantPrice+'</h4><a data-role="button" data-mini="true">Buyout</a>'+
-					'<a onclick=editProduct("+child.id+") data-icon="gear" Edit</a></li>');	
+					'<a onclick=editProduct('+child.id+') data-icon="gear" Edit</a></li>');	
 				} //JUAN FIX THE LOOK OF THIS PRINTOUT.
 			}
 			list.listview("refresh");	
@@ -218,6 +219,7 @@ function GetSubCategory(id){
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
 			currentCategory = data.parent;
+			alert(JSON.stringify(currentCategory));
 			$.mobile.loading("hide");
 			$.mobile.navigate("#children");
 		},
