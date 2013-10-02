@@ -61,7 +61,7 @@ $(document).on('pagebeforeshow', "#children", function( event, ui ) {
 			var child;
 			//when childrenList contains sub-categories
 			if(data.childType == true){
-				for (var i=0; i < len; ++i){
+					for (var i=0; i < len; ++i){
 					child = childrenList[i];		
 					list.append("<li><a onclick=GetSubCategory("+child.id+")><h2>"+child.name+"</h2></a>"+
 					'<a onclick=editCategory('+child.id+') data-icon="gear">Edit</a></li>');	
@@ -70,11 +70,24 @@ $(document).on('pagebeforeshow', "#children", function( event, ui ) {
 			//when childrenList contains products
 			else{
 				for (var i=0; i < len; ++i){
-					child = childrenList[i];	
-					list.append('<li><a onclick=GetProduct('+child.id+')><h2>'+child.name+'</h2></a>'+
-					'<h4>'+child.bidPrice+'</h4><a data-role="button" data-mini="true">Bid</a><h4>'+child.instantPrice+'</h4><a data-role="button" data-mini="true">Buyout</a>'+
+					child = childrenList[i];
+					//<li><img src="http://3.bp.blogspot.com/-nU8O8xLuSvs/TdjWsU3X2DI/AAAAAAAAAIs/Lsa3Y92DGy0/s320/112.jpg" /></li>	
+					list.append('<li><a onclick=GetProduct('+child.id+')><h2>'+child.name+'</h2>'+
+					'<p><img src="http://3.bp.blogspot.com/-nU8O8xLuSvs/TdjWsU3X2DI/AAAAAAAAAIs/Lsa3Y92DGy0/s320/112.jpg" /></p>'+
+					'<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(child.bidPrice) + '</h4></p>'+
+					'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(child.instantPrice) + '</h4></p></a>'+
 					'<a onclick=editProduct('+child.id+') data-icon="gear" Edit</a></li>');	
-				} //JUAN FIX THE LOOK OF THIS PRINTOUT.
+					//Juan Test =====================================================================================================
+					list.append('<li><a onclick=GetProduct('+child.id+')><h2>'+child.name+'</h2>'+
+					'<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(child.bidPrice) + '</h4></p>'+
+					'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(child.instantPrice) + '</h4></p></a>'+
+					'<a onclick=editProduct('+child.id+') data-icon="gear" Edit</a></li>');	
+					list.append('<li><a onclick=GetProduct('+child.id+')><h2>'+child.name+'</h2>'+
+					'<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(child.bidPrice) + '</h4></p>'+
+					'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(child.instantPrice) + '</h4></p></a>'+
+					'<a onclick=editProduct('+child.id+') data-icon="gear" Edit</a></li>');	
+					//Juan Test End =================================================================================================
+				}
 			}
 			list.listview("refresh");	
 		},
@@ -85,7 +98,7 @@ $(document).on('pagebeforeshow', "#children", function( event, ui ) {
 	});
 });
 
-//Test - Juan
+//Enter Button Fix - Juan
 $(document).ready(function(){
     $("#upd-name").keypress(function(e){
       if(e.keyCode==13)
@@ -99,7 +112,7 @@ $(document).ready(function(){
       $("#SaveNewCategory").click();
     });
 });
-//End Test - Juan
+//Enter Button Fix End - Juan
 
 $(document).on('pagebeforeshow', "#category-view", function( event, ui ) {
 	// currentCategory has been set at this point
