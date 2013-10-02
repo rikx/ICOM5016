@@ -135,7 +135,10 @@ $(document).on('pagebeforeshow', "#product-view", function( event, ui ) {
 	$("#productTitle").html(product.name);
 	var list = $("#prod-details");
 	list.empty();
-	list.append('<li><img src="http://3.bp.blogspot.com/-nU8O8xLuSvs/TdjWsU3X2DI/AAAAAAAAAIs/Lsa3Y92DGy0/s320/112.jpg" /></li><li><strong>Account ID: </strong>' + product.id + "</li></li><li><strong>Brand: </strong>" + product.brand + "</li></li><li><strong>Model: </strong>" + product.model + "</li></li><li><strong>Description: </strong>" + product.description + "</li>");
+	list.append('<li><img src="http://3.bp.blogspot.com/-nU8O8xLuSvs/TdjWsU3X2DI/AAAAAAAAAIs/Lsa3Y92DGy0/s320/112.jpg" /></li>'+
+	'<li><strong>Product ID: </strong>' + product.id + '</li></li><li><strong>Brand: </strong>' + product.brand + '</li></li>'+
+	'<li><strong>Model: </strong>' + product.model + '</li></li><li><strong>Description: </strong>' + product.description + '</li>'+
+	'<li>'+product.dimensions+'</li>');
 	list.listview("refresh");	
 });
 
