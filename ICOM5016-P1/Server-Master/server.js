@@ -101,6 +101,8 @@ var categoryNextId = 42;
 // d) DELETE - Remove an individual object, or collection (Database delete operation)
 
 // REST Operation - HTTP GET to read all categories
+// Modify this so it only gets the categories whose parent == null, and it can be used in conjunction with the browse (children) page.
+// Then this get will be used for the actual home page
 app.get('/Server-Master/home', function(req, res) {
 	console.log("GET categories");
 
@@ -226,9 +228,9 @@ app.post('/Server-Master/home', function(req, res) {
 });
 
 // REST Operation - HTTP GET to read all children (if they exist)
-app.post('/Server-Master/home/categories/:urlhistory', function(req, res) {
-	var id = req.body.id;
-	var urlHistory = req.params.urlhistory;
+app.get('/Server-Master/home/categories/:id', function(req, res) {
+	var id = req.params.id; 
+	//var urlHistory = req.body.urlhistory;
 	console.log("GET subcategories of " + id);
 
 	if ((id < 0) || (id >= categoryNextId)){
@@ -262,7 +264,7 @@ app.post('/Server-Master/home/categories/:urlhistory', function(req, res) {
 				}		
 			}
 			var response = {"children" : theChildren, "parent" : categoryList[target], "childType" : theType};
-			console.log("History is: " + urlHistory);
+			//console.log("History is: " + urlHistory);
 			res.json(response);
 		}
 	}
@@ -291,6 +293,7 @@ app.get('/Server-Master/subCategory/:id', function(req, res) {
 		}	
 		else {
 			var response = {"parent" : categoryList[target]};
+			console.log(categoryList[target].parent);
   			res.json(response);
 		}
 	}
@@ -411,6 +414,9 @@ app.post('/Server-Master/home/:userNameLogin', function(req, res) {
 	}
 });*/
 
+// Missing REST Operation for deleting user
+
+
 /*==================================================================*/
 /*								Products							*/
 /*==================================================================*/
@@ -457,6 +463,9 @@ app.get('/Server-Master/product/:id', function(req, res) {
   		}	
 	}
 });
+
+// Missing REST operations for posting, updating, and deleting a product.
+
 
 // Server starts running when listen is called.
 app.use(express.static(__dirname + '/RJN-Master'));
