@@ -11,6 +11,7 @@
 		<script src="js/jquery.mobile-1.3.1.js"></script>
 		<script src="js/accounting.js"></script>
 		<script src="appjs/app.js"></script>
+		
 	</head>
 	<body>
 		<div id ="categories" data-role="page">
@@ -24,7 +25,7 @@
 							<a href="" data-role="button" data-icon="search" data-iconpos="top">Browse</a>
 							<a data-role="button" data-icon="user" data-iconpos="top" onClick="GetUserAccount()">Account</a>
 							<!-- <a data-role="button" data-inline="true" onClick="LogOut()">Logout</a> --> <!-- Add this dynamically later -->
-							<a data-role="button" data-icon="shopping-cart" data-iconpos="top" onClick="GetCart()">Cart</a>
+							<a href="#cart" data-role="button" data-icon="shopping-cart" data-iconpos="top">Cart</a><!-- /// onClick="GetCart()">/// -->
 						</div>
 					</div>
 				</div><!-- /grid-b -->
@@ -297,6 +298,31 @@
 				</center>
 			</div>
 		</div><!-- /page -->
+		
+		<!--///////////////////////////////////		CART	//////////////////////////////////////-->
+		<div id ="cart" data-role="page">
+			<div data-role="header" data-theme="a" data-position="fixed">
+				<div class="ui-grid-b" align="center">
+					<div class="ui-block-a"><h3>RJN Bay</h3></div>
+					<div class="ui-block-b"></div>
+					<div class="ui-block-c">
+						<div data-role="controlgroup" data-type="horizontal">
+							<a href="#categories" data-role="button" data-icon="home" data-iconpos="top">Home</a>
+							<a href="" data-role="button" data-icon="search" data-iconpos="top">Browse</a>
+							<a data-role="button" data-icon="user" data-iconpos="top" onClick="GetUserAccount()">Account</a>
+						</div>
+					</div>
+				</div><!-- /grid-b -->
+			</div>
+			<div data-role="content">
+				<h3 align="center">Your Cart</h3>	
+				<ul id="category-list" data-role="listview" data-inset="true">
+				</ul>
+			</div><!-- /content -->
+		</div><!-- /page -->
+		<!--///////////////////////////////////		CART END	//////////////////////////////////////////-->
+				
+		<!--///////////////////////////////////		PRODUCT-VIEW	//////////////////////////////////////-->
 		<div id="product-view" data-role="page">
 			<div data-role="header" data-theme="a" data-position="fixed">
 				<div class="ui-grid-b" align="center">
@@ -316,13 +342,7 @@
 				<div class="ui-grid-a">
 					<div class="ui-block-a">
 						<h3 align="center">Product Details</h3>
-						<ul id="prod-details" data-role="listview" data-inset="true">
-							
-							
-							<li><label for="name"> Name: <input id="name" name="name" type="text"/></label></li>
-		  					<li><label for="bid-price"> Bid Price $: <input id="bidPrice" name="bidPrice" type="number"/></label></li>
-							<li><label for="buyout-price"> Buyout Price $: <input id="instantPrice" name="instantPrice" type="number"/></label></li>
-	  			  	
+						<ul id="prod-details" data-role="listview" data-inset="true">	  			  	
 						</ul>
 					</div>
 					<div class="ui-block-b">
@@ -348,5 +368,7 @@
 				<a href="" data-role="button" data-rel="close">Close panel</a>
 			</div>
 		</div><!-- /page -->
+		<!--///////////////////////////////////		PRODUCT-VIEW END	//////////////////////////////////////-->
+		
 	</body>
 </html>
