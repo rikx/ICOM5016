@@ -149,7 +149,7 @@
 		</div><!-- /page -->
 
 		<div id="user-account" data-role="page">
-			<div data-role="header" data-theme="b" data-position="fixed">
+			<div data-role="header" data-theme="a" data-position="fixed">
 				<div class="ui-grid-b" align="center">
 					<div class="ui-block-a"><h3 id="userTitle"></h3></div>
 					<div class="ui-block-b"></div>
@@ -171,20 +171,29 @@
 						</ul>
 					</div>
 					<div class="ui-block-b">
-						<a data-role="button">Show History</a>
-						<div class="ui-grid-a">
-							<div class="ui-block-a">
-								<a data-role="button" onclick="bidHistory()">Items bought</a>
-								<ul id="bid-history" data-role="listview" data-inset="true">
-								</ul>
-							</div>
-							<div class="ui-block-b">
-								<a data-role="button" onclick="sellHistory()">Items sold</a>
-								<ul id="sell-history" data-role="listview" data-inset="true">
+						<div data-role="collapsible" data-theme="a" data-content-theme="c">
+							<h2>Payment Information</h2>
+							<ul id="creditcard-list" data-role="listview">
+								<li>ZOMGZ VISA</li>
+								<li>Nelsongo</li>
 							</ul>
-							</div>
-						</div><!-- /grid-a -->
-					</div>
+						</div><!--/collapsible-->
+						<div data-role="collapsible" data-theme="a">
+							<h2>Show History</h2>
+							<div class="ui-grid-a">
+								<div class="ui-block-a">
+									<a data-role="button" onclick="bidHistory()">Items bought</a>
+									<ul id="bid-history" data-role="listview" data-inset="true">
+									</ul>
+								</div>
+								<div class="ui-block-b">
+									<a data-role="button" onclick="sellHistory()">Items sold</a>
+									<ul id="sell-history" data-role="listview" data-inset="true">
+								</ul>
+								</div>
+							</div><!-- /grid-a -->
+						</div><!--/collapsible-->
+					</div><!--/block-b -->
 				</div><!-- /grid-a -->
 			</div><!-- /content -->
 		</div><!-- /page -->
