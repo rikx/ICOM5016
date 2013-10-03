@@ -426,7 +426,9 @@ function LogOut(){
 		$.mobile.loading("hide");
 	}
 }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//											THE PRODUCT												  //
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 var currentProduct = {};
 
 //Get product by ID
@@ -441,6 +443,35 @@ function GetProduct(id){
 			currentProduct = data.product;
 			$.mobile.loading("hide");
 			$.mobile.navigate("#product-view");
+		},
+		error: function(data, textStatus, jqXHR){
+			console.log("textStatus: " + textStatus);
+			$.mobile.loading("hide");
+			if (data.status == 404){
+				alert("Product not found.");
+			}
+			else {
+				alert("Internal Server Error.");
+			}
+		}
+	});
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//											THE CART												  //
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+var Cart=[];//Test - Juan
+//Add to Cart - Juan
+function addToCart(id){
+	$.mobile.loading("show");
+	$.ajax({
+		url : "http://localhost:3412/Server-Master/product/" + id,
+		method: 'get',
+		contentType: "application/json",
+		dataType:"json",
+		success : function(data, textStatus, jqXHR){
+			Cart.push(currentProduct);
+			$.mobile.loading("hide");
+			
 		},
 		error: function(data, textStatus, jqXHR){
 			console.log("textStatus: " + textStatus);

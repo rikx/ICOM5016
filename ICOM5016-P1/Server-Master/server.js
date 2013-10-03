@@ -32,6 +32,7 @@ var Category = modules.Category;
 var categoryList = modules.categoryList;
 
 var categoryList = new Array(
+	//Category: function (id, name, parent)
 	new Category(1, "Books", null),
 	new Category(2, "Electronics", null),
 	new Category(3, "Computers", null),
@@ -151,8 +152,7 @@ app.put('/Server-Master/home/:id', function(req, res) {
 		res.statusCode = 404;
 		res.send("Category not found.");
 	}
-	else if(!req.body.hasOwnProperty('name')){/* || !req.body.hasOwnProperty('model')
-  	|| !req.body.hasOwnProperty('year') || !req.body.hasOwnProperty('price') || !req.body.hasOwnProperty('description')) {*/
+	else if(!req.body.hasOwnProperty('name')){
     	res.statusCode = 400;
     	return res.send('Error: Missing fields for category.');
   	}
@@ -171,10 +171,6 @@ app.put('/Server-Master/home/:id', function(req, res) {
 		else {
 			var theCategory= categoryList[target];
 			theCategory.name = req.body.name;
-			/*theCategory.model = req.body.model;
-			theCategory.year = req.body.year;
-			theCategory.price = req.body.price;
-			theCategory.description = req.body.description;*/
 			var response = {"category" : theCategory};
   			res.json(response);		
   		}
@@ -214,13 +210,12 @@ app.del('/Server-Master/home/:id', function(req, res) {
 app.post('/Server-Master/home', function(req, res) {
 	console.log("POST");
 
-  	if(!req.body.hasOwnProperty('name') ){/*|| !req.body.hasOwnProperty('model')
-  	|| !req.body.hasOwnProperty('year') || !req.body.hasOwnProperty('price') || !req.body.hasOwnProperty('description')) {*/
+  	if(!req.body.hasOwnProperty('name') ){
     	res.statusCode = 400;
     	return res.send('Error: Missing fields for category.');
   	}
 
-  	var newCategory = new Category(req.body.name);/*, req.body.model, req.body.year, req.body.description, req.body.price);*/
+  	var newCategory = new Category(req.body.name);
   	console.log("New Category: " + JSON.stringify(newCategory));
   	newCategory.id = categoryNextId++;
   	categoryList.push(newCategory);
@@ -230,7 +225,6 @@ app.post('/Server-Master/home', function(req, res) {
 // REST Operation - HTTP GET to read all children (if they exist)
 app.get('/Server-Master/home/categories/:id', function(req, res) {
 	var id = req.params.id; 
-	//var urlHistory = req.body.urlhistory;
 	console.log("GET subcategories of " + id);
 
 	if ((id < 0) || (id >= categoryNextId)){
