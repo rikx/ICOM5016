@@ -135,7 +135,7 @@ $(document).on('pagebeforeshow', "#user-account", function( event, ui ) {
 	list.append("<li><h2>" + user.username + "</h2></li><li><strong>Account ID: </strong>" + user.id + '</li></li>'+
 		'<li><strong>First Name: </strong>' + user.firstname + '</li></li><li><strong>Last Name: </strong>' + user.lastname + 
 		'</li></li><li><strong>Email: </strong>' + user.email + '</li><li><strong>Shipping Address: </strong>' + user.shipAddress+'</li>'+
-		'<li><strong>Billing Address </strong>' + user.billAddress + '</li><li><strong>Credit Card: </strong>' + user.ccInfo +'</li>'
+		'<li><strong>Billing Address: </strong>' + user.billAddress + '</li><li><strong>Current Credit Card: </strong>' + user.ccInfo +'</li>'
 	);
 	list.listview("refresh");	
 });
@@ -144,6 +144,8 @@ $(document).on('pagebeforeshow', "#update-account", function(event, ui){
 	$("#acc-fname").val(currentUser.firstname);
 	$("#acc-lname").val(currentUser.lastname);
 	$("#acc-email").val(currentUser.email);
+	$("#acc-sAddress").val(currentUser.shipAddress);
+	$("#acc-bAddress").val(currentUser.billAddress);
 	//not finished
 });
 
@@ -151,12 +153,14 @@ $(document).on('pagebeforeshow', "#product-view", function( event, ui ) {
 	// currentProduct has been set at this point
 	var product = currentProduct;
 	$("#productTitle").html(product.name);
+	$("#showBidPrice").html(product.bidPrice);
+	$("#showBuyoutPrice").html(product.instantPrice);
 	var list = $("#prod-details");
 	list.empty();
 	list.append('<li><img src="http://3.bp.blogspot.com/-nU8O8xLuSvs/TdjWsU3X2DI/AAAAAAAAAIs/Lsa3Y92DGy0/s320/112.jpg" /></li>'+
 	'<li><strong>Product ID: </strong>' + product.id + '</li></li><li><strong>Brand: </strong>' + product.brand + '</li></li>'+
 	'<li><strong>Model: </strong>' + product.model + '</li></li><li><strong>Description: </strong>' + product.description + '</li>'+
-	'<li>'+product.dimensions+'</li>');
+	'<li><strong>Dimensions: </strong>'+product.dimensions+'</li>');
 	list.listview("refresh");	
 });
 
