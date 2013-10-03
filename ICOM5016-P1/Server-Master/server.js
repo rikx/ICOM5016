@@ -29,7 +29,7 @@ var modules = require("./modules.js");
 /* This array emulates the category entity in the database.
 /*==================================================================*/
 var Category = modules.Category;
-var categoryList = modules.categoryList;
+//var categoryList = modules.categoryList;
 
 var categoryList = new Array(
 	//Category: function (id, name, parent)
@@ -298,22 +298,31 @@ app.get('/Server-Master/subCategory/:id', function(req, res) {
 /*==================================================================*/
 var User = modules.User;
 
-//type, username, password, firstname, lastname, email, shipAddress, billAddress, ccInfo
+//type, username, password, firstname, lastname, email, shipAddress, billAddress
 var userList = new Array(
-	new User("user", "user1", "password", "FirstName", "LastName", "user1@rjn.com", "wat 123 Guaynabo, PR", "wat 123 Guaynabo, PR", "0123-4567-89AB-CDEF"),
+	new User("user", "user1", "password", "FirstName", "LastName", "user1@rjn.com", "wat 123 Guaynabo, PR", "wat 123 Guaynabo, PR"),
 	new User("admin", "admin1", "password", "FirstName", "LastName", "admin1@rjn.com")
 	);
-
 var userNextId = 0;
 
 for (var i=0; i < userList.length;++i){
 	userList[i].id = userNextId++;
 }
 
+var paymentType = modules.PaymentType;
+
+// user id, card info
+var payTypeList = new Array(
+	new paymentType(0, "0123-4567-89AB-CDEF"),
+	new paymentType(0, "FEDC-BA98-7654-3210")
+	);
+
 // REST Operation - HTTP GET to read a user account based on its id
 app.get('/Server-Master/account/:id', function(req, res) {
 	var id = req.params.id;
 		console.log("GET user account: " + id);
+	var paymentTypes = new Array();
+
 	if ((id < 0) || (id >= userNextId)){
 		// not found
 		res.statusCode = 404;
@@ -324,6 +333,10 @@ app.get('/Server-Master/account/:id', function(req, res) {
 		for (var i=0; i < userList.length; ++i){
 			if (userList[i].id == id){
 				target = i;
+				for(var j=0; j < payTypeList.length;++j){
+					if(userList[i].id == payTypeList[j].uId)
+						paymentTypes.push(payTypeList[j]);
+				}
 				break;	
 			}
 		}
@@ -332,7 +345,7 @@ app.get('/Server-Master/account/:id', function(req, res) {
 			res.send("User not found.");
 		}
 		else {
-			var response = {"user" : userList[target]};
+			var response = {"user" : userList[target], "paymentTypes" : payTypeList};
   			res.json(response);	
   		}	
 	}
@@ -342,8 +355,7 @@ app.get('/Server-Master/account/:id', function(req, res) {
 app.post('/Server-Master/home/:userNameLogin', function(req, res) {
 	console.log("POST user login: " + req.params.userNameLogin);
 
-  	if(!req.body.hasOwnProperty('username') || !req.body.hasOwnProperty('password') ) {/*
-  	|| !req.body.hasOwnProperty('year') || !req.body.hasOwnProperty('price') || !req.body.hasOwnProperty('description')) {*/
+  	if(!req.body.hasOwnProperty('username') || !req.body.hasOwnProperty('password') ) {
     	res.statusCode = 400;
     	return res.send('Error: Missing fields for user login.');
   	}

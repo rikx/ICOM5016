@@ -43,7 +43,7 @@ $(document).on('pagebeforeshow', "#categories", function( event, ui ) {
 	});
 });
 
-$(document).on('pagebeforeshow', "#children", function( event, ui ) {
+$(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 	//currentHistory = currentHistory + "/" + currentCategory.id;
 	$.ajax({
 		url : "http://localhost:3412/Server-Master/home/categories/" + currentCategory.id,
@@ -53,10 +53,10 @@ $(document).on('pagebeforeshow', "#children", function( event, ui ) {
 		contentType: "application/json",
 		//dataType:"json",
 		success : function(data, textStatus, jqXHR){
-			$("#childTitle").html(data.parent.name);
+			$("#browseTitle").html(data.parent.name);
 			var childrenList = data.children;
 			var len = childrenList.length;
-			var list = $("#children-list");
+			var list = $("#browse-list");
 			list.empty();
 			var child;
 			//when childrenList contains sub-categories
@@ -130,14 +130,26 @@ $(document).on('pagebeforeshow', "#user-account", function( event, ui ) {
 	// currentUser has been set at this point
 	var user = currentUser;
 	$("#userTitle").html(user.username);
-	var list = $("#user-info");
-	list.empty();
-	list.append("<li><h2>" + user.username + "</h2></li><li><strong>Account ID: </strong>" + user.id + '</li></li>'+
+
+	//Populate user information list
+	var infoList = $("#user-info");
+	infoList.empty();
+	infoList.append("<li><h2>" + user.username + "</h2></li><li><strong>Account ID: </strong>" + user.id + '</li></li>'+
 		'<li><strong>First Name: </strong>' + user.firstname + '</li></li><li><strong>Last Name: </strong>' + user.lastname + 
 		'</li></li><li><strong>Email: </strong>' + user.email + '</li><li><strong>Shipping Address: </strong>' + user.shipAddress+'</li>'+
-		'<li><strong>Billing Address: </strong>' + user.billAddress + '</li><li><strong>Current Credit Card: </strong>' + user.ccInfo +'</li>'
+		'<li><strong>Billing Address: </strong>' + user.billAddress + '</li>'
 	);
-	list.listview("refresh");	
+	infoList.listview("refresh");
+
+	//Populate payment information list
+	var payTypes = currentPaymentTypes;
+	var payList = $("#paymentType-list");
+	payList.empty();
+	alert(JSON.stringify(currentPaymentTypes));
+	for(var i=0; i < payTypes.length; ++i){
+		//payList.append('<li>Card Ending with '+ payTypes[i].cNumber.substr(16)+'</li>');
+	}
+	payList.listview("refresh");
 });
 
 $(document).on('pagebeforeshow', "#update-account", function(event, ui){
@@ -241,7 +253,7 @@ function GetSubCategory(id){
 		success : function(data, textStatus, jqXHR){
 			currentCategory = data.parent;
 			$.mobile.loading("hide");
-			$.mobile.navigate("#children");
+			$.mobile.navigate("#browse");
 		},
 		error: function(data, textStatus, jqXHR){
 			console.log("textStatus: " + textStatus);
@@ -342,6 +354,7 @@ function LogIn(){
 
 //initial value is set to Sign In for home page
 var currentUser = {"id": null};
+var currentPaymentTypes = {};
 
 function GetUserAccount(){
 	$.mobile.loading("show");
@@ -356,6 +369,7 @@ function GetUserAccount(){
 			dataType:"json",
 			success : function(data, textStatus, jqXHR){
 				currentUser = data.user;
+				currentPaymentTypes = data.paymentTypes;
 				$.mobile.loading("hide");
 				if(currentUser.type == "user"){
 					$.mobile.navigate("#user-account");
@@ -419,6 +433,7 @@ function LogOut(){
 	if(uExit == true){
 		$.mobile.loading("show");
 		currentUser = {"id": null};
+		currentPaymentTypes = {};
 		$.mobile.loading("hide");
 		$.mobile.navigate("#categories");
 	}

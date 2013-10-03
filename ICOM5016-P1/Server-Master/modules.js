@@ -17,7 +17,7 @@ module.exports =  {
 		this.dimensions= dimensions;
 	},
 	
-	User: function (type, username, password, firstname, lastname, email, shipAddress, billAddress, ccInfo){
+	User: function (type, username, password, firstname, lastname, email, shipAddress, billAddress){
 		this.id = "";
 		this.type = type;
 		this.username = username;
@@ -27,7 +27,11 @@ module.exports =  {
 		this.email = email;
 		this.shipAddress = shipAddress;
 		this.billAddress = billAddress;
-		this.ccInfo = ccInfo;
+	},
+
+	PaymentType: function (cNumber){
+		this.uId="";
+		this.cNumber = cNumber;
 	}
 
 };
