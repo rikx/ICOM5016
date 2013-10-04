@@ -51,6 +51,7 @@ $(document).on('pagebeforeshow', "#categories", function( event, ui ) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
+	//currentHistory will be used later to display breadcrumb trail on page as you go deeper into the category hierarchy
 	//currentHistory = currentHistory + "/" + currentCategory.id;
 	$.ajax({
 		url : "http://localhost:3412/Server-Master/home/categories/" + currentCategory.id,
@@ -160,7 +161,8 @@ $(document).on('pagebeforeshow', "#user-account", function( event, ui ) {
 	var payTypes = currentPaymentTypes;
 	var payList = $("#paymentType-list");
 	payList.empty();
-	//alert(JSON.stringify(currentPaymentTypes));
+	//alert(JSON.stringify(payTypes));
+	//This is not fully functional yet because payTypes contains the right number of elements, but they each have empty values that should not be there
 	for(var i=0; i < payTypes.length; ++i){
 		//payList.append('<li>Card Ending with '+ payTypes[i].cNumber.substr(16)+'</li>');
 	}
@@ -177,7 +179,7 @@ $(document).on('pagebeforeshow', "#update-account", function(event, ui){
 	$("#acc-email").val(currentUser.email);
 	$("#acc-sAddress").val(currentUser.shipAddress);
 	$("#acc-bAddress").val(currentUser.billAddress);
-	//not finished - missing the logic changing password
+	//not finished - missing the logic for changing password
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -216,6 +218,9 @@ function ConverToJSON(formData){
 //											THE CATEGORIES											  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+var currentCategory = {}; //-- ??
+var currentHistory = ""; //-- ??
+
 //--------------- POST NEW CATEGORY (ADMIN ONLY) ---------------//
 function SaveCategory(){
 	$.mobile.loading("show");
@@ -244,9 +249,6 @@ function SaveCategory(){
 
 }
 
-var currentCategory = {}; //-- ??
-var currentHistory = ""; //-- ??
-
 //--------------- GET CATEGORY DETAILS (ADMIN ONLY) ---------------//
 function editCategory(id){
 	$.mobile.loading("show");
@@ -273,7 +275,7 @@ function editCategory(id){
 	});
 }
 
-//--------------- GET SUB-CATEGORY ??---------------//
+//--------------- GET SUB-CATEGORY (gets categories that are children of main categories or of other categories)---------------//
 function GetSubCategory(id){
 	$.mobile.loading("show");
 	$.ajax({
@@ -362,7 +364,11 @@ function DeleteCategory(){
 //											THE USERS											      //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//--------------- POST USER ?? ---------------//
+//initial value is set to null for when noone is logged in
+var currentUser = {"id": null}; //-- ??
+var currentPaymentTypes = {}; //-- ??
+
+//--------------- Logs in via POST so it can send the form values of username and password to the server for authentication ---------------//
 function LogIn(){
 	$.mobile.loading("show");
 	var form = $("#login-form");
@@ -390,11 +396,7 @@ function LogIn(){
 	});
 }
 
-//initial value is set to Sign In for home page
-var currentUser = {"id": null}; //-- ??
-var currentPaymentTypes = {}; //-- ??
-
-//--------------- GET USER ACCOUNT + PRIVILEGES?? ---------------//
+//--------------- GET USER ACCOUNT + PRIVILEGES(in the future). If user is user it loads user account; if admin, loads admin controls page ---------------//
 function GetUserAccount(){
 	$.mobile.loading("show");
 	if(currentUser.id == null){
@@ -434,7 +436,7 @@ function GetUserAccount(){
 	}
 }
 
-//--------------- REGISTER NEW USER ACCOUNT + LOGIC?? ---------------//
+//--------------- REGISTER NEW USER ACCOUNT - Checks if passwords do not match before sending information, and cheks if username is already taken ---------------//
 function RegisterAccount(){
 	if( $('#new-password').val() != $('#new-confirmpassword').val()){
 		alert("Password fields do not match. Please type them again.");
@@ -504,13 +506,15 @@ function RegisterAccount(){
 	});
 }*/
 
-//--------------- LOG CURRENT USER ACCOUNT - PRIVILEGES?? ---------------//
+//--------------- LOG CURRENT USER ACCOUNT and resets global variables to their initial state---------------//
 function LogOut(){
 	var uExit = confirm("Do you want to log out?");
 	if(uExit == true){
 		$.mobile.loading("show");
+		//global variables are reset to initial values.
 		currentUser = {"id": null};
 		currentPaymentTypes = {};
+		Cart = []; //added this for Juan so his cart array gets emptied after logout
 		$.mobile.loading("hide");
 		$.mobile.navigate("#categories");
 	}
@@ -524,7 +528,7 @@ function LogOut(){
 
 var currentProduct = {}; //--??
 
-//--------------- GET PRODUCT FROM ID?? ---------------//
+//--------------- GET PRODUCT by id.  ---------------//
 function GetProduct(id){
 	$.mobile.loading("show");
 	$.ajax({
