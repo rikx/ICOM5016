@@ -329,23 +329,31 @@ app.post('/Server-Master/home/:userNameLogin', function(req, res) {
   		var userName = req.body.username;
   		var passWord = req.body.password;
   		var target = -1; 
+  		var found = false;
   		for (var i=0; i < userList.length;++i){
+  			if(userList[i].username == userName){
+  				found = true;
+  			}
 			if(userList[i].username == userName && userList[i].password == passWord){	
 				target = i;
 				console.log("Succesful login of user id: " + userList[i].id + " of type: " + userList[i].type);
 				break;  	
 			}
 		}
-		if (target == -1){
+		if (found && target == -1){
+			res.statusCode = 409;
+			rese.send("Username exists but entered password does not match");
+		}
+		else if (found == false && target == -1){
 			res.statusCode = 404;
 			res.send("User not found.");
 		}
 		else {
-			//create global userCount variable and add userCount++ here to see how many users are currently logged in
+			//Future work: create global userCount variable and add userCount++ here to see how many users are currently logged in
 			var response = {"user" : userList[target]};
-  			res.json(response);	
-  		}	 	
-  	}
+				res.json(response);	
+		}	 	
+	}
 });
 
 // REST Operation - HTTP GET to read a user account based on its id

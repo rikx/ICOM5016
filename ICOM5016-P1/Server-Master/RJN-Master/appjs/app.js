@@ -370,30 +370,40 @@ var currentPaymentTypes = {}; //-- ??
 
 //--------------- Logs in via POST so it can send the form values of username and password to the server for authentication ---------------//
 function LogIn(){
-	$.mobile.loading("show");
-	var form = $("#login-form");
-	var formData = form.serializeArray();
-	console.log("form Data: " + formData);
-	var userLogin = ConverToJSON(formData);
-	console.log("User Login: " + JSON.stringify(userLogin));
-	var userLoginJSON = JSON.stringify(userLogin);
-	$.ajax({
-		url : "http://localhost:3412/Server-Master/home/" + userLogin.username,
-		method: 'post',
-		data : userLoginJSON,
-		contentType: "application/json",
-		dataType:"json",
-		success : function(data, textStatus, jqXHR){
-			$.mobile.loading("hide");
-			currentUser = data.user;
-			$.mobile.navigate("#categories");
-		},
-		error: function(data, textStatus, jqXHR){
-			console.log("textStatus: " + textStatus);
-			$.mobile.loading("hide");
-			alert("Username and password match could not be found. Please try again!");
-		}
-	});
+	if($('#loginusername').val() == ""){
+		alert("Please type in your username.");
+	}
+	else {
+		$.mobile.loading("show");
+		var form = $("#login-form");
+		var formData = form.serializeArray();
+		console.log("form Data: " + formData);
+		var userLogin = ConverToJSON(formData);
+		console.log("User Login: " + JSON.stringify(userLogin));
+		var userLoginJSON = JSON.stringify(userLogin);
+		$.ajax({
+			url : "http://localhost:3412/Server-Master/home/" + userLogin.username,
+			method: 'post',
+			data : userLoginJSON,
+			contentType: "application/json",
+			dataType:"json",
+			success : function(data, textStatus, jqXHR){
+				$.mobile.loading("hide");
+				currentUser = data.user;
+				$.mobile.navigate("#categories");
+			},
+			error: function(data, textStatus, jqXHR){
+				console.log("textStatus: " + textStatus);
+				$.mobile.loading("hide");
+				if(data.status == 409){
+					alert("Username exists but entered password does not match. Please retype your password.");
+				}
+				else{
+					alert("Username does not exist. Retype username or register if you do not have an account.");
+				}
+			}
+		});
+	}
 }
 
 //--------------- GET USER ACCOUNT + PRIVILEGES(in the future). If user is user it loads user account; if admin, loads admin controls page ---------------//
@@ -438,7 +448,9 @@ function GetUserAccount(){
 
 //--------------- REGISTER NEW USER ACCOUNT - Checks if passwords do not match before sending information, and cheks if username is already taken ---------------//
 function RegisterAccount(){
-	if( $('#new-password').val() != $('#new-confirmpassword').val()){
+	if($('#new-password').val() == "" || $('#new-confirmpassword').val() == "")
+		alert("Password fields cannot be blank. Please choose a password of at least 6 characters");
+	else if( $('#new-password').val() != $('#new-confirmpassword').val()){
 		alert("Password fields do not match. Please type them again.");
 	}
 	else{
