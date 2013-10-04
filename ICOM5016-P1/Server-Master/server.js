@@ -317,6 +317,37 @@ var payTypeList = new Array(
 	new paymentType(0, "FEDC-BA98-7654-3210")
 	);
 
+// REST Operation - HTTP POST to login user
+app.post('/Server-Master/home/:userNameLogin', function(req, res) {
+	console.log("POST login attempt: " + req.params.userNameLogin);
+
+  	if(!req.body.hasOwnProperty('username') || !req.body.hasOwnProperty('password') ) {
+    	res.statusCode = 400;
+    	return res.send('Error: Missing fields for user login.');
+  	}
+  	else {
+  		var userName = req.body.username;
+  		var passWord = req.body.password;
+  		var target = -1; 
+  		for (var i=0; i < userList.length;++i){
+			if(userList[i].username == userName && userList[i].password == passWord){	
+				target = i;
+				console.log("Succesful login of user id: " + userList[i].id + " of type: " + userList[i].type);
+				break;  	
+			}
+		}
+		if (target == -1){
+			res.statusCode = 404;
+			res.send("User not found.");
+		}
+		else {
+			//create global userCount variable and add userCount++ here to see how many users are currently logged in
+			var response = {"user" : userList[target]};
+  			res.json(response);	
+  		}	 	
+  	}
+});
+
 // REST Operation - HTTP GET to read a user account based on its id
 app.get('/Server-Master/account/:id', function(req, res) {
 	var id = req.params.id;
@@ -351,37 +382,37 @@ app.get('/Server-Master/account/:id', function(req, res) {
 	}
 });
 
-// REST Operation - HTTP POST to login user
-app.post('/Server-Master/home/:userNameLogin', function(req, res) {
-	console.log("POST user login: " + req.params.userNameLogin);
-
-  	if(!req.body.hasOwnProperty('username') || !req.body.hasOwnProperty('password') ) {
+// REST Operation - HTTP POST to add a new a user
+app.post('/Server-Master/register', function(req, res) {
+	console.log("POST new user");
+	var exists = false;
+	//new-firstname, new-lastname, new-email, new-password, new-confirmpassword
+  	if( !req.body.hasOwnProperty('username') || !req.body.hasOwnProperty('firstname') ||
+  		!req.body.hasOwnProperty('lastname') || !req.body.hasOwnProperty('email') ||
+  		!req.body.hasOwnProperty('password') || !req.body.hasOwnProperty('confirmpassword') ||
+  		!req.body.hasOwnProperty('shipaddress') || !req.body.hasOwnProperty('billaddress')){
     	res.statusCode = 400;
-    	return res.send('Error: Missing fields for user login.');
+    	return res.send('Error: Missing fields for new user.');
+  	}
+	for (var i=0; i < userList.length; ++i){
+		if (userList[i].id == req.body.username){
+			exists = true;
+			break;
+		}
+	}
+  	if (exists) {
+  		res.statusCode = 409; // is this the correct code for when username already exists?
+  		return res.send('Error: A user by this username already exists.');
   	}
   	else {
-  		var userName = req.body.username;
-  		var passWord = req.body.password;
-  		var target = -1; 
-  		for (var i=0; i < userList.length;++i){
-			if(userList[i].username == userName && userList[i].password == passWord){	
-				target = i;
-				console.log("Succesful login of user id: " + userList[i].id + " of type: " + userList[i].type);
-				break;  	
-			}
-		}
-		if (target == -1){
-			res.statusCode = 404;
-			res.send("User not found.");
-		}
-		else {
-			//create global userCount variable and add userCount++ here to see how many users are currently logged in
-			var response = {"user" : userList[target]};
-  			res.json(response);	
-  		}	 	
+	  	var newUser = new User("user", req.body.username, req.body.password, req.body.firstname, 
+	  		req.body.lastname, req.body.email, req.body.shipaddress, req.body.billaddress);
+	  	console.log("New User: " + JSON.stringify(newUser));
+	  	newUser.id = userNextId++;
+	  	userList.push(newUser);
+	  	res.json(true);
   	}
 });
-
 // REST Operation - HTTP PUT to updated an account based on its id
 /*app.put('/Server-Master/account/:id', function(req, res) {
 	var id = req.params.id;

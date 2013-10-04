@@ -77,8 +77,8 @@
 				<form id="login-form">
 					<fieldset data-role="controlgroup">
 					<ul>
-					<li><label for="username"> Name: <input id="username" name="username" type="text"/></label></li>
-					<li><label for="password"> Password: <input id="password" name="password" type="password"/></label></li>
+					<li><label for="loginusername"> Name: <input id="loginusername" name="username" type="text"/></label></li>
+					<li><label for="loginpassword"> Password: <input id="loginpassword" name="password" type="password"/></label></li>
 					<li><a data-role="button" onclick="LogIn()">Log In</a>
 				    <!-- <input type="submit" value="Submit Button" onclick="LogIn(); return false;"/> --></li>
 				    <li><a data-role="button" href="#register-account" rel="external">New User? Register here</a></li>
@@ -233,36 +233,29 @@
 					<div class="ui-block-c">
 						<div data-role="controlgroup" data-type="horizontal">
 							<a href="#categories" data-role="button" data-icon="home" data-iconpos="top">Home</a>
-							<a data-role="button" class="ui-btn-right" data-inline="true" onclick="RegisterAccount()">Submit</a>
+							<a data-role="button" data-inline="true" onclick="RegisterAccount()">Submit</a>
 						</div>
 					</div>
 				</div><!-- /grid-b -->
 			</div>
 			<div data-role="content">
 				<h3 align="center">Create your personal account</h3>
-				<form id="category-view-form">
+				<form id="register-form">
 	 				<fieldset data-role="controlgroup">
 	 					<ul>
-	 					<li><label for="acc-firstname"> First Name: <input id="upd-fname" name="fname" type="text"/></label></li>
-	  					<li><label for="acc-lastname"> Last Name: <input id="upd-lname" name="lname" type="text"/></label></li>
-	 					<li><label for="acc-username"> Username: <input id="upd-name" name="uname" type="text"/></label></li>
-	 					<li><label for="acc-email"> Email: <input id="upd-email" name="email" type="text"/></label></li>
-	 					<li><label for="acc-newpassword"> Password: <input id="upd-password" name="newpassword" type="password"/></label></li>
-	 					<li><label for="acc-confirmpassword"> Confirm Password: <input id="upd-confirmpassword" name="confirmpassword" type="password"/></label></li>
+	 					<li><label for="username"> Username: <input id="newusername" name="username" type="text"/></label></li>
+	 					<li><label for="firstname"> First Name: <input id="new-firstname" name="firstname" type="text"/></label></li>
+	  					<li><label for="lastname"> Last Name: <input id="new-lastname" name="lastname" type="text"/></label></li>
+	 					<li><label for="email"> Email: <input id="new-email" name="email" type="text"/></label></li>
+	 					<li><label for="password"> Password: <input id="new-password" name="password" type="password"/></label></li>
+	 					<li><label for="confirmpassword"> Confirm Password: <input id="new-confirmpassword" name="confirmpassword" type="password"/></label></li>
+	 					<li><label for="shipaddress"> Shipping Address: <input id="new-shipaddress" name="shipaddress" type="text" /></label></li>
+	 					<li><label for="billaddress"> Billing Address: <input id="new-billaddress" name="billaddress" type="text" /></label></li>	 					
 	  			  	</ul>
 				 	</fieldset>
 				</form>
-				<center>
-					<a data-icon="delete" data-role="button" data-inline="true" onclick="DeleteAccount()">Delete Account?</a>
-				</center>
 			</div>
-			<div data-role="footer">
-				<div data-role="controlgroup" data-type="horizontal" align="center">
-					<a data-role="button" data-inline="true" data-icon="home" data-iconpos="top" href="#categories">Home</a>
-					<a data-role="button" data-inline="true" data-icon="star" data-iconpos="top" onClick="GetUserAccount()">Profile</a>
-				</div>
-			</div>
-		</div>
+		</div><!--/page-->
 
 		<div id="update-account" data-role="page">
 			<div data-role="header" data-theme="e" data-position="fixed">
@@ -272,7 +265,7 @@
 					<div class="ui-block-c">
 						<div data-role="controlgroup" data-type="horizontal">
 							<a href="#categories" data-role="button" data-icon="home" data-iconpos="top">Home</a>
-							<a href="" data-role="button" data-icon="search" data-iconpos="top">Browse</a>
+							<a href="#browse" data-role="button" data-icon="search" data-iconpos="top">Browse</a>
 							<a data-role="button" data-inline="true" data-icon="gear" data-iconpos="left" onclick="UpdateAccount()">Save</a>	
 							<a data-role="button" data-inline="true" data-icon="" data-iconpos="top" onClick="LogOut()">Logout</a>
 						</div>
@@ -281,15 +274,17 @@
 			</div>
 			<div data-role="content">
 				<h3 align="center">Edit Profile Information</h3>
-				<form id="category-view-form">
+				<form id="update-account-form">
 	 				<fieldset data-role="controlgroup">
 	 					<ul>
-	 					<li><label for="acc-firstname"> First Name: <input id="acc-fname" name="fname" type="text"/></label></li>
-	  					<li><label for="acc-lastname"> Last Name: <input id="acc-lname" name="lname" type="text"/></label></li>
+	 					<li><label for="acc-firstname"> First Name: <input id="acc-fname" name="firstname" type="text"/></label></li>
+	  					<li><label for="acc-lastname"> Last Name: <input id="acc-lname" name="lastname" type="text"/></label></li>
 	 					<li><label for="acc-email"> Email: <input id="acc-email" name="email" type="text"/></label></li>
-	 					<li><label for="acc-oldpassword"> Old Password: <input id="verify-password" name="oldpassword" type="password"/></label></li>
-	 					<li><label for="acc-newpassword"> New Password: <input id="upd-password" name="newpassword" type="password"/></label></li>
-	 					<li><label for="acc-confirmpassword"> Confirm Password: <input id="upd-confirmpassword" name="confirmpassword" type="password"/></label></li>
+	 					<li><label for="acc-shipaddress"> Shipping Address: <input id="acc-shipaddress" name="shipaddress" type="text" /></label></li>
+	 					<li><label for="acc-billaddress"> Billing Address: <input id="acc-billaddress" name="billaddress" type="text" /></label></li>	
+	 					<li><label for="acc-oldpassword"> Old Password: <input id="acc-oldpassword" name="oldpassword" type="password"/></label></li>
+	 					<li><label for="acc-newpassword"> New Password: <input id="acc-newpassword" name="newpassword" type="password"/></label></li>
+	 					<li><label for="acc-confirmpassword"> Confirm Password: <input id="acc-confirmpassword" name="confirmpassword" type="password"/></label></li>
 	  			  	</ul>
 				 	</fieldset>
 				</form>

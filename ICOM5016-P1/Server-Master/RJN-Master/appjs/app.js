@@ -395,6 +395,42 @@ function GetUserAccount(){
 	}
 }
 
+function RegisterAccount(){
+	if( $('#new-password').val() != $('#new-confirmpassword').val()){
+		alert("Password fields do not match. Please type them again.");
+	}
+	else{
+		$.mobile.loading("show");
+		var form = $("#register-form");
+		var formData = form.serializeArray();
+		console.log("form Data: " + formData);
+		var newUser = ConverToJSON(formData);
+		console.log("New Category: " + JSON.stringify(newUser));
+		var newUserJSON = JSON.stringify(newUser);
+		$.ajax({
+			url : "http://localhost:3412/Server-Master/register",
+			method: 'post',
+			data : newUserJSON,
+			contentType: "application/json",
+			dataType:"json",
+			success : function(data, textStatus, jqXHR){
+				$.mobile.loading("hide");
+				$.mobile.navigate("#login");
+			},
+			error: function(data, textStatus, jqXHR){
+				console.log("textStatus: " + textStatus);
+				$.mobile.loading("hide");
+				if(data.status == 409){
+					alert("A user by this username already exists. Please choose a different username");
+				}
+				else{
+					alert("New user could not be registered!");
+				}
+			}
+		});
+	}
+}
+
 //NOT finished yet
 /*function UpdateAccount(){
 	$.mobile.loading("show");
