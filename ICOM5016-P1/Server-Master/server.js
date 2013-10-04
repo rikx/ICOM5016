@@ -395,7 +395,7 @@ app.post('/Server-Master/register', function(req, res) {
     	return res.send('Error: Missing fields for new user.');
   	}
 	for (var i=0; i < userList.length; ++i){
-		if (userList[i].id == req.body.username){
+		if (userList[i].username == req.body.username){
 			exists = true;
 			break;
 		}

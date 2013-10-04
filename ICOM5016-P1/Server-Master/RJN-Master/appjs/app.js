@@ -145,7 +145,7 @@ $(document).on('pagebeforeshow', "#user-account", function( event, ui ) {
 	var payTypes = currentPaymentTypes;
 	var payList = $("#paymentType-list");
 	payList.empty();
-	alert(JSON.stringify(currentPaymentTypes));
+	//alert(JSON.stringify(currentPaymentTypes));
 	for(var i=0; i < payTypes.length; ++i){
 		//payList.append('<li>Card Ending with '+ payTypes[i].cNumber.substr(16)+'</li>');
 	}
@@ -158,7 +158,7 @@ $(document).on('pagebeforeshow', "#update-account", function(event, ui){
 	$("#acc-email").val(currentUser.email);
 	$("#acc-sAddress").val(currentUser.shipAddress);
 	$("#acc-bAddress").val(currentUser.billAddress);
-	//not finished
+	//not finished - missing the logic changing password
 });
 
 $(document).on('pagebeforeshow', "#product-view", function( event, ui ) {
