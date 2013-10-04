@@ -14,7 +14,8 @@
 		
 	</head>
 	<body>
-		<div id ="categories" data-role="page">
+		<!-- Home page -->
+		<div id ="categories" data-role="page"> 
 			<div data-role="header" data-theme="a" data-position="fixed">
 				<div class="ui-grid-b" align="center">
 					<div class="ui-block-a"><h3>RJN Bay</h3></div>
@@ -57,34 +58,6 @@
 				<h3 align="center">Products for Sale</h3>	<!-- Add title dynamically later -->
 				<ul id="browse-list" data-role="listview" data-inset="true">
 				</ul>
-			</div><!-- /content -->
-		</div><!-- /page -->
-
-		<div id="login" data-role="page">
-			<div data-role="header">
-				<div class="ui-grid-b" align="center">
-					<div class="ui-block-a"><h3>Login</h3></div>
-					<div class="ui-block-b"></div>
-					<div class="ui-block-c">
-						<div data-role="controlgroup" data-type="horizontal">
-							<a href="#categories" data-role="button" data-icon="home" data-iconpos="top">Home</a>
-							<a href="" data-role="button" data-icon="search" data-iconpos="top">Browse</a>
-						</div>
-					</div>
-				</div><!-- /grid-b -->
-			</div>
-			<div data-role="content" data-theme="c">	
-				<form id="login-form">
-					<fieldset data-role="controlgroup">
-					<ul>
-					<li><label for="loginusername"> Name: <input id="loginusername" name="username" type="text"/></label></li>
-					<li><label for="loginpassword"> Password: <input id="loginpassword" name="password" type="password"/></label></li>
-					<li><a data-role="button" onclick="LogIn()">Log In</a>
-				    <!-- <input type="submit" value="Submit Button" onclick="LogIn(); return false;"/> --></li>
-				    <li><a data-role="button" href="#register-account" rel="external">New User? Register here</a></li>
-					</ul>
-					</fieldset>
-				</form>	
 			</div><!-- /content -->
 		</div><!-- /page -->
 
@@ -147,6 +120,38 @@
 					<a data-role="button" data-inline="true" data-icon="star" data-iconpos="top" onClick="GetUserAccount()">Admin</a>
 				</div>
 			</div><!-- /footer -->
+		</div><!-- /page -->
+
+		<!--                        -->
+		<!-- ACCOUNT RELATED MARKUP -->
+		<!--                        -->
+
+		<div id="login" data-role="page">
+			<div data-role="header">
+				<div class="ui-grid-b" align="center">
+					<div class="ui-block-a"><h3>Login</h3></div>
+					<div class="ui-block-b"></div>
+					<div class="ui-block-c">
+						<div data-role="controlgroup" data-type="horizontal">
+							<a href="#categories" data-role="button" data-icon="home" data-iconpos="top">Home</a>
+							<a href="" data-role="button" data-icon="search" data-iconpos="top">Browse</a>
+						</div>
+					</div>
+				</div><!-- /grid-b -->
+			</div>
+			<div data-role="content" data-theme="c">	
+				<form id="login-form">
+					<fieldset data-role="controlgroup">
+					<ul>
+					<li><label for="loginusername"> Name: <input id="loginusername" name="username" type="text"/></label></li>
+					<li><label for="loginpassword"> Password: <input id="loginpassword" name="password" type="password"/></label></li>
+					<li><a data-role="button" onclick="LogIn()">Log In</a></li>
+				    <!-- <input type="submit" value="Submit Button" onclick="LogIn(); return false;"/> -->
+				    <li><a data-role="button" href="#register-account" rel="external">New User? Register here</a></li>
+					</ul>
+					</fieldset>
+				</form>	
+			</div><!-- /content -->
 		</div><!-- /page -->
 
 		<div id="user-account" data-role="page">
