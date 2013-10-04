@@ -1,4 +1,7 @@
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//								CATEGORY LIST A.K.A. HOME PAGE										  //
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 $(document).on('pagebeforeshow', "#categories", function( event, ui ) {
 	currentHistory = "";
@@ -42,6 +45,10 @@ $(document).on('pagebeforeshow', "#categories", function( event, ui ) {
 		}
 	});
 });
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//										SUB-CATEGORY LIST											  //
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 	//currentHistory = currentHistory + "/" + currentCategory.id;
@@ -98,7 +105,23 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 	});
 });
 
-//Enter Button Fix - Juan
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//										CATEGORY DETAILS											  //
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$(document).on('pagebeforeshow', "#category-view", function( event, ui ) {
+	// currentCategory has been set at this point
+	$("#upd-name").val(currentCategory.name);
+	/*
+	 * DON'T DELETE
+	$("#upd-model").val(currentCategory.model);
+	$("#upd-year").val(currentCategory.year);
+	$("#upd-price").val(currentCategory.price);
+	$("#upd-description").val(currentCategory.description);
+	*/
+});
+
+//--------------- Enter Button Fix - Juan ---------------//
 $(document).ready(function(){
     $("#upd-name").keypress(function(e){
       if(e.keyCode==13)
@@ -112,19 +135,11 @@ $(document).ready(function(){
       $("#SaveNewCategory").click();
     });
 });
-//Enter Button Fix End - Juan
 
-$(document).on('pagebeforeshow', "#category-view", function( event, ui ) {
-	// currentCategory has been set at this point
-	$("#upd-name").val(currentCategory.name);
-	/*
-	 * DON'T DELETE
-	$("#upd-model").val(currentCategory.model);
-	$("#upd-year").val(currentCategory.year);
-	$("#upd-price").val(currentCategory.price);
-	$("#upd-description").val(currentCategory.description);
-	*/
-});
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//										USER ACCOUNT												  //
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 $(document).on('pagebeforeshow', "#user-account", function( event, ui ) {
 	// currentUser has been set at this point
@@ -152,6 +167,10 @@ $(document).on('pagebeforeshow', "#user-account", function( event, ui ) {
 	payList.listview("refresh");
 });
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//										ACCOUNT	DETAILS												  //
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 $(document).on('pagebeforeshow', "#update-account", function(event, ui){
 	$("#acc-fname").val(currentUser.firstname);
 	$("#acc-lname").val(currentUser.lastname);
@@ -160,6 +179,10 @@ $(document).on('pagebeforeshow', "#update-account", function(event, ui){
 	$("#acc-bAddress").val(currentUser.billAddress);
 	//not finished - missing the logic changing password
 });
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//										PRODUCT	DETAILS												  //
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 $(document).on('pagebeforeshow', "#product-view", function( event, ui ) {
 	// currentProduct has been set at this point
@@ -176,8 +199,9 @@ $(document).on('pagebeforeshow', "#product-view", function( event, ui ) {
 	list.listview("refresh");	
 });
 
-////////////////////////////////////////////////////////////////////////////////////////////////
-/// Functions Called Directly from Buttons ///////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//											BUTTON FUNCTION:										  //
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function ConverToJSON(formData){
 	var result = {};
@@ -188,6 +212,11 @@ function ConverToJSON(formData){
 	return result;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//											THE CATEGORIES											  //
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//--------------- POST NEW CATEGORY (ADMIN ONLY) ---------------//
 function SaveCategory(){
 	$.mobile.loading("show");
 	var form = $("#category-form");
@@ -215,9 +244,10 @@ function SaveCategory(){
 
 }
 
-var currentCategory = {};
-var currentHistory = "";
+var currentCategory = {}; //-- ??
+var currentHistory = ""; //-- ??
 
+//--------------- GET CATEGORY DETAILS (ADMIN ONLY) ---------------//
 function editCategory(id){
 	$.mobile.loading("show");
 	$.ajax({
@@ -243,6 +273,7 @@ function editCategory(id){
 	});
 }
 
+//--------------- GET SUB-CATEGORY ??---------------//
 function GetSubCategory(id){
 	$.mobile.loading("show");
 	$.ajax({
@@ -268,6 +299,7 @@ function GetSubCategory(id){
 	});
 }
 
+//--------------- PUT NEW CATEGORY DETAILS (ADMIN ONLY) ---------------//
 function UpdateCategory(){
 	$.mobile.loading("show");
 	var form = $("#category-view-form");
@@ -300,6 +332,7 @@ function UpdateCategory(){
 	});
 }
 
+//--------------- DELETE CURRENT CATEGORY (ADMIN ONLY) ---------------//
 function DeleteCategory(){
 	$.mobile.loading("show");
 	var id = currentCategory.id;
@@ -325,6 +358,11 @@ function DeleteCategory(){
 	});	
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//											THE USERS											      //
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//--------------- POST USER ?? ---------------//
 function LogIn(){
 	$.mobile.loading("show");
 	var form = $("#login-form");
@@ -353,9 +391,10 @@ function LogIn(){
 }
 
 //initial value is set to Sign In for home page
-var currentUser = {"id": null};
-var currentPaymentTypes = {};
+var currentUser = {"id": null}; //-- ??
+var currentPaymentTypes = {}; //-- ??
 
+//--------------- GET USER ACCOUNT + PRIVILEGES?? ---------------//
 function GetUserAccount(){
 	$.mobile.loading("show");
 	if(currentUser.id == null){
@@ -395,6 +434,7 @@ function GetUserAccount(){
 	}
 }
 
+//--------------- REGISTER NEW USER ACCOUNT + LOGIC?? ---------------//
 function RegisterAccount(){
 	if( $('#new-password').val() != $('#new-confirmpassword').val()){
 		alert("Password fields do not match. Please type them again.");
@@ -463,7 +503,8 @@ function RegisterAccount(){
 		}
 	});
 }*/
-//Log Out function
+
+//--------------- LOG CURRENT USER ACCOUNT - PRIVILEGES?? ---------------//
 function LogOut(){
 	var uExit = confirm("Do you want to log out?");
 	if(uExit == true){
@@ -480,9 +521,10 @@ function LogOut(){
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //											THE PRODUCT												  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-var currentProduct = {};
 
-//Get product by ID
+var currentProduct = {}; //--??
+
+//--------------- GET PRODUCT FROM ID?? ---------------//
 function GetProduct(id){
 	$.mobile.loading("show");
 	$.ajax({
@@ -507,11 +549,12 @@ function GetProduct(id){
 		}
 	});
 }
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //											THE CART												  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-var Cart=[];//Test - Juan
-//Add to Cart - Juan
+var Cart=[];//Test - Juan - ARRAY OF CURRENT PRODUCTS IN CART
+//--------------- GET CART + ADD PRODUCTS (NO NAVIGATION!!!) ---------------//
 function addToCart(id){
 	$.mobile.loading("show");
 	$.ajax({
