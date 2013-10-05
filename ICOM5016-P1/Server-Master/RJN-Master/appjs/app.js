@@ -488,8 +488,12 @@ function GetUserAccount(){
 
 //--------------- REGISTER NEW USER ACCOUNT - Checks if passwords do not match before sending information, and cheks if username is already taken ---------------//
 function RegisterAccount(){
-	if($('#new-password').val() == "" || $('#new-confirmpassword').val() == "")
+	if($('#newusername').val() == ""){
+		alert("Please type in a username of your choosing.");
+	}
+	else if($('#new-password').val() == "" || $('#new-confirmpassword').val() == ""){
 		alert("Password fields cannot be blank. Please choose a password of at least 6 characters");
+	}
 	else if( $('#new-password').val() != $('#new-confirmpassword').val()){
 		alert("Password fields do not match. Please type them again.");
 	}
