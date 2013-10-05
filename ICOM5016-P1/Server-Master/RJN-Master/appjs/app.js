@@ -146,6 +146,7 @@ $(document).on('pagebeforeshow', "#user-account", function( event, ui ) {
 	// currentUser has been set at this point
 	var user = currentUser;
 	$("#userTitle").html(user.username);
+	$('#ratings-average').empty();
 
 	//Populate user information list
 	var infoList = $("#user-info");
@@ -174,16 +175,44 @@ $(document).on('pagebeforeshow', "#user-account", function( event, ui ) {
 	var avgRating = 0;
 	var rCount = 0;
 	for(var i=0; i < currentRatingsList.length;++i){
-		ratingsList.append('<li>User of id '+ currentRatingsList[i].raterId + ' - '+ currentRatingsList[i].rating+'</li>');
+		ratingsList.append('<li>User of id '+ currentRatingsList[i].raterId + ' - '+ ConvertToStars(currentRatingsList[i].rating) +'</li>');
 		avgRating += currentRatingsList[i].rating;
 		rCount++;
 	}
 	ratingsList.listview("refresh");
 	
 	avgRating = avgRating / rCount;
-	$('#ratings-average').prepend(avgRating);
+	//$('#ratingsdiv').prepend("<h2>Rating: " + avgRating + "</h2>");
+	$('#ratings-average').append("Rating: " + ConvertToStars(avgRating));
 });
 
+function ConvertToStars(rating){
+	//Selects number of * for each rating
+	switch(rating) {
+	  case 1:
+	  	return '<span class="ui-icon ui-icon-fastar"></span>';
+	    break;
+	  case 2:
+	  	return '<div data-role="controlgroup" data-type="horizontal"><span class="ui-icon ui-icon-fastar"></span>'+
+	  			'<span class="ui-icon ui-icon-fastar"></span></div>';
+	    break;
+	  case 3:
+	  	return '<div data-role="controlgroup" data-type="horizontal">'+
+	  			'<span class="ui-icon ui-icon-fastar"></span>'+
+	  			'<span class="ui-icon ui-icon-fastar"></span>'+
+	  			'<span class="ui-icon ui-icon-fastar"></span></div>'; 
+	    break;
+	  case 4:
+	  	return '<div data-role="controlgroup" data-type="horizontal">'+
+	  			'<span class="ui-icon ui-icon-fastar"></span>'+
+	  			'<span class="ui-icon ui-icon-fastar"></span>'+
+	  			'<span class="ui-icon ui-icon-fastar"></span>'+
+	  			'<span class="ui-icon ui-icon-fastar"></span></div>'; 
+	  	break;
+	  default:
+	    return '<span class="ui-icon ui-icon-star-empty"></span>';
+	};
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //										ACCOUNT	DETAILS												  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -404,6 +433,7 @@ function LogIn(){
 			contentType: "application/json",
 			dataType:"json",
 			success : function(data, textStatus, jqXHR){
+				//add code to clear login form data here
 				$.mobile.loading("hide");
 				currentUser = data.user;
 				$.mobile.navigate("#categories");
