@@ -294,6 +294,55 @@ app.get('/Server-Master/subCategory/:id', function(req, res) {
 });
 
 /*==================================================================*/
+/*								Products							*/
+/*==================================================================*/
+
+var Product = modules.Product;
+
+//Product:function(name,parent,instantPrice,bidPrice,description,model,brand,dimensions)
+var productList = new Array(
+	new Product("MyPhone", 13, 500, 400, "Brand new, still in box Myphone.", "MyPhone5X", "Mapple", '10"x8"x0.5"'),
+	new Product("Viperus", 38, 901, 700, "Honyota Viperus Wheels. Its so fast your skin flies off.", "Viperus XLR", "Honyota", '15" diameter with 2" thickness'),
+	new Product("Test Product 1", 41, 9001, 42, "Test of product printing", "model", "brand", "dimensions")
+	);
+
+var productNextId = 0;
+
+for (var i=0; i < productList.length;++i){
+	productList[i].id = productNextId++;
+}
+
+// REST Operation - HTTP GET to read a product based on its id
+app.get('/Server-Master/product/:id', function(req, res) {
+	var id = req.params.id;
+		console.log("GET product: " + id);
+	if ((id < 0) || (id >= productNextId)){
+		// not found
+		res.statusCode = 404;
+		res.send("Product not found.");
+	}
+	else {
+		var target = -1;
+		for (var i=0; i < productList.length; ++i){
+			if (productList[i].id == id){
+				target = i;
+				break;	
+			}
+		}
+		if (target == -1){
+			res.statusCode = 404;
+			res.send("Product not found.");
+		}
+		else {
+			var response = {"product" : productList[target]};
+  			res.json(response);	
+  		}	
+	}
+});
+
+// Missing REST operations for posting, updating, and deleting a product.
+
+/*==================================================================*/
 /*								Users								*/
 /*==================================================================*/
 var User = modules.User;
@@ -490,56 +539,6 @@ app.post('/Server-Master/register', function(req, res) {
 });*/
 
 // Missing REST Operation for deleting user
-
-
-/*==================================================================*/
-/*								Products							*/
-/*==================================================================*/
-
-var Product = modules.Product;
-
-//Product:function(name,parent,instantPrice,bidPrice,description,model,brand,dimensions)
-var productList = new Array(
-	new Product("MyPhone", 13, 500, 400, "Brand new, still in box Myphone.", "MyPhone5X", "Mapple", '10"x8"x0.5"'),
-	new Product("Viperus", 38, 901, 700, "Honyota Viperus Wheels. Its so fast your skin flies off.", "Viperus XLR", "Honyota", '15" diameter with 2" thickness'),
-	new Product("Test Product 1", 41, 9001, 42, "Test of product printing", "model", "brand", "dimensions")
-	);
-
-var productNextId = 0;
-
-for (var i=0; i < productList.length;++i){
-	productList[i].id = productNextId++;
-}
-
-// REST Operation - HTTP GET to read a product based on its id
-app.get('/Server-Master/product/:id', function(req, res) {
-	var id = req.params.id;
-		console.log("GET product: " + id);
-	if ((id < 0) || (id >= productNextId)){
-		// not found
-		res.statusCode = 404;
-		res.send("Product not found.");
-	}
-	else {
-		var target = -1;
-		for (var i=0; i < productList.length; ++i){
-			if (productList[i].id == id){
-				target = i;
-				break;	
-			}
-		}
-		if (target == -1){
-			res.statusCode = 404;
-			res.send("Product not found.");
-		}
-		else {
-			var response = {"product" : productList[target]};
-  			res.json(response);	
-  		}	
-	}
-});
-
-// Missing REST operations for posting, updating, and deleting a product.
 
 
 // Server starts running when listen is called.
