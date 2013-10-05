@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
+	<head> 
 
 		<title>RJN BAY</title>
 		<meta name="viewport" content="width=device-width; initial-scale=1.0" />
@@ -11,6 +11,7 @@
 		<script src="js/jquery.mobile-1.3.1.js"></script>
 		<script src="js/accounting.js"></script>
 		<script src="appjs/app.js"></script>
+		
 		
 	</head>
 	<body>
@@ -38,10 +39,10 @@
 				<h3 align="center">Products for Sale</h3>	
 				
 					<!--Search Bar-->
-					<div>
-					<label for="search-basic">Search:</label>
-					<input type="search" name="search" id="search-bar" value="Enter Product Name" />
-					</div>
+							
+					<input type="text" class="search-field" name="search" value="Enter Product Name Here..." />
+					<a class="submit" data-role="button" data-iconpos="left" data-icon="search" title="Search">Search</a>
+									
 					<!--Search Bar End-->
 				
 				<ul id="category-list" data-role="listview" data-inset="true">
@@ -67,6 +68,14 @@
 			</div>
 			<div data-role="content">
 				<h3 align="center">Products for Sale</h3>	<!-- Add title dynamically later -->
+				
+				<!--Search Bar-->
+							
+					<input type="text" class="search-field" name="search" value="Enter Product Name Here..." />
+					<a class="submit" data-role="button" data-iconpos="left" data-icon="search" title="Search">Search</a>
+									
+				<!--Search Bar End-->
+				
 				<ul id="browse-list" data-role="listview" data-inset="true">
 				</ul>
 			</div><!-- /content -->
