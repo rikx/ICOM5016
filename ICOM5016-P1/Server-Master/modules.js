@@ -29,10 +29,17 @@ module.exports =  {
 		this.billAddress = billAddress;
 	},
 
-	PaymentType: function (cNumber){
-		this.uId="";
+	PaymentType: function (userId, cNumber){
+		this.id="";
+		this.userId = userId;
 		this.cNumber = cNumber;
-	}
+	},
 
+	Rating: function(sellerId, raterId, rating){
+		this.id="";
+		this.sellerId = sellerId;
+		this.raterId = raterId;
+		this.rating = rating;
+	}
 };
 

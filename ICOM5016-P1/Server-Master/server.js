@@ -301,6 +301,8 @@ var User = modules.User;
 //type, username, password, firstname, lastname, email, shipAddress, billAddress
 var userList = new Array(
 	new User("user", "user1", "password", "FirstName", "LastName", "user1@rjn.com", "wat 123 Guaynabo, PR", "wat 123 Guaynabo, PR"),
+	new User("user", "user2", "password", "FirstName", "LastName", "user2@rjn.com", "123 Mayawest, PR", "alextown 53 apt 1 San Juan, PR"),
+	new User("user", "user3", "password", "FirstName", "LastName", "user3@rjn.com", "5 OPNESS Texas, USA", "5 OPNESS Texas, USA"),
 	new User("admin", "admin1", "password", "FirstName", "LastName", "admin1@rjn.com")
 	);
 var userNextId = 0;
@@ -309,13 +311,33 @@ for (var i=0; i < userList.length;++i){
 	userList[i].id = userNextId++;
 }
 
-var paymentType = modules.PaymentType;
+var PaymentType = modules.PaymentType;
 
-// user id, card info
+//user id, card info
 var payTypeList = new Array(
-	new paymentType(0, "0123-4567-89AB-CDEF"),
-	new paymentType(0, "FEDC-BA98-7654-3210")
+	new PaymentType(0, "0123-4567-89AB-CDEF"),
+	new PaymentType(0, "FEDC-BA98-7654-3210")
 	);
+
+var paymentNextId = 0;
+
+for (var i=0; i < payTypeList.length;++i){
+	payTypeList[i].id = paymentNextId++;
+}
+
+var Rating = modules.Rating;
+
+//id, seller id, rater id, rating
+var ratingsList = new Array(
+	new Rating (0, 1, 4),
+	new Rating (0, 2, 0)
+	);
+
+var ratingsNextId = 0;
+
+for (var i=0; i < ratingsList.length;++i){
+	ratingsList[i].id = ratingsNextId++;
+}
 
 // REST Operation - HTTP POST to login user
 app.post('/Server-Master/home/:userNameLogin', function(req, res) {
@@ -351,7 +373,7 @@ app.post('/Server-Master/home/:userNameLogin', function(req, res) {
 		else {
 			//Future work: create global userCount variable and add userCount++ here to see how many users are currently logged in
 			var response = {"user" : userList[target]};
-				res.json(response);	
+			res.json(response);	
 		}	 	
 	}
 });
@@ -361,6 +383,7 @@ app.get('/Server-Master/account/:id', function(req, res) {
 	var id = req.params.id;
 		console.log("GET user account: " + id);
 	var paymentTypes = new Array();
+	var ratersList = new Array();
 
 	if ((id < 0) || (id >= userNextId)){
 		// not found
@@ -373,8 +396,14 @@ app.get('/Server-Master/account/:id', function(req, res) {
 			if (userList[i].id == id){
 				target = i;
 				for(var j=0; j < payTypeList.length;++j){
-					if(userList[i].id == payTypeList[j].uId)
+					if(userList[i].id == payTypeList[j].userId){
 						paymentTypes.push(payTypeList[j]);
+					}
+				}
+				for(var l=0; l < ratingsList.length;++l){
+					if(userList[i].id == ratingsList[l].sellerId){
+						ratersList.push(ratingsList[l]);
+					}
 				}
 				break;	
 			}
@@ -384,7 +413,7 @@ app.get('/Server-Master/account/:id', function(req, res) {
 			res.send("User not found.");
 		}
 		else {
-			var response = {"user" : userList[target], "paymentTypes" : payTypeList};
+			var response = {"user" : userList[target], "paymentTypes" : payTypeList, "ratingsList" : ratersList};
   			res.json(response);	
   		}	
 	}

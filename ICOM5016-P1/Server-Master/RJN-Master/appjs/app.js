@@ -161,12 +161,27 @@ $(document).on('pagebeforeshow', "#user-account", function( event, ui ) {
 	var payTypes = currentPaymentTypes;
 	var payList = $("#paymentType-list");
 	payList.empty();
-	//alert(JSON.stringify(payTypes));
-	//This is not fully functional yet because payTypes contains the right number of elements, but they each have empty values that should not be there
+	
 	for(var i=0; i < payTypes.length; ++i){
-		//payList.append('<li>Card Ending with '+ payTypes[i].cNumber.substr(16)+'</li>');
+		payList.append('<li>Card Ending with '+ payTypes[i].cNumber.substr(15)+'</li>');
 	}
 	payList.listview("refresh");
+
+	//Populate average rating header and ratings list
+	var ratingsList = $("#ratings-list");
+	ratingsList.empty();
+
+	var avgRating = 0;
+	var rCount = 0;
+	for(var i=0; i < currentRatingsList.length;++i){
+		ratingsList.append('<li>User of id '+ currentRatingsList[i].raterId + ' - '+ currentRatingsList[i].rating+'</li>');
+		avgRating += currentRatingsList[i].rating;
+		rCount++;
+	}
+	ratingsList.listview("refresh");
+	
+	avgRating = avgRating / rCount;
+	$('#ratings-average').prepend(avgRating);
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -367,6 +382,7 @@ function DeleteCategory(){
 //initial value is set to null for when noone is logged in
 var currentUser = {"id": null}; //-- ??
 var currentPaymentTypes = {}; //-- ??
+var currentRatingsList = {};
 
 //--------------- Logs in via POST so it can send the form values of username and password to the server for authentication ---------------//
 function LogIn(){
@@ -421,6 +437,7 @@ function GetUserAccount(){
 			success : function(data, textStatus, jqXHR){
 				currentUser = data.user;
 				currentPaymentTypes = data.paymentTypes;
+				currentRatingsList = data.ratingsList;
 				$.mobile.loading("hide");
 				if(currentUser.type == "user"){
 					$.mobile.navigate("#user-account");
