@@ -145,7 +145,7 @@
 					<ul>
 					<li><label for="loginusername"> Name: <input id="loginusername" name="username" type="text"/></label></li>
 					<li><label for="loginpassword"> Password: <input id="loginpassword" name="password" type="password"/></label></li>
-					<li><a data-role="button" onclick="LogIn()">Log In</a></li>
+					<li><a data-role="button" onclick="LogIn()" href="#">Log In</a></li>
 				    <!-- <input type="submit" value="Submit Button" onclick="LogIn(); return false;"/> -->
 				    <li><a data-role="button" href="#register-account" rel="external">New User? Register here</a></li>
 					</ul>
@@ -170,27 +170,39 @@
 				</div><!-- /grid-b -->
 			</div>
 			<div data-role="content">
-				<h3>Your Profile Info</h3>
 				<h4 id="ratings-average"></h2>
 				<div class="ui-grid-a" align="center">
 					<div class="ui-block-a">
-						<ul id="user-info" data-role="listview" data-inset="true">
-						</ul>
+						<div data-role="collapsible" data-collapsed="false" data-theme="a" data-content-theme="c">
+							<h2>Profile Information</h2>
+							<ul id="user-info" data-role="listview" data-inset="true">
+							</ul>
+						</div><!--/collapsible-->
 						<div data-role="collapsible" data-theme="a" data-content-theme="c">
-							<h2>Ratings by user</h2>
+							<h2>Shipping Addresses</h2>
+							<ul id="shipaddress-list" data-role="listview">
+							</ul>
+						</div><!--/collapsible-->
+						<div data-role="collapsible" data-theme="a" data-content-theme="c">
+							<h2>Payment Options</h2>
+							<ul id="paymentType-list" data-role="listview">
+							</ul>
+						</div><!--/collapsible-->
+						<div data-role="collapsible" data-theme="a" data-content-theme="c">
+							<h2>Ratings by User</h2>
 							<ul id="ratings-list" data-role="listview">
 							</ul>
 						</div><!--/collapsible-->
 					</div>
 					<div class="ui-block-b">
 						<div data-role="collapsible" data-theme="a" data-content-theme="c">
-							<h2>Current bids</h2>
+							<h2>Current Bids</h2>
 							<ul id="currentBids-list" data-role="listview">
 							</ul>
 						</div><!--/collapsible-->
 						<div data-role="collapsible" data-theme="a" data-content-theme="c">
-							<h2>Payment Information</h2>
-							<ul id="paymentType-list" data-role="listview">
+							<h2>Current Sales</h2>
+							<ul id="currentSales-list" data-role="listview">
 							</ul>
 						</div><!--/collapsible-->
 						<div data-role="collapsible" data-theme="a">
@@ -223,7 +235,7 @@
 							<a href="#categories" data-role="button" data-icon="home" data-iconpos="top">Home</a>
 							<a href="" data-role="button" data-icon="search" data-iconpos="top">Browse</a>
 							<a data-role="button" data-icon="gear" data-iconpos="top" href="#update-account">Edit</a>	
-							<a data-role="button" data-inline="true" data-icon="" data-iconpos="top" onClick="LogOut()">Logout</a>
+							<a data-role="button" data-inline="true" data-icon="off" data-iconpos="top" onClick="LogOut()">Logout</a>
 						</div>
 					</div>
 				</div><!-- /grid-b -->
@@ -249,7 +261,7 @@
 					<div class="ui-block-c">
 						<div data-role="controlgroup" data-type="horizontal">
 							<a href="#categories" data-role="button" data-icon="home" data-iconpos="top">Home</a>
-							<a data-role="button" data-inline="true" onclick="RegisterAccount()">Submit</a>
+							<a data-role="button" data-inline="true" data-icon="" data-iconpos="top" onclick="RegisterAccount()">Submit</a>
 						</div>
 					</div>
 				</div><!-- /grid-b -->
@@ -282,8 +294,8 @@
 						<div data-role="controlgroup" data-type="horizontal">
 							<a href="#categories" data-role="button" data-icon="home" data-iconpos="top">Home</a>
 							<a href="#browse" data-role="button" data-icon="search" data-iconpos="top">Browse</a>
-							<a data-role="button" data-inline="true" data-icon="gear" data-iconpos="left" onclick="UpdateAccount()">Save</a>	
-							<a data-role="button" data-inline="true" data-icon="" data-iconpos="top" onClick="LogOut()">Logout</a>
+							<a data-role="button" data-inline="true" data-icon="gear" data-iconpos="top" onclick="UpdateAccount()">Save</a>	
+							<a data-role="button" data-inline="true" data-icon="off" data-iconpos="top" onClick="LogOut()">Logout</a>
 						</div>
 					</div>
 				</div><!-- /grid-b -->

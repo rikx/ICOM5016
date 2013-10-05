@@ -315,8 +315,8 @@ var PaymentType = modules.PaymentType;
 
 //user id, card info
 var payTypeList = new Array(
-	new PaymentType(0, "0123-4567-89AB-CDEF"),
-	new PaymentType(0, "FEDC-BA98-7654-3210")
+	new PaymentType("0", "0123-4567-89AB-CDEF"),
+	new PaymentType("0", "FEDC-BA98-7654-3210")
 	);
 
 var paymentNextId = 0;
@@ -395,11 +395,13 @@ app.get('/Server-Master/account/:id', function(req, res) {
 		for (var i=0; i < userList.length; ++i){
 			if (userList[i].id == id){
 				target = i;
+				//if user is found, return all of his payment types
 				for(var j=0; j < payTypeList.length;++j){
 					if(userList[i].id == payTypeList[j].userId){
 						paymentTypes.push(payTypeList[j]);
 					}
 				}
+				//if user is found, return all of his ratings
 				for(var l=0; l < ratingsList.length;++l){
 					if(userList[i].id == ratingsList[l].sellerId){
 						ratersList.push(ratingsList[l]);
@@ -413,7 +415,7 @@ app.get('/Server-Master/account/:id', function(req, res) {
 			res.send("User not found.");
 		}
 		else {
-			var response = {"user" : userList[target], "paymentTypes" : payTypeList, "ratingsList" : ratersList};
+			var response = {"user" : userList[target], "paymentTypes" : paymentTypes, "ratingsList" : ratersList};
   			res.json(response);	
   		}	
 	}

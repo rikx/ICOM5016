@@ -143,15 +143,15 @@ $(document).ready(function(){
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 $(document).on('pagebeforeshow', "#user-account", function( event, ui ) {
-	// currentUser has been set at this point
+	// currentUser, currentPaymentTypes and currentRatings have been set at this point
+	$('#ratings-average').empty();
 	var user = currentUser;
 	$("#userTitle").html(user.username);
-	$('#ratings-average').empty();
 
 	//Populate user information list
 	var infoList = $("#user-info");
 	infoList.empty();
-	infoList.append("<li><h2>" + user.username + "</h2></li><li><strong>Account ID: </strong>" + user.id + '</li></li>'+
+	infoList.append("<li><strong>Account ID: </strong>" + user.id + '</li></li>'+
 		'<li><strong>First Name: </strong>' + user.firstname + '</li></li><li><strong>Last Name: </strong>' + user.lastname + 
 		'</li></li><li><strong>Email: </strong>' + user.email + '</li><li><strong>Shipping Address: </strong>' + user.shipAddress+'</li>'+
 		'<li><strong>Billing Address: </strong>' + user.billAddress + '</li>'
@@ -159,12 +159,12 @@ $(document).on('pagebeforeshow', "#user-account", function( event, ui ) {
 	infoList.listview("refresh");
 
 	//Populate payment information list
-	var payTypes = currentPaymentTypes;
 	var payList = $("#paymentType-list");
 	payList.empty();
 	
-	for(var i=0; i < payTypes.length; ++i){
-		payList.append('<li>Card Ending with '+ payTypes[i].cNumber.substr(15)+'</li>');
+	//change this logic to check for type of payment option, such as creditcard or paypal
+	for(var i=0; i < currentPaymentTypes.length; ++i){
+		payList.append('<li>Card Ending with '+ currentPaymentTypes[i].cNumber.substr(15)+'</li>');
 	}
 	payList.listview("refresh");
 
