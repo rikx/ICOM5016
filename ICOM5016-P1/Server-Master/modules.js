@@ -5,10 +5,11 @@ module.exports =  {
 		this.parent = parent;
 	},
 	
-	Product:function(name,parent,instantPrice,bidPrice,description,model,brand,dimensions){
+	Product: function(name,parent,sellerId,instantPrice,bidPrice,description,model,brand,dimensions){
 		this.id="";
 		this.name = name;
 		this.parent = parent;
+		this.sellerId = sellerId;
 		this.instantPrice = instantPrice;
 		this.bidPrice = bidPrice;
 		this.description = description;

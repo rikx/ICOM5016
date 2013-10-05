@@ -197,36 +197,47 @@ $(document).on('pagebeforeshow', "#user-account", function( event, ui ) {
 	//Populate user information list
 	var infoList = $("#user-info");
 	infoList.empty();
-	infoList.append("<li><strong>Account ID: </strong>" + user.id + '</li></li>'+
+	infoList.append('<li><strong>Account ID: </strong>' + user.id + '</li></li>'+
 		'<li><strong>First Name: </strong>' + user.firstname + '</li></li><li><strong>Last Name: </strong>' + user.lastname + 
 		'</li></li><li><strong>Email: </strong>' + user.email + '</li><li><strong>Shipping Address: </strong>' + user.shipAddress+'</li>'+
 		'<li><strong>Billing Address: </strong>' + user.billAddress + '</li>'
 	);
 	infoList.listview("refresh");
 
-	//Populate payment information list
-	var payList = $("#paymentType-list");
+	var payList = $('#paymentType-list');
+	var ratingsList = $('#ratings-list');
+	var sellingList = $('#currentSales-list');
 	payList.empty();
-	
-	//change this logic to check for type of payment option, such as creditcard or paypal
-	for(var i=0; i < currentPaymentTypes.length; ++i){
-		payList.append('<li>Card Ending with '+ currentPaymentTypes[i].cNumber.substr(15)+'</li>');
-	}
-	payList.listview("refresh");
-
-	//Populate average rating header and ratings list
-	var ratingsList = $("#ratings-list");
 	ratingsList.empty();
+	sellingList.empty();
+
+	var maxLength = Math.max(currentPaymentTypes.length, currentRatingsList.length, currentProductsSelling.length); 
 
 	var avgRating = 0;
 	var rCount = 0;
-	for(var i=0; i < currentRatingsList.length;++i){
-		ratingsList.append('<li>User of id '+ currentRatingsList[i].raterId + ' - '+ ConvertToStars(currentRatingsList[i].rating) +'</li>');
-		avgRating += currentRatingsList[i].rating;
-		rCount++;
+	for(var i=0; i < maxLength; ++i){
+		//Populate Payment Options list
+		if(i < currentPaymentTypes.length){
+			payList.append('<li>Card Ending with '+ currentPaymentTypes[i].cNumber.substr(15)+'</li>');
+		}
+		//Populate Ratings by User list
+		if(i < currentRatingsList.length){
+			ratingsList.append('<li>User of id '+ currentRatingsList[i].raterId + ' - '+ ConvertToStars(currentRatingsList[i].rating) +'</li>');
+			avgRating += currentRatingsList[i].rating;
+			rCount++;
+		}
+		//Populate Current Sales list
+		if(i < currentProductsSelling.length){
+			sellingList.append('<li><a onclick=GetProduct('+currentProductsSelling[i].id+')><h4>'+currentProductsSelling[i].name+'</h4></a>'+
+			'<a onclick=editProduct('+currentProductsSelling[i].id+') data-icon="gear" Edit</a></li>'
+			);
+		}
 	}
+	payList.listview("refresh");
 	ratingsList.listview("refresh");
-	
+	sellingList.listview("refresh");
+
+	//Populate average rating header
 	avgRating = avgRating / rCount;
 	//$('#ratingsdiv').prepend("<h2>Rating: " + avgRating + "</h2>");
 	$('#ratings-average').append("Rating: " + ConvertToStars(avgRating));
@@ -458,6 +469,7 @@ function DeleteCategory(){
 var currentUser = {"id": null}; //-- ??
 var currentPaymentTypes = {}; //-- ??
 var currentRatingsList = {};
+var currentProductsSelling = {};
 
 //--------------- Logs in via POST so it can send the form values of username and password to the server for authentication ---------------//
 function LogIn(){
@@ -514,6 +526,7 @@ function GetUserAccount(){
 				currentUser = data.user;
 				currentPaymentTypes = data.paymentTypes;
 				currentRatingsList = data.ratingsList;
+				currentProductsSelling = data.sellingProducts;
 				$.mobile.loading("hide");
 				if(currentUser.type == "user"){
 					$.mobile.navigate("#user-account");

@@ -299,11 +299,11 @@ app.get('/Server-Master/subCategory/:id', function(req, res) {
 
 var Product = modules.Product;
 
-//Product:function(name,parent,instantPrice,bidPrice,description,model,brand,dimensions)
+//Product:function(name,parent,sellerId,instantPrice,bidPrice,description,model,brand,dimensions)
 var productList = new Array(
-	new Product("MyPhone", 13, 500, 400, "Brand new, still in box Myphone.", "MyPhone5X", "Mapple", '10"x8"x0.5"'),
-	new Product("Viperus", 38, 901, 700, "Honyota Viperus Wheels. Its so fast your skin flies off.", "Viperus XLR", "Honyota", '15" diameter with 2" thickness'),
-	new Product("Test Product 1", 41, 9001, 42, "Test of product printing", "model", "brand", "dimensions")
+	new Product("MyPhone", 13, 0, 500, 400, "Brand new, still in box Myphone.", "MyPhone5X", "Mapple", '10"x8"x0.5"'),
+	new Product("Viperus", 38, 0, 901, 700, "Honyota Viperus Wheels. Its so fast your skin flies off.", "Viperus XLR", "Honyota", '15" diameter with 2" thickness'),
+	new Product("Test Product 1", 41, 1, 9001, 42, "Test of product printing", "model", "brand", "dimensions")
 	);
 
 var productNextId = 0;
@@ -442,27 +442,31 @@ app.get('/Server-Master/account/:id', function(req, res) {
 		console.log("GET user account: " + id);
 	var paymentTypes = new Array();
 	var ratersList = new Array();
-
+	var productsSale = new Array();
 	if ((id < 0) || (id >= userNextId)){
 		// not found
 		res.statusCode = 404;
 		res.send("User not found.");
 	}
 	else {
+		var maxLength = Math.max(payTypeList.length, ratingsList.length, productList.length); 
 		var target = -1;
 		for (var i=0; i < userList.length; ++i){
+			//if user is found,
 			if (userList[i].id == id){
 				target = i;
-				//if user is found, return all of his payment types
-				for(var j=0; j < payTypeList.length;++j){
-					if(userList[i].id == payTypeList[j].userId){
-						paymentTypes.push(payTypeList[j]);
+				for(var x=0; x < maxLength; ++x){
+					//return his payment types
+					if(x < payTypeList.length && userList[i].id == payTypeList[x].userId){
+						paymentTypes.push(payTypeList[x]);
 					}
-				}
-				//if user is found, return all of his ratings
-				for(var l=0; l < ratingsList.length;++l){
-					if(userList[i].id == ratingsList[l].sellerId){
-						ratersList.push(ratingsList[l]);
+					//return his ratings
+					if(x < ratingsList.length && userList[i].id == ratingsList[x].sellerId){
+						ratersList.push(ratingsList[x]);
+					}
+					//return his products on sale
+					if(x < productList.length && userList[i].id == productList[x].sellerId){
+						productsSale.push(productList[x]);
 					}
 				}
 				break;	
@@ -473,7 +477,7 @@ app.get('/Server-Master/account/:id', function(req, res) {
 			res.send("User not found.");
 		}
 		else {
-			var response = {"user" : userList[target], "paymentTypes" : paymentTypes, "ratingsList" : ratersList};
+			var response = {"user" : userList[target], "paymentTypes" : paymentTypes, "ratingsList" : ratersList, "sellingProducts" : productsSale};
   			res.json(response);	
   		}	
 	}
