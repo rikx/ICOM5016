@@ -340,6 +340,15 @@ app.get('/Server-Master/product/:id', function(req, res) {
 	}
 });
 
+//JUAN SEARCH TESTING
+// REST Operation - HTTP GET to read a product based on its id
+app.get('/Server-Master/search', function(req, res) {
+	console.log("GET products");
+
+	var response = {"ListOfProducts" : productList};
+  	res.json(response);
+});
+//JUAN SEARCH TESTING END
 // Missing REST operations for posting, updating, and deleting a product.
 
 /*==================================================================*/

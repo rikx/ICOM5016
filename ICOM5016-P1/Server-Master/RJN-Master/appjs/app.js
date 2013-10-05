@@ -152,6 +152,37 @@ $(document).ready(function(){
     });
 });
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//										SEARCH														  //
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$(document).ready(function(){
+    $("#search-bar").keypress(function(e){
+      
+      if(e.keyCode==13){
+      	var input = $("#search-bar").val();
+        $.ajax({
+          url : "http://localhost:3412/Server-Master/search",
+              contentType: "application/json",
+              success : function(data, textStatus, jqXHR){
+                  var productList = data.ListOfProducts;
+                  var len = productList.length;
+                  for (var i=0; i < len; ++i){
+                      name = productList[i].name;
+                      if(name===input) {
+                          GetProduct(productList[i].id);
+                          break;
+                      }
+                  }    
+              },
+              error: function(data, textStatus, jqXHR){
+                  console.log("textStatus: " + textStatus);
+                  alert("Product not found!");
+              }
+        });
+      }
+    });
+});
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //										USER ACCOUNT												  //

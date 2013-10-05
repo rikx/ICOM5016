@@ -7,8 +7,8 @@ module.exports =  {
 	
 	Product:function(name,parent,instantPrice,bidPrice,description,model,brand,dimensions){
 		this.id="";
-		this.parent=parent;
 		this.name = name;
+		this.parent = parent;
 		this.instantPrice = instantPrice;
 		this.bidPrice = bidPrice;
 		this.description = description;
