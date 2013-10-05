@@ -21,12 +21,15 @@
 					<div class="ui-block-a"><h3>RJN Bay</h3></div>
 					<div class="ui-block-b"></div>
 					<div class="ui-block-c">
+				
 						<div data-role="controlgroup" data-type="horizontal">
-							<a href="#home" data-role="button" data-icon="home" data-iconpos="notext">Home</a>
-							<a href="" data-role="button" data-icon="search" data-iconpos="notext">Browse</a>
-							<a data-role="button" data-icon="user" data-iconpos="notext" onClick="GetUserAccount()">Account</a>
+							
+							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
+							<a href="" 						data-role="button" data-icon="search"		 data-iconpos="top" title="Browse"	></a>
+							<a onClick="GetUserAccount()"	data-role="button" data-icon="user"			 data-iconpos="top" title="Account"	></a>
+							<a href="#cart" 				data-role="button" data-icon="shopping-cart" data-iconpos="top" title="Cart"	></a><!-- /// onClick="GetCart()">/// -->
 							<!-- <a data-role="button" data-inline="true" onClick="LogOut()">Logout</a> --> <!-- Add this dynamically later -->
-							<a href="#cart" data-role="button" data-icon="shopping-cart" data-iconpos="notext">Cart</a><!-- /// onClick="GetCart()">/// -->
+							
 						</div>
 					</div>
 				</div><!-- /grid-b -->
@@ -45,11 +48,11 @@
 					<div class="ui-block-b"></div>
 					<div class="ui-block-c">
 						<div data-role="controlgroup" data-type="horizontal">
-							<a href="#home" data-role="button" data-icon="home" data-iconpos="top">Home</a>
-							<a href="" data-role="button" data-icon="search" data-iconpos="top">Browse</a>
-							<a data-role="button" data-icon="user" data-iconpos="top" onClick="GetUserAccount()">Account</a>
+							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
+							<a href="" 						data-role="button" data-icon="search"		 data-iconpos="top" title="Browse"	></a>
+							<a onClick="GetUserAccount()"	data-role="button" data-icon="user"			 data-iconpos="top" title="Account"	></a>
+							<a href="#cart" 				data-role="button" data-icon="shopping-cart" data-iconpos="top" title="Cart"	></a><!-- /// onClick="GetCart()">/// -->
 							<!-- <a data-role="button" data-inline="true" onClick="LogOut()">Logout</a> --> <!-- Add this dynamically later -->
-							<a data-role="button" data-icon="shopping-cart" data-iconpos="top" href="#cart">Cart</a>
 						</div>
 					</div>
 				</div><!-- /grid-b -->
@@ -84,8 +87,8 @@
 			</div><!-- /content -->
 			<div data-role="footer">
 				<div data-role="controlgroup" data-type="horizontal" align="center">
-					<a data-role="button" data-inline="true" data-icon="home" data-iconpos="top" href="#home">Home</a>
-					<a data-role="button" data-inline="true" data-icon="star" data-iconpos="top" onClick="GetUserAccount()">Admin</a>
+							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
+							<a onClick="GetUserAccount()"	data-role="button" data-icon="star"			 data-iconpos="top" title="Admin"	></a>
 				</div>
 			</div><!-- /footer -->
 		</div><!-- /page -->
@@ -116,8 +119,8 @@
 			</div>
 			<div data-role="footer">
 				<div data-role="controlgroup" data-type="horizontal" align="center">
-					<a data-role="button" data-inline="true" data-icon="home" data-iconpos="top" href="#home">Home</a>
-					<a data-role="button" data-inline="true" data-icon="star" data-iconpos="top" onClick="GetUserAccount()">Admin</a>
+					<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
+					<a onClick="GetUserAccount()"	data-role="button" data-icon="star"			 data-iconpos="top" title="Admin"	></a>
 				</div>
 			</div><!-- /footer -->
 		</div><!-- /page -->
@@ -161,10 +164,12 @@
 					<div class="ui-block-b"></div>
 					<div class="ui-block-c">
 						<div data-role="controlgroup" data-type="horizontal">
-							<a href="#home" data-role="button" data-icon="home" data-iconpos="top">Home</a>
-							<a href="" data-role="button" data-icon="search" data-iconpos="top">Browse</a>
-							<a data-role="button" data-icon="gear" data-iconpos="top" href="#update-account">Edit</a>	
-							<a data-role="button" data-inline="true" data-icon="off" data-iconpos="top" onClick="LogOut()">Logout</a>
+							
+							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
+							<a href="" 						data-role="button" data-icon="search"		 data-iconpos="top" title="Browse"	></a>
+							<a href="#update-account"		data-role="button" data-icon="gear"			 data-iconpos="top" title="Edit"	></a>
+							<a onClick="LogOut()"			data-role="button" data-icon="off" 			 data-iconpos="top" title="Logout"	></a>
+							
 						</div>
 					</div>
 				</div><!-- /grid-b -->
@@ -237,10 +242,10 @@
 					<div class="ui-block-b"></div>
 					<div class="ui-block-c">
 						<div data-role="controlgroup" data-type="horizontal">
-							<a href="#home" data-role="button" data-icon="home" data-iconpos="top">Home</a>
-							<a href="" data-role="button" data-icon="search" data-iconpos="top">Browse</a>
-							<a data-role="button" data-icon="gear" data-iconpos="top" href="#update-account">Edit</a>	
-							<a data-role="button" data-inline="true" data-icon="off" data-iconpos="top" onClick="LogOut()">Logout</a>
+							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
+							<a href="" 						data-role="button" data-icon="search"		 data-iconpos="top" title="Browse"	></a>
+							<a href="#update-account"		data-role="button" data-icon="gear"			 data-iconpos="top" title="Edit"	></a>
+							<a onClick="LogOut()"			data-role="button" data-icon="off" 			 data-iconpos="top" title="Logout"	></a>
 						</div>
 					</div>
 				</div><!-- /grid-b -->
@@ -335,9 +340,9 @@
 					<div class="ui-block-b"></div>
 					<div class="ui-block-c">
 						<div data-role="controlgroup" data-type="horizontal">
-							<a href="#home" data-role="button" data-icon="home" data-iconpos="top">Home</a>
-							<a href="" data-role="button" data-icon="search" data-iconpos="top">Browse</a>
-							<a data-role="button" data-icon="user" data-iconpos="top" onClick="GetUserAccount()">Account</a>
+							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
+							<a href="" 						data-role="button" data-icon="search"		 data-iconpos="top" title="Browse"	></a>
+							<a onClick="GetUserAccount()"	data-role="button" data-icon="user"			 data-iconpos="top" title="Account"	></a>
 						</div>
 					</div>
 				</div><!-- /grid-b -->
@@ -358,10 +363,10 @@
 					<div class="ui-block-b"></div>
 					<div class="ui-block-c">
 						<div data-role="controlgroup" data-type="horizontal">
-							<a href="#home" data-role="button" data-icon="home" data-iconpos="top">Home</a>
-							<a data-role="button" data-icon="search" data-iconpos="top" href="">Browse</a>
-							<a data-role="button" data-icon="info" data-iconpos="top" onClick="GetUserAccount()">Account</a>
-							<a data-role="button" data-icon="shopping-cart" data-iconpos="top" href="#cart">Cart</a>
+							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
+							<a href="" 						data-role="button" data-icon="search"		 data-iconpos="top" title="Browse"	></a>
+							<a onClick="GetUserAccount()"	data-role="button" data-icon="user"			 data-iconpos="top" title="Account"	></a>
+							<a href="#cart" 				data-role="button" data-icon="shopping-cart" data-iconpos="top" title="Cart"	></a><!-- /// onClick="GetCart()">/// -->
 						</div>
 					</div>
 				</div><!-- /grid-b -->
