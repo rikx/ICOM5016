@@ -1,9 +1,9 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-//								CATEGORY LIST A.K.A. HOME PAGE										  //
+//											HOME PAGE												  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-$(document).on('pagebeforeshow', "#categories", function( event, ui ) {
+$(document).on('pagebeforeshow', "#home", function( event, ui ) {
 	currentHistory = "";
 	$.ajax({
 		url : "http://localhost:3412/Server-Master/home",
@@ -47,7 +47,7 @@ $(document).on('pagebeforeshow', "#categories", function( event, ui ) {
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-//										SUB-CATEGORY LIST											  //
+//										SUB-CATEGORY LIST PAGE										  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
@@ -107,19 +107,12 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-//										CATEGORY DETAILS											  //
+//										CATEGORY DETAILS PAGE										  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 $(document).on('pagebeforeshow', "#category-view", function( event, ui ) {
 	// currentCategory has been set at this point
 	$("#upd-name").val(currentCategory.name);
-	/*
-	 * DON'T DELETE
-	$("#upd-model").val(currentCategory.model);
-	$("#upd-year").val(currentCategory.year);
-	$("#upd-price").val(currentCategory.price);
-	$("#upd-description").val(currentCategory.description);
-	*/
 });
 
 //--------------- Enter Button Fix - Juan ---------------//
@@ -234,8 +227,8 @@ $(document).on('pagebeforeshow', "#product-view", function( event, ui ) {
 	// currentProduct has been set at this point
 	var product = currentProduct;
 	$("#productTitle").html(product.name);
-	$("#showBidPrice").html(product.bidPrice);
-	$("#showBuyoutPrice").html(product.instantPrice);
+	$("#showBidPrice").html(accounting.formatMoney(product.bidPrice));
+	$("#showBuyoutPrice").html(accounting.formatMoney(product.instantPrice));
 	var list = $("#prod-details");
 	list.empty();
 	list.append('<li><img src="http://3.bp.blogspot.com/-nU8O8xLuSvs/TdjWsU3X2DI/AAAAAAAAAIs/Lsa3Y92DGy0/s320/112.jpg" /></li>'+
@@ -246,7 +239,7 @@ $(document).on('pagebeforeshow', "#product-view", function( event, ui ) {
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-//											BUTTON FUNCTION:										  //
+//											BUTTON FUNCTIONS:										  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function ConverToJSON(formData){
@@ -282,7 +275,7 @@ function SaveCategory(){
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
 			$.mobile.loading("hide");
-			$.mobile.navigate("#categories");
+			$.mobile.navigate("#home");
 		},
 		error: function(data, textStatus, jqXHR){
 			console.log("textStatus: " + textStatus);
@@ -363,7 +356,7 @@ function UpdateCategory(){
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
 			$.mobile.loading("hide");
-			$.mobile.navigate("#categories");
+			$.mobile.navigate("#home");
 		},
 		error: function(data, textStatus, jqXHR){
 			console.log("textStatus: " + textStatus);
@@ -389,7 +382,7 @@ function DeleteCategory(){
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
 			$.mobile.loading("hide");
-			$.mobile.navigate("#categories");
+			$.mobile.navigate("#home");
 		},
 		error: function(data, textStatus, jqXHR){
 			console.log("textStatus: " + textStatus);
@@ -436,7 +429,7 @@ function LogIn(){
 				//add code to clear login form data here
 				$.mobile.loading("hide");
 				currentUser = data.user;
-				$.mobile.navigate("#categories");
+				$.mobile.navigate("#home");
 			},
 			error: function(data, textStatus, jqXHR){
 				console.log("textStatus: " + textStatus);
@@ -550,7 +543,7 @@ function RegisterAccount(){
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
 			$.mobile.loading("hide");
-			$.mobile.navigate("#categories");
+			$.mobile.navigate("#home");
 		},
 		error: function(data, textStatus, jqXHR){
 			console.log("textStatus: " + textStatus);
@@ -575,7 +568,7 @@ function LogOut(){
 		currentPaymentTypes = {};
 		Cart = []; //added this for Juan so his cart array gets emptied after logout
 		$.mobile.loading("hide");
-		$.mobile.navigate("#categories");
+		$.mobile.navigate("#home");
 	}
 	else{
 		$.mobile.loading("hide");
