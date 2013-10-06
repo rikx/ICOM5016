@@ -55,14 +55,21 @@ $(document).on('pagebeforeshow', "#cart", function( event, ui ) {
 	
 			var len = Cart.length;
 			var list = $("#shopping-list");
+			var cList = $("#total");
+			var total = 0.00;
 			list.empty();
+			cList.empty();
 
 				for (var i=0; i < len; ++i){
 					product = Cart[i];
+					total=total+product.instantPrice;
 					list.append('<li><a onclick=GetProduct('+product.id+')><h2>'+product.name+'</h2></a>'+
-					'<a onclick=removeFromCart('+i+') data-icon="delete">Delete</a></li>');	
+					'<a onclick=removeFromCart('+i+') data-icon="delete">Delete</a></li>');
 				}
 			list.listview("refresh");	
+			cList.append('<li><h2><strong> Total: ' + accounting.formatMoney(total) + '</strong></h2></li>');
+			cList.listview("refresh");
+			
 		
 	
 });
@@ -156,7 +163,6 @@ $(document).ready(function(){
 //										SEARCH														  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//// TEST BEGIN -JUAN
 $(document).ready(function() {
 
 	$('.search-field').focus(function() {
@@ -746,10 +752,6 @@ function addToCart(){
 function removeFromCart(Index){
 	Cart.splice(Index,1);
 	alert("Deleted");
-	location.reload();
-	/*
-	$.mobile.loading("show");
-		$.mobile.navigate("#cart");
-		$.mobile.loading("hide");*/
 	
+	//location.reload();// THI WILL WORK ONCE WE HAVE COOKIES
 }
