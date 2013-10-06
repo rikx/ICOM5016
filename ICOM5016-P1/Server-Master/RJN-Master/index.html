@@ -240,16 +240,18 @@
 							<h2>Show History</h2>
 							<div class="ui-grid-a">
 								<div class="ui-block-a">
-									<a data-role="button" onclick="bidHistory()">Items bought</a>
-									<ul id="bid-history" data-role="listview" data-inset="true">
-									</ul>
+									<a data-role="button" onclick="boughtHistory()">Items bought</a>
 								</div>
 								<div class="ui-block-b">
 									<a data-role="button" onclick="sellHistory()">Items sold</a>
-									<ul id="sell-history" data-role="listview" data-inset="true">
-								</ul>
 								</div>
 							</div><!-- /grid-a -->
+							<ul id="bought-history" data-role="listview" data-inset="true">
+								<li>Product bought #9000</li>
+							</ul>
+							<ul id="sell-history" data-role="listview" data-inset="true">
+								<li>Nelson's sexy bikini</li>
+							</ul>
 <!-- 							<select name="flip-1" id="flip-1" data-role="slider">
 								<option value="itemsBought">Items Bought</option>
 								<option value="itemsSold">Items Sold</option>
@@ -342,9 +344,8 @@
 	 					<ul>
 	 					<li><label for="acc-firstname"> First Name: <input id="acc-fname" name="firstname" type="text"/></label></li>
 	  					<li><label for="acc-lastname"> Last Name: <input id="acc-lname" name="lastname" type="text"/></label></li>
-	 					<li><label for="acc-email"> Email: <input id="acc-email" name="email" type="text"/></label></li>
+	 					<li><label for="acc-email"> Email: <input id="acc-email" name="email" type="email"/></label></li>
 	 					<li><label for="acc-shipaddress"> Shipping Address: <input id="acc-shipaddress" name="shipaddress" type="text" /></label></li>
-	 					<li><label for="acc-billaddress"> Billing Address: <input id="acc-billaddress" name="billaddress" type="text" /></label></li>	
 	 					<li><label for="acc-oldpassword"> Old Password: <input id="acc-oldpassword" name="oldpassword" type="password"/></label></li>
 	 					<li><label for="acc-newpassword"> New Password: <input id="acc-newpassword" name="newpassword" type="password"/></label></li>
 	 					<li><label for="acc-confirmpassword"> Confirm Password: <input id="acc-confirmpassword" name="confirmpassword" type="password"/></label></li>

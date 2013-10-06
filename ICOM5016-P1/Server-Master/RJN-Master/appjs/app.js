@@ -274,6 +274,8 @@ $(document).ready(function() {
 $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 	// currentUser has been set at this point
 	$.mobile.loading("hide");
+	$('#bought-history').hide();
+	$('#sell-history').hide();
 	$.ajax({
 		url : "http://localhost:3412/Server-Master/account/" + currentUser.id,
 		method: 'get',
@@ -413,10 +415,19 @@ $(document).on('pagebeforeshow', "#update-account", function(event, ui){
 	$("#acc-fname").val(currentUser.firstname);
 	$("#acc-lname").val(currentUser.lastname);
 	$("#acc-email").val(currentUser.email);
-	$("#acc-sAddress").val(currentUser.shipAddress);
-	$("#acc-bAddress").val(currentUser.billAddress);
+	$("#acc-shipaddress").val(currentUser.shipAddress);
 	//not finished - missing the logic for changing password
 });
+
+function boughtHistory(){
+    $('#bought-history').show();
+    $('#sell-history').hide();
+}
+
+function sellHistory(){
+    $('#bought-history').hide();
+    $('#sell-history').show();
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //										PRODUCT	DETAILS												  //
@@ -454,7 +465,7 @@ $(document).on('pagebeforeshow', '#bidhistory', function( event, ui ){
 			var list = $('#bidhistory-list');
 			list.empty();
 			for(var i=0; i < bidHistory.length; ++i){
-				list.append('<li><strong>Bidder id: </strong>'+bidHistory.bidderId+'</li>');
+				list.append('<li><strong>Bidder id: </strong>'+bidHistory.bidderId+' <strong>bid</strong> '+bidHistory.bidPrice+'</li>');
 			}
 			list.listview('refresh');
 		},
