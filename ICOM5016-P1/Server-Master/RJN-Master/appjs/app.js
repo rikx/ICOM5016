@@ -74,6 +74,51 @@ $(document).on('pagebeforeshow', "#cart", function( event, ui ) {
 	
 });
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//										INVOICE PAGE											  //
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+$(document).on('pagebeforeshow', "#invoice", function( event, ui ) {
+	if(currentUser.type == "user" && Cart.length!=0){
+			
+			var len = Cart.length;
+			var shipping = $("#ShipTo");
+			var billing = $("#BillTo");
+			var list = $("#checkout-list");
+			var total = 0.00;
+			list.empty();
+			billing.empty();
+			shipping.empty();
+			
+			billing.append('<li><h3><strong>'+currentUser.firstname+'  '+currentUser.lastname+'</strong></h3>'+
+						   '<p><h3>'+currentUser.billAddress+'</h3></p></li>');
+			
+			shipping.append('<li><h3><strong>'+currentUser.firstname+'  '+currentUser.lastname+'</strong></h3>'+
+						   '<p><h3>'+currentUser.shipAddress+'</h3></p></li>');
+
+			
+				for (var i=0; i < len; ++i){
+					product = Cart[i];
+					total=total+product.instantPrice;
+					list.append('<li><h2><strong>'+product.name+' Item #:'+product.id+'</strong></h2>'+
+								'<p><h3>'+product.description+'</h3></p>'+
+								'<h3 align="right">'+accounting.formatMoney(product.instantPrice)+'</h3></li>');
+				}
+			list.append('<li><h2><strong> Total: ' + accounting.formatMoney(total) + '</strong></h2></li>');
+			
+			
+			list.listview("refresh");	
+			billing.listview("refresh");
+			shipping.listview("refresh");
+	}//End IF
+	else if(currentUser.type == "user" && Cart.length==0){
+		alert('Cart Is Empty');//Need to Make it so it doesn't go to invoice page if this happens
+	}
+	else{
+		 $("#ForceLogin").click();
+    }//End ELSE
+});
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //										SUB-CATEGORY LIST PAGE										  //

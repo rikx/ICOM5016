@@ -371,11 +371,54 @@
 				<div data-role="footer">
 				<ul id="total" data-role="listview" data-inset="true" data-inline="true">
 				</ul>
-				<a onClick="Checkout()" data-role="button">Checkout</a>
+				<a href="#invoice" data-role="button">Checkout</a> <!--onClick="Checkout()"-->
 				</div><!-- /footer -->
 			</div><!-- /content -->
 		</div><!-- /page -->
 		<!--///////////////////////////////////		CART END	//////////////////////////////////////////-->
+		
+		<!--///////////////////////////////////		INVOICE		//////////////////////////////////////////-->
+		<div id ="invoice" data-role="page">
+			<div data-role="header" data-theme="a" data-position="fixed">
+				<div class="ui-grid-b" align="center">
+					<div class="ui-block-a">
+						<h3>Invoice:# </h3>
+					</div><!-- /block-a -->
+					<div class="ui-block-b">
+						<script language="JavaScript">
+							date=Date();
+							document.write(date);
+						</script>
+					</div><!-- /block-b -->
+					<div class="ui-block-c">
+						<div data-role="controlgroup" data-type="horizontal">
+							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
+							<a onClick="GetUserAccount()"	data-role="button" data-icon="user"			 data-iconpos="top" title="Account"	id="ForceLogin"></a>
+						</div><!-- /control-group -->
+					</div><!-- /block-c -->
+				</div><!-- /grid-b -->
+			</div>
+			<div data-role="content">
+				<div class="ui-grid-a">
+						<div class="ui-block-a">
+							<h3 align="center">Ship To</h3>
+							<ul id="ShipTo" data-role="listview" data-inset="true">	  			  	
+							</ul>
+						</div>
+						<div class="ui-block-b">
+							<h3 align="center">Bill To</h3>
+							<ul id="BillTo" data-role="listview" data-inset="true">	  			  	
+							</ul>
+						</div>
+				</div><!-- /grid-a -->
+				<div>
+					<h3 align="center">Order Summary</h3>	
+					<ul id="checkout-list" data-role="listview" data-inset="true">
+					</ul>
+				</div>
+			</div><!-- /content -->
+		</div><!-- /page -->
+		<!--///////////////////////////////////		INVOICE END	  ////////////////////////////////////////-->
 				
 		<!--///////////////////////////////////		PRODUCT-VIEW	//////////////////////////////////////-->
 		<div id="product-view" data-role="page">
