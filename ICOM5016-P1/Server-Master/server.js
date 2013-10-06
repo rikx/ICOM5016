@@ -322,7 +322,7 @@ var productBidsList = new Array(
 
 var prodbidNextId = 0;
 
-for (var i=0; i < productBidsListList.length;++i){
+for (var i=0; i < productBidsList.length;++i){
 	productBidsList[i].id = prodbidNextId++;
 }
 // REST Operation - HTTP GET to read a product based on its id
@@ -352,7 +352,7 @@ app.get('/Server-Master/product/:id', function(req, res) {
   		}	
 	}
 });
-app.get('/Server-Master/product/bid-history/:id'){
+app.get('/Server-Master/product/bid-history/:id', function(req, res) {
 	var id = req.params.id;
 	console.log("GET bid history for product : " + id);
 	var bidHistory = new Array();
@@ -379,7 +379,7 @@ app.get('/Server-Master/product/bid-history/:id'){
   			res.json(response);	
   		}	
 	}
-}
+});
 
 //JUAN SEARCH TESTING
 // REST Operation - HTTP GET to read a product based on its id

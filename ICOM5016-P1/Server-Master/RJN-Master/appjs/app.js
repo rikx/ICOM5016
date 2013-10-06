@@ -430,7 +430,7 @@ $(document).on('pagebeforeshow', "#product-view", function( event, ui ) {
 	var product = currentProduct;
 	$("#productTitle").html(product.name);
 	$("#showBidPrice").html(accounting.formatMoney(product.bidPrice));
-	$("#numOfBids").html(product.numBids);
+	$("#numOfBids").html('<a href="#bidhistory">'+product.numBids+'</a>');
 	$("#showBuyoutPrice").html(accounting.formatMoney(product.instantPrice));
 	var list = $("#prod-details");
 	list.empty();
@@ -452,7 +452,7 @@ $(document).on('pagebeforeshow', '#bidhistory', function( event, ui ){
 			var bidHistory = data.bidHistory;
 			var list = $('#bidhistory-list');
 			list.empty();
-			list.append('<li>'++'</li>');
+			list.append('<li><strong>Bidder id: </strong>'+bidHistory.bidderId+'</li>');
 			list.listview('refresh');
 		},
 		error: function(data, textStatus, jqXHR){
