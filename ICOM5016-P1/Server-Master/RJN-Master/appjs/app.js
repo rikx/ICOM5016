@@ -156,11 +156,21 @@ $(document).ready(function(){
 //										SEARCH														  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-$(document).ready(function(){
-    $("#search-bar").keypress(function(e){
+//// TEST BEGIN -JUAN
+$(document).ready(function() {
+
+	$('.search-field').focus(function() {
+		if($(this).val() == "Enter Product Name Here...") {
+			this.value = "";
+		}
+	});
+	
+	$('.search-field').keypress(function(e){
       
       if(e.keyCode==13){
-      	var input = $("#search-bar").val();
+      	var input = $(this).val();
+      	$(this).val("");
+      	var found = false;
         $.ajax({
           url : "http://localhost:3412/Server-Master/search",
               contentType: "application/json",
@@ -171,9 +181,13 @@ $(document).ready(function(){
                       name = productList[i].name;
                       if(name===input) {
                           GetProduct(productList[i].id);
+                          found=true;
                           break;
                       }
                   }    
+                  if(!found){
+                  	alert("Product not found!");
+                  }
               },
               error: function(data, textStatus, jqXHR){
                   console.log("textStatus: " + textStatus);
@@ -182,6 +196,37 @@ $(document).ready(function(){
         });
       }
     });
+    
+    $('.submit').click(function(e){
+      	var input = $('.search-field').val();
+      	$('.search-field').val("");
+      	var found = false;
+        $.ajax({
+          url : "http://localhost:3412/Server-Master/search",
+              contentType: "application/json",
+              success : function(data, textStatus, jqXHR){
+                  var productList = data.ListOfProducts;
+                  var len = productList.length;
+                  for (var i=0; i < len; ++i){
+                      name = productList[i].name;
+                      if(name===input) {
+                          GetProduct(productList[i].id);
+                          found=true;
+                          break;
+                      }
+                  }    
+                  if(!found){
+                  	alert("Product not found!");
+                  }
+              },
+              error: function(data, textStatus, jqXHR){
+                  console.log("textStatus: " + textStatus);
+                  alert("Product not found!");
+              }
+        });
+      
+    });
+
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
