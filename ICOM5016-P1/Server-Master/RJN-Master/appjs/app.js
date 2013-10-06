@@ -246,6 +246,9 @@ $(document).on('pagebeforeshow', "#user-account", function( event, ui ) {
 function ConvertToStars(rating){
 	//Selects number of * for each rating
 	switch(rating) {
+	  case 0:
+	  	return '<span class="ui-icon ui-icon-star-empty"></span>';
+	  	break; 
 	  case 1:
 	  	return '<span class="ui-icon ui-icon-fastar"></span>';
 	    break;
@@ -267,7 +270,7 @@ function ConvertToStars(rating){
 	  			'<span class="ui-icon ui-icon-fastar"></span></div>'; 
 	  	break;
 	  default:
-	    return '<span class="ui-icon ui-icon-star-empty"></span>';
+	    return 'No Rating';
 	};
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
