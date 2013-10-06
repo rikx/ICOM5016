@@ -5,7 +5,7 @@ module.exports =  {
 		this.parent = parent;
 	},
 	
-	Product: function(name,parent,sellerId,instantPrice,bidPrice,description,model,brand,dimensions){
+	Product: function(name,parent,sellerId,instantPrice,bidPrice,description,model,brand,dimensions,numBids){
 		this.id="";
 		this.name = name;
 		this.parent = parent;
@@ -16,13 +16,14 @@ module.exports =  {
 		this.model = model;
 		this.brand = brand;
 		this.dimensions= dimensions;
+		this.numBids = numBids;
 	},
 
-	ProductBids: function(productId, bidderId, bidPrice){
+	ProductBid: function(productId, bidderId, bidPrice){
 		this.id="";
-		this.productId;
-		this.bidderId;
-		this.bidPrice;
+		this.productId = productId;
+		this.bidderId = bidderId;
+		this.bidPrice = bidPrice;
 	},
 	
 	User: function (type, username, password, firstname, lastname, email, shipAddress, billAddress){

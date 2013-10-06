@@ -299,11 +299,11 @@ app.get('/Server-Master/subCategory/:id', function(req, res) {
 
 var Product = modules.Product;
 
-//Product:function(name,parent,sellerId,instantPrice,bidPrice,description,model,brand,dimensions)
+//Product:function(name,parent,sellerId,instantPrice,bidPrice,description,model,brand,dimensions,numBids)
 var productList = new Array(
-	new Product("MyPhone", 13, 0, 500, 400,"Brand new, still in box Myphone.", "MyPhone5X", "Mapple", '10"x8"x0.5"'),
-	new Product("Viperus", 38, 0, 901, 700, "Honyota Viperus Wheels. Its so fast your skin flies off.", "Viperus XLR", "Honyota", '15" diameter with 2" thickness'),
-	new Product("Test Product 1", 41, 1, 9001, 42,"Test of product printing", "model", "brand", "dimensions")
+	new Product("MyPhone", 13, 0, 500, 400,"Brand new, still in box Myphone.", "MyPhone5X", "Mapple", '10"x8"x0.5"',0),
+	new Product("Viperus", 38, 0, 901, 700, "Honyota Viperus Wheels. Its so fast your skin flies off.", "Viperus XLR", "Honyota", '15" diameter with 2" thickness',0),
+	new Product("Test Product 1", 41, 1, 9001, 42,"Test of product printing", "model", "brand", "dimensions",2)
 	);
 
 var productNextId = 0;
@@ -312,6 +312,19 @@ for (var i=0; i < productList.length;++i){
 	productList[i].id = productNextId++;
 }
 
+var ProductBid = modules.ProductBid;
+
+//Product bid: productId, bidderId, bidPrice
+var productBidsList = new Array(
+	new ProductBid(2, 0, 42),
+	new ProductBid(2, 2, 38)
+	);
+
+var prodbidNextId = 0;
+
+for (var i=0; i < productBidsListList.length;++i){
+	productBidsList[i].id = prodbidNextId++;
+}
 // REST Operation - HTTP GET to read a product based on its id
 app.get('/Server-Master/product/:id', function(req, res) {
 	var id = req.params.id;
@@ -339,6 +352,34 @@ app.get('/Server-Master/product/:id', function(req, res) {
   		}	
 	}
 });
+app.get('/Server-Master/product/bid-history/:id'){
+	var id = req.params.id;
+	console.log("GET bid history for product : " + id);
+	var bidHistory = new Array();
+
+	if ((id < 0) || (id >= productNextId)){
+		// not found
+		res.statusCode = 404;
+		res.send("Product not found.");
+	}
+	else {
+		var target = -1;
+		for (var i=0; i < productBidList.length; ++i){
+			if (productBidList[i].productId == id){
+				target = i;
+				bidHistory.push(productBidList[i]);
+			}
+		}
+		if (target == -1){
+			res.statusCode = 404;
+			res.send("Product not found.");
+		}
+		else {
+			var response = {"bidHistory" : bidHistory};
+  			res.json(response);	
+  		}	
+	}
+}
 
 //JUAN SEARCH TESTING
 // REST Operation - HTTP GET to read a product based on its id
