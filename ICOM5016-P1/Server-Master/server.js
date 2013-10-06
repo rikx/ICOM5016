@@ -301,9 +301,9 @@ var Product = modules.Product;
 
 //Product:function(name,parent,sellerId,instantPrice,bidPrice,description,model,brand,dimensions)
 var productList = new Array(
-	new Product("MyPhone", 13, 0, 500, 400, "Brand new, still in box Myphone.", "MyPhone5X", "Mapple", '10"x8"x0.5"'),
+	new Product("MyPhone", 13, 0, 500, 400,"Brand new, still in box Myphone.", "MyPhone5X", "Mapple", '10"x8"x0.5"'),
 	new Product("Viperus", 38, 0, 901, 700, "Honyota Viperus Wheels. Its so fast your skin flies off.", "Viperus XLR", "Honyota", '15" diameter with 2" thickness'),
-	new Product("Test Product 1", 41, 1, 9001, 42, "Test of product printing", "model", "brand", "dimensions")
+	new Product("Test Product 1", 41, 1, 9001, 42,"Test of product printing", "model", "brand", "dimensions")
 	);
 
 var productNextId = 0;

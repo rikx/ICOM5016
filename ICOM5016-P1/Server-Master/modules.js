@@ -11,11 +11,18 @@ module.exports =  {
 		this.parent = parent;
 		this.sellerId = sellerId;
 		this.instantPrice = instantPrice;
-		this.bidPrice = bidPrice;
+		this.bidPrice = bidPrice; //current highest bid
 		this.description = description;
 		this.model = model;
 		this.brand = brand;
 		this.dimensions= dimensions;
+	},
+
+	ProductBids: function(productId, bidderId, bidPrice){
+		this.id="";
+		this.productId;
+		this.bidderId;
+		this.bidPrice;
 	},
 	
 	User: function (type, username, password, firstname, lastname, email, shipAddress, billAddress){

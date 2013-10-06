@@ -385,6 +385,7 @@ $(document).on('pagebeforeshow', "#product-view", function( event, ui ) {
 	var product = currentProduct;
 	$("#productTitle").html(product.name);
 	$("#showBidPrice").html(accounting.formatMoney(product.bidPrice));
+	//$("#numOfBids").html(product.numBids);
 	$("#showBuyoutPrice").html(accounting.formatMoney(product.instantPrice));
 	var list = $("#prod-details");
 	list.empty();

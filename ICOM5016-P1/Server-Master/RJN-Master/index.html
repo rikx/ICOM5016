@@ -404,16 +404,20 @@
 						<h3 align="center">Options</h3>
 						<a data-role="button" href="#thePanel">Seller Details</a>
 						<a data-role="button" onclick="addToCart()">Add to Cart</a>
-						<div class="ui-grid-a">
+						<div class="ui-grid-a" align="center">
+							<div class="ui-block-a"><p>Current bid: <strong id="showBidPrice"></strong></p></div>
+							<div class="ui-block-b"><p>Number of bids: <strong id="numOfBids"></strong></p></div>
+						</div>
+						<div class="ui-grid-a" align="center">
 							<div class="ui-block-a">
-								<p id="showBidPrice" align="center"></p>
-								<a id="bidButton" data-role="button">Bid</a>
+								<div data-role="fieldcontain">
+									<input name="bidInput" type="text" data-mini="true" /><a id="bidButton" data-role="button" data-inline="true" data-theme="e" data-mini="true">Bid</a>
+								</div>
 							</div>
-							<div class="ui-block-b">
-								<p id="showBuyoutPrice" align="center"></p>
-								<a id="buyoutButton" data-role="button">Buyout</a>
-							</div>
+							<div class="ui-block-b"></div>
 						</div><!-- /grid-a -->
+							<p>Buyout Price: <strong id="showBuyoutPrice"></strong>
+							<a id="buyoutButton" data-role="button" data-inline="true" data-theme="b" data-mini="true">Buyout</a></p>
 					</div>
 				</div><!-- /grid-a -->
 			</div><!-- /content -->
