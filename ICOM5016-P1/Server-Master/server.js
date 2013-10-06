@@ -369,12 +369,29 @@ for (var i=0; i < userList.length;++i){
 	userList[i].id = userNextId++;
 }
 
+/* Shipping Address List */
+var ShipAddress = modules.ShippingAddress;
+
+//user id, address
+var shipAddressList = new Array(
+	new ShipAddress(0, "wat 123 Guaynabo, PR"),
+	new ShipAddress(2, "5 OPNESS Texas, USA"),
+	new ShipAddress(1, "123 Mayawest, PR")
+	);
+
+var shipAddressNextId = 0;
+
+for (var i=0; i < shipAddressList.length;++i){
+	shipAddressList[i].id = shipAddressNextId++;
+}
+
+/* Payment Options List */
 var PaymentType = modules.PaymentType;
 
 //user id, card info
 var payTypeList = new Array(
-	new PaymentType("0", "0123-4567-89AB-CDEF"),
-	new PaymentType("0", "FEDC-BA98-7654-3210")
+	new PaymentType("0", "creditcard", "0123-4567-89AB-CDEF", "wat 123 Guaynabo, PR"),
+	new PaymentType("0", "creditcard", "FEDC-BA98-7654-3210", "wat 123 Guaynabo, PR")
 	);
 
 var paymentNextId = 0;
@@ -383,6 +400,7 @@ for (var i=0; i < payTypeList.length;++i){
 	payTypeList[i].id = paymentNextId++;
 }
 
+/* User Ratings List */
 var Rating = modules.Rating;
 
 //id, seller id, rater id, rating
@@ -439,23 +457,30 @@ app.post('/Server-Master/home/:userNameLogin', function(req, res) {
 // REST Operation - HTTP GET to read a user account based on its id
 app.get('/Server-Master/account/:id', function(req, res) {
 	var id = req.params.id;
-		console.log("GET user account: " + id);
+	console.log("GET user account: " + id);
+
+	var shippingAddresses = new Array();
 	var paymentTypes = new Array();
 	var ratersList = new Array();
 	var productsSale = new Array();
+
 	if ((id < 0) || (id >= userNextId)){
 		// not found
 		res.statusCode = 404;
 		res.send("User not found.");
 	}
 	else {
-		var maxLength = Math.max(payTypeList.length, ratingsList.length, productList.length); 
+		var maxLength = Math.max(shipAddressList.length, payTypeList.length, ratingsList.length, productList.length); 
 		var target = -1;
 		for (var i=0; i < userList.length; ++i){
 			//if user is found,
 			if (userList[i].id == id){
 				target = i;
 				for(var x=0; x < maxLength; ++x){
+					//return his shipping addresses
+					if(x < shipAddressList.length && userList[i].id == shipAddressList[x].userId){
+						shippingAddresses.push(shipAddressList[x]);
+					}
 					//return his payment types
 					if(x < payTypeList.length && userList[i].id == payTypeList[x].userId){
 						paymentTypes.push(payTypeList[x]);
@@ -477,7 +502,8 @@ app.get('/Server-Master/account/:id', function(req, res) {
 			res.send("User not found.");
 		}
 		else {
-			var response = {"user" : userList[target], "paymentTypes" : paymentTypes, "ratingsList" : ratersList, "sellingProducts" : productsSale};
+			var response = {"user" : userList[target], "shippingAddresses" : shippingAddresses, "paymentTypes" : paymentTypes, 
+							"ratingsList" : ratersList, "sellingProducts" : productsSale};
   			res.json(response);	
   		}	
 	}

@@ -30,10 +30,18 @@ module.exports =  {
 		this.billAddress = billAddress;
 	},
 
-	PaymentType: function (userId, cNumber){
+	ShippingAddress: function(userId, address){
 		this.id="";
 		this.userId = userId;
+		this.address = address;
+	},
+	
+	PaymentType: function (userId, type, cNumber, billAddress){
+		this.id="";
+		this.type = type;
+		this.userId = userId;
 		this.cNumber = cNumber;
+		this.billAddress = billAddress;
 	},
 
 	Rating: function(sellerId, raterId, rating){

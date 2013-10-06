@@ -106,17 +106,7 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 					'<p><img src="http://3.bp.blogspot.com/-nU8O8xLuSvs/TdjWsU3X2DI/AAAAAAAAAIs/Lsa3Y92DGy0/s320/112.jpg" /></p>'+
 					'<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(child.bidPrice) + '</h4></p>'+
 					'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(child.instantPrice) + '</h4></p></a>'+
-					'<a onclick=editProduct('+child.id+') data-icon="gear" Edit</a></li>');	
-					//Juan Test =====================================================================================================
-					list.append('<li><a onclick=GetProduct('+child.id+')><h2>'+child.name+'</h2>'+
-					'<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(child.bidPrice) + '</h4></p>'+
-					'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(child.instantPrice) + '</h4></p></a>'+
-					'<a onclick=editProduct('+child.id+') data-icon="gear" Edit</a></li>');	
-					list.append('<li><a onclick=GetProduct('+child.id+')><h2>'+child.name+'</h2>'+
-					'<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(child.bidPrice) + '</h4></p>'+
-					'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(child.instantPrice) + '</h4></p></a>'+
-					'<a onclick=editProduct('+child.id+') data-icon="gear" Edit</a></li>');	
-					//Juan Test End =================================================================================================
+					'<a onclick=EditProduct('+child.id+') data-icon="gear">Edit</a></li>');	
 				}
 			}
 			list.listview("refresh");	
@@ -233,59 +223,104 @@ $(document).ready(function() {
 //										USER ACCOUNT												  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-$(document).on('pagebeforeshow', "#user-account", function( event, ui ) {
-	// currentUser, currentPaymentTypes and currentRatings have been set at this point
-	$('#ratings-average').empty();
-	var user = currentUser;
-	$("#userTitle").html(user.username);
+$(document).on('pagebeforeshow', "#account", function( event, ui ) {
+	// currentUser has been set at this point
+	$.mobile.loading("hide");
+	$.ajax({
+		url : "http://localhost:3412/Server-Master/account/" + currentUser.id,
+		method: 'get',
+		contentType: "application/json",
+		dataType:"json",
+		success : function(data, textStatus, jqXHR){
+			if(currentUser.type == "user"){
+				$('#ratings-average').empty();
+				var user = currentUser;
+				$("#userTitle").html(user.username);
 
-	//Populate user information list
-	var infoList = $("#user-info");
-	infoList.empty();
-	infoList.append('<li><strong>Account ID: </strong>' + user.id + '</li></li>'+
-		'<li><strong>First Name: </strong>' + user.firstname + '</li></li><li><strong>Last Name: </strong>' + user.lastname + 
-		'</li></li><li><strong>Email: </strong>' + user.email + '</li><li><strong>Shipping Address: </strong>' + user.shipAddress+'</li>'+
-		'<li><strong>Billing Address: </strong>' + user.billAddress + '</li>'
-	);
-	infoList.listview("refresh");
+				//Populate user information list
+				var infoList = $("#user-info");
+				infoList.empty();
+				infoList.append('<li><strong>Account ID: </strong>' + user.id + '</li></li>'+
+					'<li><strong>First Name: </strong>' + user.firstname + '</li></li><li><strong>Last Name: </strong>' + user.lastname + 
+					'</li></li><li><strong>Email: </strong>' + user.email + '</li><li><strong>Current Shipping Address: </strong>' + user.shipAddress+'<a onclick=changeAddress() data-icon="gear">Change</a></li>'	
+				);
+				infoList.listview("refresh");
 
-	var payList = $('#paymentType-list');
-	var ratingsList = $('#ratings-list');
-	var sellingList = $('#currentSales-list');
-	payList.empty();
-	ratingsList.empty();
-	sellingList.empty();
+				var paymentTypes = data.paymentTypes;
+				var ratings = data.ratingsList;
+				var sellingProducts = data.sellingProducts;
+				var shippingAddresses = data.shippingAddresses;
 
-	var maxLength = Math.max(currentPaymentTypes.length, currentRatingsList.length, currentProductsSelling.length); 
+				var shipAddressList = $('#shipaddress-list');
+				var payList = $('#paymentType-list');
+				var ratingsList = $('#ratings-list');
+				var sellingList = $('#currentSales-list');
 
-	var avgRating = 0;
-	var rCount = 0;
-	for(var i=0; i < maxLength; ++i){
-		//Populate Payment Options list
-		if(i < currentPaymentTypes.length){
-			payList.append('<li>Card Ending with '+ currentPaymentTypes[i].cNumber.substr(15)+'</li>');
+				shipAddressList.empty();
+				payList.empty();
+				ratingsList.empty();
+				sellingList.empty();
+
+				var maxLength = Math.max(shippingAddresses.length, paymentTypes.length, ratings.length, sellingProducts.length); 
+
+				var avgRating = 0;
+				var rCount = 0;
+				for(var i=0; i < maxLength; ++i){
+					//Populate Address List
+					if(i < shippingAddresses.length){
+						shipAddressList.append('<li><strong> Address name: '+ shippingAddresses[i].address +'</strong>'+
+						'<a onclick=EditAddress('+shippingAddresses[i].id+') data-icon="gear">Edit</a>'+
+						'<a onclick=DeleteAddress('+shippingAddresses[i].id+') data-icon="trash">Delete</a></li>'
+						);
+					}
+					//Populate Payment Options list
+					if(i < paymentTypes.length){
+						//Need to add a check later for type if its credit card or paypal
+						payList.append('<li>Card Ending with '+ paymentTypes[i].cNumber.substr(15)+
+						'<a onclick=EditPayment('+paymentTypes[i].id+') data-icon="gear">Edit</a>'+
+						'<a onclick=DeletePayment('+paymentTypes[i].id+') data-icon="trash">Delete</a>'+
+						'<strong>Billing Address: </strong>'+paymentTypes[i].billAddress+'</li>'
+						);
+					}
+					//Populate Ratings by User list
+					if(i < ratings.length){
+						ratingsList.append('<li>User of id '+ ratings[i].raterId + ' - '+ ConvertToStars(ratings[i].rating) +'</li>');
+						avgRating += ratings[i].rating;
+						rCount++;
+					}
+					//Populate Current Sales list
+					if(i < sellingProducts.length){
+						sellingList.append('<li><a onclick=GetProduct('+sellingProducts[i].id+')><h4>'+sellingProducts[i].name+'</h4></a>'+
+						'<a onclick=EditProduct('+sellingProducts[i].id+') data-icon="gear">Edit</a>'+
+						'<a onclick=DeleteProduct('+sellingProducts[i].id+') data-icon="trash">Delete</a></li>'
+						);
+					}
+				}
+				shipAddressList.listview("refresh");
+				payList.listview("refresh");
+				ratingsList.listview("refresh");
+				sellingList.listview("refresh");
+
+				//Populate average rating header
+				avgRating = avgRating / rCount;
+				//$('#ratingsdiv').prepend("<h2>Rating: " + avgRating + "</h2>");
+				$('#ratings-average').append("Rating: " + ConvertToStars(avgRating));
+			}
+			else{
+				$.mobile.navigate("#admin-account");
+			}
+		},
+		error: function(data, textStatus, jqXHR){
+			console.log("textStatus: " + textStatus);
+			$.mobile.loading("hide");
+			if (data.status == 404){
+				alert("User not found.");
+			}
+			else {
+				alert("Internal Server Error.");
+			}
 		}
-		//Populate Ratings by User list
-		if(i < currentRatingsList.length){
-			ratingsList.append('<li>User of id '+ currentRatingsList[i].raterId + ' - '+ ConvertToStars(currentRatingsList[i].rating) +'</li>');
-			avgRating += currentRatingsList[i].rating;
-			rCount++;
-		}
-		//Populate Current Sales list
-		if(i < currentProductsSelling.length){
-			sellingList.append('<li><a onclick=GetProduct('+currentProductsSelling[i].id+')><h4>'+currentProductsSelling[i].name+'</h4></a>'+
-			'<a onclick=editProduct('+currentProductsSelling[i].id+') data-icon="gear" Edit</a></li>'
-			);
-		}
-	}
-	payList.listview("refresh");
-	ratingsList.listview("refresh");
-	sellingList.listview("refresh");
-
-	//Populate average rating header
-	avgRating = avgRating / rCount;
-	//$('#ratingsdiv').prepend("<h2>Rating: " + avgRating + "</h2>");
-	$('#ratings-average').append("Rating: " + ConvertToStars(avgRating));
+	});
 });
 
 function ConvertToStars(rating){
@@ -515,10 +550,10 @@ function DeleteCategory(){
 
 //initial value is set to null for when noone is logged in
 var currentUser = {"id": null}; //-- ??
-var currentPaymentTypes = {}; //-- ??
+/*var currentPaymentTypes = {}; //-- ??
 var currentRatingsList = {};
 var currentProductsSelling = {};
-
+*/
 //--------------- Logs in via POST so it can send the form values of username and password to the server for authentication ---------------//
 function LogIn(){
 	if($('#loginusername').val() == ""){
@@ -562,6 +597,19 @@ function LogIn(){
 function GetUserAccount(){
 	$.mobile.loading("show");
 	if(currentUser.id == null){
+		$.mobile.loading("hide");
+		$.mobile.navigate("#login");
+	}
+	else if (currentUser.type == "admin"){
+		$.mobile.navigate("#admin-account");
+	}
+	else {
+		$.mobile.navigate("#account");
+	}
+}
+/*function GetUserAccount(){
+	$.mobile.loading("show");
+	if(currentUser.id == null){
 		$.mobile.navigate("#login");
 	}
 	else{
@@ -598,7 +646,7 @@ function GetUserAccount(){
 			}
 		});
 	}
-}
+}*/
 
 //--------------- REGISTER NEW USER ACCOUNT - Checks if passwords do not match before sending information, and cheks if username is already taken ---------------//
 function RegisterAccount(){
@@ -676,6 +724,18 @@ function RegisterAccount(){
 	});
 }*/
 
+function EditAddress(id){
+
+}
+function DeleteAddress(id){
+
+}
+function EditPaymentType(id){
+
+}
+function DeletePaymentType(id){
+
+}
 //--------------- LOG CURRENT USER ACCOUNT and resets global variables to their initial state---------------//
 function LogOut(){
 	var uExit = confirm("Do you want to log out?");
@@ -683,7 +743,6 @@ function LogOut(){
 		$.mobile.loading("show");
 		//global variables are reset to initial values.
 		currentUser = {"id": null};
-		currentPaymentTypes = {};
 		Cart = []; //added this for Juan so his cart array gets emptied after logout
 		$.mobile.loading("hide");
 		$.mobile.navigate("#home");
@@ -723,7 +782,12 @@ function GetProduct(id){
 		}
 	});
 }
+function EditProduct(id){
 
+}
+function DeleteProduct(id){
+
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //											THE CART												  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
