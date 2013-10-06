@@ -223,9 +223,11 @@ app.post('/Server-Master/home', function(req, res) {
 });
 
 // REST Operation - HTTP GET to read all children (if they exist)
-app.get('/Server-Master/home/categories/:id', function(req, res) {
-	var id = req.params.id; 
-	console.log("GET subcategories of " + id);
+app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
+	var id = req.params.id;
+	var SortType = req.params.SortType;
+
+	console.log("GET subcategories of " + id + " Sorted By: " + SortType);
 
 	if ((id < 0) || (id >= categoryNextId)){
 		// not found
@@ -251,11 +253,33 @@ app.get('/Server-Master/home/categories/:id', function(req, res) {
 		else {
 			if (theChildren.length <1){
 				theType = false; //content of theChildren are products
-				for (var i=0; i < productList.length; ++i){
-					if (productList[i].parent == id){
-						theChildren.push(productList[i]);
+				
+				if(SortType=="none"){
+					for (var i=0; i < productList.length; ++i){
+						if (productList[i].parent == id){
+							theChildren.push(productList[i]);
+						}
 					}
-				}		
+				}
+				
+				else if(SortType=="name"||SortType=="price"||SortType=="brand"){
+					console.log("Trololol Sort Will Be Implemented in Phase 2 Have a Nice Day! :D");
+					for (var i=0; i < productList.length; ++i){
+						if (productList[i].parent == id){
+							theChildren.push(productList[i]);
+						}
+					}
+				}
+				
+				else{
+					console.log("This is not supposed to happen... EVER!");
+					for (var i=0; i < productList.length; ++i){
+						if (productList[i].parent == id){
+							theChildren.push(productList[i]);
+						}
+					}
+				}
+						
 			}
 			var response = {"children" : theChildren, "parent" : categoryList[target], "childType" : theType};
 			//console.log("History is: " + urlHistory);
@@ -299,11 +323,11 @@ app.get('/Server-Master/subCategory/:id', function(req, res) {
 
 var Product = modules.Product;
 
-//Product:function(name,parent,sellerId,instantPrice,bidPrice,description,model,brand,dimensions,numBids)
+//Product:function(name,parent,sellerId,instantPrice,bidPrice,description,model,brand,dimensions)
 var productList = new Array(
-	new Product("MyPhone", 13, 0, 500, 400,"Brand new, still in box Myphone.", "MyPhone5X", "Mapple", '10"x8"x0.5"',0),
-	new Product("Viperus", 38, 0, 901, 700, "Honyota Viperus Wheels. Its so fast your skin flies off.", "Viperus XLR", "Honyota", '15" diameter with 2" thickness',0),
-	new Product("Test Product 1", 41, 1, 9001, 42,"Test of product printing", "model", "brand", "dimensions",2)
+	new Product("MyPhone", 13, 0, 500, 400, "Brand new, still in box Myphone.", "MyPhone5X", "Mapple", '10"x8"x0.5"'),
+	new Product("Viperus", 38, 0, 901, 700, "Honyota Viperus Wheels. Its so fast your skin flies off.", "Viperus XLR", "Honyota", '15" diameter with 2" thickness'),
+	new Product("Test Product 1", 41, 1, 9001, 42, "Test of product printing", "model", "brand", "dimensions")
 	);
 
 var productNextId = 0;
@@ -312,19 +336,6 @@ for (var i=0; i < productList.length;++i){
 	productList[i].id = productNextId++;
 }
 
-var ProductBid = modules.ProductBid;
-
-//Product bid: productId, bidderId, bidPrice
-var productBidsList = new Array(
-	new ProductBid(2, 0, 42),
-	new ProductBid(2, 2, 38)
-	);
-
-var prodbidNextId = 0;
-
-for (var i=0; i < productBidsList.length;++i){
-	productBidsList[i].id = prodbidNextId++;
-}
 // REST Operation - HTTP GET to read a product based on its id
 app.get('/Server-Master/product/:id', function(req, res) {
 	var id = req.params.id;
@@ -348,34 +359,6 @@ app.get('/Server-Master/product/:id', function(req, res) {
 		}
 		else {
 			var response = {"product" : productList[target]};
-  			res.json(response);	
-  		}	
-	}
-});
-app.get('/Server-Master/product/bid-history/:id', function(req, res) {
-	var id = req.params.id;
-	console.log("GET bid history for product : " + id);
-	var bidHistory = new Array();
-
-	if ((id < 0) || (id >= productNextId)){
-		// not found
-		res.statusCode = 404;
-		res.send("Product not found.");
-	}
-	else {
-		var target = -1;
-		for (var i=0; i < productBidList.length; ++i){
-			if (productBidList[i].productId == id){
-				target = i;
-				bidHistory.push(productBidList[i]);
-			}
-		}
-		if (target == -1){
-			res.statusCode = 404;
-			res.send("Product not found.");
-		}
-		else {
-			var response = {"bidHistory" : bidHistory};
   			res.json(response);	
   		}	
 	}

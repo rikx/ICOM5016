@@ -80,7 +80,7 @@ $(document).on('pagebeforeshow', "#cart", function( event, ui ) {
 
 var invoiceID=0;
 $(document).on('pagebeforeshow', "#invoice", function( event, ui ) {
-	if(currentUser.type == "user" && Cart.length!=0){
+	
 			
 			var len = Cart.length;
 			var shipping = $("#ShipTo");
@@ -91,14 +91,13 @@ $(document).on('pagebeforeshow', "#invoice", function( event, ui ) {
 			billing.empty();
 			shipping.empty();
 			
-			$("#invoiceID").html(invoiceID++);
+			$("#invoiceID").html('Invoice ID: '+invoiceID++);
 			billing.append('<li><h3><strong>'+currentUser.firstname+'  '+currentUser.lastname+'</strong></h3>'+
 						   '<p><h3>'+currentUser.billAddress+'</h3></p></li>');
 			
 			shipping.append('<li><h3><strong>'+currentUser.firstname+'  '+currentUser.lastname+'</strong></h3>'+
 						   '<p><h3>'+currentUser.shipAddress+'</h3></p></li>');
 
-			
 				for (var i=0; i < len; ++i){
 					product = Cart[i];
 					total=total+product.instantPrice;
@@ -108,28 +107,22 @@ $(document).on('pagebeforeshow', "#invoice", function( event, ui ) {
 				}
 			list.append('<li><h2><strong> Total: ' + accounting.formatMoney(total) + '</strong></h2></li>');
 			
-			
 			list.listview("refresh");	
 			billing.listview("refresh");
 			shipping.listview("refresh");
-	}//End IF
-	else if(currentUser.type == "user" && Cart.length==0){
-		alert('Cart Is Empty');//Need to Make it so it doesn't go to invoice page if this happens
-	}
-	else{
-		 $("#ForceLogin").click();
-    }//End ELSE
+	
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //										SUB-CATEGORY LIST PAGE										  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+var SortType="none";
 $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 	//currentHistory will be used later to display breadcrumb trail on page as you go deeper into the category hierarchy
 	//currentHistory = currentHistory + "/" + currentCategory.id;
 	$.ajax({
-		url : "http://localhost:3412/Server-Master/home/categories/" + currentCategory.id,
+		url : "http://localhost:3412/Server-Master/home/categories/" + currentCategory.id + "/"+SortType,
 		method: 'get',
 		//method: 'post',
 		//data : JSON.stringify({"urlhistory": currentHistory}),
@@ -141,6 +134,7 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 			var len = childrenList.length;
 			var list = $("#browse-list");
 			list.empty();
+			$("#sortTypes").html('');
 			var child;
 			//when childrenList contains sub-categories
 			if(data.childType == true){
@@ -152,6 +146,7 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 			}
 			//when childrenList contains products
 			else{
+				$("#sortTypes").html('<button onclick=sortByType("name")>SortByName</button><button onclick=sortByType("brand")>SortByBrand</button><button onclick=sortByType("price")>SortByPrice</button>');
 				for (var i=0; i < len; ++i){
 					child = childrenList[i];
 					//<li><img src="http://3.bp.blogspot.com/-nU8O8xLuSvs/TdjWsU3X2DI/AAAAAAAAAIs/Lsa3Y92DGy0/s320/112.jpg" /></li>	
@@ -169,6 +164,7 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 			alert("Data not found!");
 		}
 	});
+	SortType="none";
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -180,7 +176,7 @@ $(document).on('pagebeforeshow', "#category-view", function( event, ui ) {
 	$("#upd-name").val(currentCategory.name);
 });
 
-//--------------- Enter Button Fix - Juan ---------------//
+//--------------- Enter Button Fixes - Juan ---------------//
 $(document).ready(function(){
     $("#upd-name").keypress(function(e){
       if(e.keyCode==13)
@@ -441,6 +437,10 @@ $(document).on('pagebeforeshow', "#product-view", function( event, ui ) {
 	'<li><strong>Dimensions: </strong>'+product.dimensions+'</li>');
 	list.listview("refresh");	
 });
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//										BID HISTORY													  //
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 $(document).on('pagebeforeshow', '#bidhistory', function( event, ui ){
 	$.ajax({
@@ -875,8 +875,8 @@ function DeleteProduct(id){
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //											THE CART												  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-var Cart=[];//Test - Juan - ARRAY OF CURRENT PRODUCTS IN CART
-//--------------- ADD PRODUCTS ---------------//
+var Cart=[];//ARRAY OF CURRENT PRODUCTS IN CART
+//--------------- ADD PRODUCTS TO CART ---------------//
 function addToCart(){
 	var ID = currentProduct.id;
 	var New=true;
@@ -886,14 +886,40 @@ function addToCart(){
 			alert("Product is in Cart");
 		}
 	if(New){
-		Cart.push(currentProduct);
+        Cart.push(currentProduct);
 		alert("Product has been added");
 	}
 }
 
+//--------------- REMOVE PRODUCTS FROM CART ---------------//
 function removeFromCart(Index){
 	Cart.splice(Index,1);
 	alert("Deleted");
 	
 	//location.reload();// THI WILL WORK ONCE WE HAVE COOKIES
 }
+
+function checkout(){
+	if(currentUser.type == "user" && Cart.length!=0){
+	document.location.href="#invoice";
+	}//End IF
+	else if(currentUser.type == "user" && Cart.length==0){
+		alert('Cart Is Empty');
+	}//End ELSE IF
+	else if(currentUser.type == "admin"){
+		alert("Admins can't have nice things... :P");
+	}//End ELSE IF 2
+	else{
+		 $("#ForceLogin").click();//IF its a Guest Force Him to Log In
+    }//End ELSE
+}
+
+function sortByType(type){
+	alert(type);
+
+	SortType=type;
+	document.location.href="#browse";
+			
+	
+}
+
