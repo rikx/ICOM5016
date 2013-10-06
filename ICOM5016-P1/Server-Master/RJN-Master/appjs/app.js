@@ -444,7 +444,7 @@ $(document).on('pagebeforeshow', "#product-view", function( event, ui ) {
 
 $(document).on('pagebeforeshow', '#bidhistory', function( event, ui ){
 	$.ajax({
-		url : "http://localhost:3412/Server-Master/product/bid-history/" + currentProduct.id,
+		url : "http://localhost:3412/Server-Master/product/" + currentProduct.id + "/bid-history",
 		method: 'get',
 		contentType: "application/json",
 		dataType:"json",
@@ -453,7 +453,9 @@ $(document).on('pagebeforeshow', '#bidhistory', function( event, ui ){
 			var bidHistory = data.bidHistory;
 			var list = $('#bidhistory-list');
 			list.empty();
-			list.append('<li><strong>Bidder id: </strong>'+bidHistory.bidderId+'</li>');
+			for(var i=0; i < bidHistory.length; ++i){
+				list.append('<li><strong>Bidder id: </strong>'+bidHistory.bidderId+'</li>');
+			}
 			list.listview('refresh');
 		},
 		error: function(data, textStatus, jqXHR){

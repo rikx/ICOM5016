@@ -352,7 +352,7 @@ app.get('/Server-Master/product/:id', function(req, res) {
   		}	
 	}
 });
-app.get('/Server-Master/product/bid-history/:id', function(req, res) {
+app.get('/Server-Master/product/:id/bid-history', function(req, res) {
 	var id = req.params.id;
 	console.log("GET bid history for product : " + id);
 	var bidHistory = new Array();
@@ -364,10 +364,10 @@ app.get('/Server-Master/product/bid-history/:id', function(req, res) {
 	}
 	else {
 		var target = -1;
-		for (var i=0; i < productBidList.length; ++i){
-			if (productBidList[i].productId == id){
+		for (var i=0; i < productBidsList.length; ++i){
+			if (productBidsList[i].productId == id){
 				target = i;
-				bidHistory.push(productBidList[i]);
+				bidHistory.push(productBidsList[i]);
 			}
 		}
 		if (target == -1){
