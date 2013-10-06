@@ -248,7 +248,7 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 				infoList.empty();
 				infoList.append('<li><strong>Account ID: </strong>' + user.id + '</li></li>'+
 					'<li><strong>First Name: </strong>' + user.firstname + '</li></li><li><strong>Last Name: </strong>' + user.lastname + 
-					'</li></li><li><strong>Email: </strong>' + user.email + '</li><li><strong>Current Shipping Address: </strong>' + user.shipAddress+'<a onclick=changeAddress() data-icon="gear">Change</a></li>'	
+					'</li></li><li><strong>Email: </strong>' + user.email + '</li><li><strong>Primary Shipping Address: </strong>' + user.shipAddress+'</li>'	
 				);
 				infoList.listview("refresh");
 
@@ -302,6 +302,10 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 						);
 					}
 				}
+				shipAddressList.append('<li><a href="" data-role="button">Add new shipping address</a></li>');
+				payList.append('<li><a href="" data-role="button">Add new payment option</a></li>');
+				sellingList.append('<li><a href="" data-role="button">Add new sale</a></li>');
+
 				shipAddressList.listview("refresh");
 				payList.listview("refresh");
 				ratingsList.listview("refresh");
