@@ -75,10 +75,10 @@ $(document).on('pagebeforeshow', "#cart", function( event, ui ) {
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-//										INVOICE PAGE											  //
+//										INVOICE PAGE											 	 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+var invoiceID=0;
 $(document).on('pagebeforeshow', "#invoice", function( event, ui ) {
 	if(currentUser.type == "user" && Cart.length!=0){
 			
@@ -91,6 +91,7 @@ $(document).on('pagebeforeshow', "#invoice", function( event, ui ) {
 			billing.empty();
 			shipping.empty();
 			
+			$("#invoiceID").html(invoiceID++);
 			billing.append('<li><h3><strong>'+currentUser.firstname+'  '+currentUser.lastname+'</strong></h3>'+
 						   '<p><h3>'+currentUser.billAddress+'</h3></p></li>');
 			

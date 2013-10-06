@@ -18,7 +18,14 @@ module.exports =  {
 		this.dimensions= dimensions;
 		this.numBids = numBids;
 	},
-
+	
+	Invoice: function(id,billingInfo,shippingInfo,productsBought){
+		this.id=id;
+		this.billingInfo = billingInfo;
+		this.shippingInfo = shipingInfo;
+		this.productsBought = productsBought;
+	},
+	
 	ProductBid: function(productId, bidderId, bidPrice){
 		this.id="";
 		this.productId = productId;
