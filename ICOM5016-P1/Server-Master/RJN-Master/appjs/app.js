@@ -182,6 +182,42 @@ $(document).on('pagebeforeshow', "#category-view", function( event, ui ) {
 	$("#upd-name").val(currentCategory.name);
 });
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//										PRODUCT DETAILS PAGE										  //
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$(document).on('pagebeforeshow', "#edit-product-view", function( event, ui ) {
+	// currentProduct has been set at this point
+	$("#edit-name").val(currentProduct.name);
+	$("edit-parent").val(currentProduct.parent);
+    $("edit-instantPrice").val(currentProduct.instantPrice);
+	$("edit-bidPrice").val(currentProduct.bidPrice);
+	$("edit-description").val(currentProduct.description);
+	$("edit-model").val(currentProduct.model);
+	$("edit-brand").val(currentProduct.brand);
+	$("edit-dimensions").val(currentProduct.dimensions);
+});
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//										ADDRESS DETAILS PAGE										  //
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$(document).on('pagebeforeshow', "#edit-address-view", function( event, ui ) {
+	// currentAddress has been set at this point
+	$("#edit-address").val(currentAddress.address);
+});
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//										PAYMENT DETAILS PAGE										  //
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$(document).on('pagebeforeshow', "#edit-payment-view", function( event, ui ) {
+	// currentPayment has been set at this point
+	$("#edit-type").val(currentPayment.type);
+	$("#edit-cNumber").val(currentPayment.cNumber);
+	$("#edit-billAddress").val(currentPayment.billAddress);
+});
+
 //--------------- Enter Button Fixes - Juan ---------------//
 $(document).ready(function(){
     $("#upd-name").keypress(function(e){
@@ -1051,7 +1087,7 @@ function GetAddress(id){
 		success : function(data, textStatus, jqXHR){
 			currentAddress = data.address;
 			$.mobile.loading("hide");
-			$.mobile.navigate("#address-view");// Not Implemented in This Phase
+			$.mobile.navigate("#address-view");
 		},
 		error: function(data, textStatus, jqXHR){
 			console.log("textStatus: " + textStatus);
@@ -1068,7 +1104,7 @@ function GetAddress(id){
 
 function AddAddress(){
 $.mobile.loading("show");
-	var form = $("#addAddress-form");// Not Implemented in Thi Phase
+	var form = $("#address-form");
 	var formData = form.serializeArray();
 	console.log("form Data: " + formData);
 	var newAddress = ConverToJSON(formData);
@@ -1094,7 +1130,7 @@ $.mobile.loading("show");
 
 function EditAddress(id){
 $.mobile.loading("show");
-	var form = $("#addAddress-form");// Not Implemented in Thi Phase
+	var form = $("#address-view-form");
 	var formData = form.serializeArray();
 	console.log("form Data: " + formData);
 	var updAddress = ConverToJSON(formData);
@@ -1165,7 +1201,7 @@ function GetPayment(id){
 		success : function(data, textStatus, jqXHR){
 			currentPayment = data.payment;
 			$.mobile.loading("hide");
-			$.mobile.navigate("#payment-view");// Not Implemented in This Phase
+			$.mobile.navigate("#payment-view");
 		},
 		error: function(data, textStatus, jqXHR){
 			console.log("textStatus: " + textStatus);
@@ -1182,7 +1218,7 @@ function GetPayment(id){
 
 function AddPayment(){
 $.mobile.loading("show");
-	var form = $("#addPayment-form");// Not Implemented in This Phase
+	var form = $("#payment-form");
 	var formData = form.serializeArray();
 	console.log("form Data: " + formData);
 	var newPayment = ConverToJSON(formData);
@@ -1208,7 +1244,7 @@ $.mobile.loading("show");
 
 function EditPayment(id){
 $.mobile.loading("show");
-	var form = $("#addPayment-form");// Not Implemented in This Phase
+	var form = $("#payment-view-form");
 	var formData = form.serializeArray();
 	console.log("form Data: " + formData);
 	var updPayment = ConverToJSON(formData);
@@ -1296,7 +1332,7 @@ function GetProduct(id){
 
 function AddProduct(){
 	$.mobile.loading("show");
-	var form = $("#addProduct-form");// Not Implemented in This Phase
+	var form = $("#product-form");
 	var formData = form.serializeArray();
 	console.log("form Data: " + formData);
 	var newProduct = ConverToJSON(formData);
@@ -1322,7 +1358,7 @@ function AddProduct(){
 
 function EditProduct(id){
 $.mobile.loading("show");
-	var form = $("#addProduct-form");// Not Implemented in This Phase
+	var form = $("#product-view-form");
 	var formData = form.serializeArray();
 	console.log("form Data: " + formData);
 	var updProduct = ConverToJSON(formData);
@@ -1337,7 +1373,7 @@ $.mobile.loading("show");
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
 			$.mobile.loading("hide");
-			$.mobile.navigate("#account");
+			$.mobile.navigate("#product-view");
 		},
 		error: function(data, textStatus, jqXHR){
 			console.log("textStatus: " + textStatus);

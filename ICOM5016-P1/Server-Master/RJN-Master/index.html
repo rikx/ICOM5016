@@ -135,7 +135,7 @@
 				 </fieldset>
 				</form>
 				<center>
-					<a id="Del-Button" data-icon="delete" data-role="button" data-inline="true" onclick="DeleteCategory()">Delete</a>
+					<a class="Del-Button" data-icon="delete" data-role="button" data-inline="true" onclick="DeleteCategory()">Delete</a>
 				</center>
 			</div>
 			<div data-role="footer">
@@ -399,17 +399,186 @@
 		</div><!-- /page -->
 		
 		<!--///////////////////////////////////		NEW PRODUCT FORM		//////////////////////////////////////-->
-		
-		
+
+<div id="add-product" data-role="page">
+			<div data-role="header" data-theme="b" data-position="fixed">
+				<a data-role="button" data-rel="back" href="#account">Cancel</a>
+				<h1>New Product</h1>
+				<a data-role="button" id="AddNewProduct" data-rel="back" onclick="AddProduct()">Add</a>
+			</div>
+			<div data-role="content">
+				<h2 align="center">Enter the new product info</h2>
+				<form id="product-form">
+	 				<fieldset data-role="controlgroup">
+	 					<ul>
+		  					<li><label for="name"> Name: <input id="name" name="name" type="text"/></label></li>
+		  					<li><label for="parent"> Parent: <input id="parent" name="parent" type="text"/></label></li>
+		  					<li><label for="instantPrice"> Buyout Price $: <input id="instantPrice" name="instantPrice" type="number"/></label></li>
+		  					<li><label for="bidPrice"> Bid Price $: <input id="bidPrice" name="bidPrice" type="number"/></label></li>
+		  					<li><label for="description"> Description: <input id="description" name="description" type="text"/></label></li>
+		  					<li><label for="model"> Model: <input id="model" name="model" type="text"/></label></li>
+		  					<li><label for="brand"> Brand: <input id="brand" name="brand" type="text"/></label></li>
+		  			  		<li><label for="dimensions"> Dimensions: <input id="dimensions" name="dimensions" type="text"/></label></li>
+	  			  	  	</ul>
+				 	</fieldset>
+				</form>
+			</div><!-- /content -->
+			<div data-role="footer">
+				<div data-role="controlgroup" data-type="horizontal" align="center">
+							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
+							<a onclick="GetUserAccount()"	data-role="button" data-icon="user"			 data-iconpos="top" title="Account"	></a>
+				</div>
+			</div><!-- /footer -->
+		</div><!-- /page -->
+
+		<div id="edit-product-view" data-role="page">
+			<div data-role="header" data-theme="e" data-position="fixed">
+				<a data-role="button" data-rel="back" href="#product-view">Cancel</a>
+				<h1>Product Info</h1>
+				<a data-role="button" id="SaveNewProductInfo" data-rel="back" onclick="EditProduct()">Save</a>
+			</div>
+			<div data-role="content">
+				<h2 align="center">Enter new info</h2>
+				<form id="product-view-form">
+	 				<fieldset data-role="controlgroup">
+	 					<ul>
+		  					<li><label for="edit-name"> Name: <input id="edit-name" name="edit-name" type="text"/></label></li>
+		  					<li><label for="edit-parent"> Parent: <input id="edit-parent" name="edit-parent" type="text"/></label></li>
+		  					<li><label for="edit-instantPrice"> Buyout Price $: <input id="edit-instantPrice" name="edit-instantPrice" type="number"/></label></li>
+		  					<li><label for="edit-bidPrice"> Bid Price $: <input id="edit-bidPrice" name="edit-bidPrice" type="number"/></label></li>
+		  					<li><label for="edit-description"> Description: <input id="edit-description" name="edit-description" type="text"/></label></li>
+		  					<li><label for="edit-model"> Model: <input id="edit-model" name="edit-model" type="text"/></label></li>
+		  					<li><label for="edit-brand"> Brand: <input id="edit-brand" name="edit-brand" type="text"/></label></li>
+		  			  		<li><label for="edit-dimensions"> Dimensions: <input id="edit-dimensions" name="edit-dimensions" type="text"/></label></li>
+	  			  	  	</ul>
+				 </fieldset>
+				</form>
+				<center>
+					<a class="Del-Button" data-icon="delete" data-role="button" data-inline="true" onclick="DeleteProduct()">Delete</a>
+				</center>
+			</div>
+			<div data-role="footer">
+				<div data-role="controlgroup" data-type="horizontal" align="center">
+					<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
+					<a onclick="GetUserAccount()"	data-role="button" data-icon="user"			 data-iconpos="top" title="Account"	></a>
+				</div>
+			</div><!-- /footer -->
+		</div><!-- /page -->
+
+
 		<!--///////////////////////////////////		NEW PRODUCT FORM END	//////////////////////////////////////-->
 		
 		<!--///////////////////////////////////		NEW ADDRESS FORM		//////////////////////////////////////-->
 		
+		<div id="add-address" data-role="page">
+			<div data-role="header" data-theme="b" data-position="fixed">
+				<a data-role="button" data-rel="back" href="#account">Cancel</a>
+				<h1>New Address</h1>
+				<a data-role="button" id="AddNewAddress" data-rel="back" onclick="AddAddress()">Add</a>
+			</div>
+			<div data-role="content">
+				<h2 align="center">Enter the new address info</h2>
+				<form id="address-form">
+	 				<fieldset data-role="controlgroup">
+	 					<ul>
+		  					<li><label for="address">Shipping Address: <input id="address" name="address" type="text"/></label></li>
+	  			  	  	</ul>
+				 	</fieldset>
+				</form>
+			</div><!-- /content -->
+			<div data-role="footer">
+				<div data-role="controlgroup" data-type="horizontal" align="center">
+							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
+							<a onclick="GetUserAccount()"	data-role="button" data-icon="user"			 data-iconpos="top" title="Account"	></a>
+				</div>
+			</div><!-- /footer -->
+		</div><!-- /page -->
+
+		<div id="edit-address-view" data-role="page">
+			<div data-role="header" data-theme="e" data-position="fixed">
+				<a data-role="button" data-rel="back" href="#account">Cancel</a>
+				<h1>Address Info</h1>
+				<a data-role="button" id="SaveNewAddressInfo" data-rel="back" onclick="EditAddress()">Save</a>
+			</div>
+			<div data-role="content">
+				<h2 align="center">Enter new info</h2>
+				<form id="address-view-form">
+	 				<fieldset data-role="controlgroup">
+	 					<ul>
+		  					<li><label for="edit-address">Shipping Address: <input id="edit-address" name="edit-address" type="text"/></label></li>
+	  			  	  	</ul>
+				 </fieldset>
+				</form>
+				<center>
+					<a class="Del-Button" data-icon="delete" data-role="button" data-inline="true" onclick="DeleteAddress()">Delete</a>
+				</center>
+			</div>
+			<div data-role="footer">
+				<div data-role="controlgroup" data-type="horizontal" align="center">
+					<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
+					<a onclick="GetUserAccount()"	data-role="button" data-icon="user"			 data-iconpos="top" title="Account"	></a>
+				</div>
+			</div><!-- /footer -->
+		</div><!-- /page -->
 		
 		<!--///////////////////////////////////		NEW ADDRESS FORM END	//////////////////////////////////////-->
 		
 		<!--///////////////////////////////////		NEW PAYMENT FORM		//////////////////////////////////////-->
 		
+		<div id="add-payment" data-role="page">
+			<div data-role="header" data-theme="b" data-position="fixed">
+				<a data-role="button" data-rel="back" href="#account">Cancel</a>
+				<h1>New Payment</h1>
+				<a data-role="button" id="AddNewPayment" data-rel="back" onclick="AddPayment()">Add</a>
+			</div>
+			<div data-role="content">
+				<h2 align="center">Enter the new payment info</h2>
+				<form id="payment-form">
+	 				<fieldset data-role="controlgroup">
+	 					<ul> 
+		  					<li><label for="type">Type: <input id="type" name="type" type="text"/></label></li>
+		  					<li><label for="cNumber">Card #: <input id="cNumber" name="cNumber" type="text"/></label></li>
+		  					<li><label for="billAddress">Billing Address: <input id="billAddress" name="billAddress" type="text"/></label></li>
+	  			  	  	</ul>
+				 	</fieldset>
+				</form>
+			</div><!-- /content -->
+			<div data-role="footer">
+				<div data-role="controlgroup" data-type="horizontal" align="center">
+							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
+							<a onclick="GetUserAccount()"	data-role="button" data-icon="user"			 data-iconpos="top" title="Account"	></a>
+				</div>
+			</div><!-- /footer -->
+		</div><!-- /page -->
+
+		<div id="edit-payment-view" data-role="page">
+			<div data-role="header" data-theme="e" data-position="fixed">
+				<a data-role="button" data-rel="back" href="#account">Cancel</a>
+				<h1>Payment Info</h1>
+				<a data-role="button" id="SaveNewPaymentInfo" data-rel="back" onclick="EditPayment()">Save</a>
+			</div>
+			<div data-role="content">
+				<h2 align="center">Enter new info</h2>
+				<form id="payment-view-form">
+	 				<fieldset data-role="controlgroup">
+	 					<ul>
+		  					<li><label for="edit-type">Type: <input id="edit-type" name="edit-type" type="text"/></label></li>
+		  					<li><label for="edit-cNumber">Card #: <input id="edit-cNumber" name="edit-cNumber" type="text"/></label></li>
+		  					<li><label for="edit-billAddress">Billing Address: <input id="edit-billAddress" name="edit-billAddress" type="text"/></label></li>
+	  			  	  	</ul>
+				 </fieldset>
+				</form>
+				<center>
+					<a class="Del-Button" data-icon="delete" data-role="button" data-inline="true" onclick="DeletePayment()">Delete</a>
+				</center>
+			</div>
+			<div data-role="footer">
+				<div data-role="controlgroup" data-type="horizontal" align="center">
+					<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
+					<a onclick="GetUserAccount()"	data-role="button" data-icon="user"			 data-iconpos="top" title="Account"	></a>
+				</div>
+			</div><!-- /footer -->
+		</div><!-- /page -->
 		
 		<!--///////////////////////////////////		NEW PAYMENT FORM END	//////////////////////////////////////-->
 		
@@ -495,7 +664,7 @@
 							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
 							<a href="" 						data-role="button" data-icon="search"		 data-iconpos="top" title="Browse"	></a>
 							<a onclick="GetUserAccount()"	data-role="button" data-icon="user"			 data-iconpos="top" title="Account"	></a>
-							<a href="#cart" 				data-role="button" data-icon="shopping-cart" data-iconpos="top" title="Cart"	></a><!-- /// onclick="GetCart()">/// -->
+							<a href="#cart" 				data-role="button" data-icon="shopping-cart" data-iconpos="top" title="Cart"	></a>
 						</div>
 					</div>
 				</div><!-- /grid-b -->

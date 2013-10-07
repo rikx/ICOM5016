@@ -1,5 +1,5 @@
 
-#Del-Button{
+.Del-Button{
 font-family: Helvetica, Arial, sans-serif /*{global-font-family}*/;
 border: 1px solid 		#111111 /*{a-bup-border}*/;
 	background: 			#333333 /*{a-bup-background-color}*/;
