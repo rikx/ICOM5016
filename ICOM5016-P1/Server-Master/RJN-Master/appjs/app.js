@@ -463,6 +463,7 @@ $(document).on('pagebeforeshow', "#seller-profile", function(event, ui){
 		contentType: "application/json",
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
+			$('#seller-ratings-average').empty();
 			var seller = data.sellerDetails;
 			var ratings = data.ratings;
 			var sales = data.sellingProducts;
@@ -603,6 +604,7 @@ $(document).on('pagebeforeshow', "#product-view", function( event, ui ) {
 	// currentProduct has been set at this point
 	var product = currentProduct;
 	$("#productTitle").html(product.name);
+	$('#seller-details').attr("onclick", "GetSellerProfile("+currentProduct.sellerId+")");
 	$("#showBidPrice").html(accounting.formatMoney(product.bidPrice));
 	$("#numOfBids").html('<a href="#bidhistory">'+product.numBids+'</a>');
 	$("#showBuyoutPrice").html(accounting.formatMoney(product.instantPrice));
