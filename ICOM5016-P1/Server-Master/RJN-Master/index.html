@@ -501,34 +501,22 @@
 				</div><!-- /grid-b -->
 			</div><!-- /header -->
 			<div data-role="content">
-				<div class="ui-grid-a">
-					<div class="ui-block-a">
-						<h3 align="center">Product Details</h3>
-						<ul id="prod-details" data-role="listview" data-inset="true">	  			  	
-						</ul>
-					</div>
-					<div class="ui-block-b">
-						<h3 align="center">Options</h3>
-						<a id="seller-details" data-role="button">Seller Details</a>
-						<a data-role="button" onclick="addToCart()">Add to Cart</a>
-						<div class="ui-grid-a" align="center">
-							<div class="ui-block-a"><p>Current bid: <strong id="showBidPrice"></strong></p></div>
-							<div class="ui-block-b"><p>Number of bids: <strong id="numOfBids"></strong></p></div>
-						</div>
-						<div class="ui-grid-a" align="center">
-							<div class="ui-block-a">
-								<div data-role="fieldcontain">
-									<input name="bidInput" type="text" data-mini="true" /><a id="bidButton" data-role="button" data-inline="true" data-theme="e" data-mini="true">Bid</a>
-								</div>
-							</div>
-							<div class="ui-block-b"></div>
-						</div><!-- /grid-a -->
-							<p>Buyout Price: <strong id="showBuyoutPrice"></strong>
-							<a id="buyoutButton" data-role="button" data-inline="true" data-theme="b" data-mini="true">Buyout</a></p>
-					</div>
-				</div><!-- /grid-a -->
+				<h3 align="center">Product Details</h3>
+				<ul id="prod-details" data-role="listview" data-inset="true">	  			  	
+				</ul>
+				<h3 align="center">Options</h3>
+				<a id="seller-details" data-role="button">Seller Details</a>
+				<a data-role="button" onclick="addToCart()">Add to Cart</a>
+				<p>Current bid: <strong id="showBidPrice"></strong> &nbsp;|&nbsp; Number of bids: <strong id="numOfBids"></strong></p>
+				
+				<div data-role="fieldcontain">
+					<input name="bidInput" type="text" data-mini="true" /><a id="bidButton" data-role="button" data-inline="true" data-theme="e" data-mini="true">Bid</a>
+				</div>
+				<p>Buyout Price: <strong id="showBuyoutPrice"></strong>
+				<a id="buyoutButton" data-role="button" data-inline="true" data-theme="b" data-mini="true">Buyout</a></p>
 			</div><!-- /content -->
 		</div><!-- /page -->
+
 		<div id="bidhistory" data-role="page">
 			<div data-role="header">
 			</div>
