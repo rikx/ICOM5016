@@ -118,9 +118,13 @@ $(document).on('pagebeforeshow', "#invoice", function( event, ui ) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 var SortType="none";
+
+$.mobile.changePage.defaults.allowSamePageTransition = true;//F*CK YEAH RICK
+
 $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 	//currentHistory will be used later to display breadcrumb trail on page as you go deeper into the category hierarchy
 	//currentHistory = currentHistory + "/" + currentCategory.id;
+	
 	$.ajax({
 		url : "http://localhost:3412/Server-Master/home/categories/" + currentCategory.id + "/"+SortType,
 		method: 'get',
@@ -164,7 +168,9 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 			alert("Data not found!");
 		}
 	});
+
 	SortType="none";
+	
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -908,7 +914,7 @@ function addToCart(){
 function removeFromCart(Index){
 	Cart.splice(Index,1);
 	alert("Deleted");
-	
+	document.location.href="#cart";
 	//location.reload();// THI WILL WORK ONCE WE HAVE COOKIES
 }
 
@@ -928,9 +934,9 @@ function checkout(){
 }
 
 function sortByType(type){
-	alert(type);
-
+	
 	SortType=type;
+	 	
 	document.location.href="#browse";
 			
 	
