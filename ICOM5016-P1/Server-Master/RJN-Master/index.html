@@ -197,70 +197,70 @@
 			</div>
 			<div data-role="content">
 				<h4 id="ratings-average"></h2>
-					<p>Primary options (e.g. primary payment option) are highlighted in yellow</p>
-						<div data-role="collapsible" data-collapsed="false" data-theme="a" data-content-theme="c">
-							<h2>Profile Information</h2>
-							<ul id="user-info" data-role="listview" data-inset="true" data-inline="true">
-							</ul>
-						</div><!--/collapsible-->
-						<div data-role="collapsible" data-theme="a" data-content-theme="c">
-							<h2>Shipping Addresses</h2>
-							<ul id="shipaddress-list" data-role="listview" data-inline="true">
-							</ul>
-						</div><!--/collapsible-->
-						<div data-role="collapsible" data-theme="a" data-content-theme="c">
-							<h2>Payment Options</h2>
-							<ul id="paymentType-list" data-role="listview" data-inline="true">
-							</ul>
-						</div><!--/collapsible-->
-						<div data-role="collapsible" data-theme="a" data-content-theme="c">
-							<h2>Ratings by User</h2>
-							<ul id="ratings-list" data-role="listview" data-inline="true">
-							</ul>
-						</div><!--/collapsible-->
-						<div data-role="collapsible" data-theme="a" data-content-theme="c">
-							<h2>Your Orders</h2>
-							<ul id="orders-list" data-role="listview" data-inline="true"> 
-							</ul>
-						</div><!--/collapsible-->
-						<div data-role="collapsible" data-theme="a" data-content-theme="c">
-							<h2>Current Bids</h2>
-							<ul id="currentBids-list" data-role="listview" data-inline="true">
-							</ul>
-						</div><!--/collapsible-->
-						<div data-role="collapsible" data-theme="a" data-content-theme="c">
-							<h2>Current Sales</h2>
-							<ul id="currentSales-list" data-role="listview" data-inline="true">
-							</ul>
-						</div><!--/collapsible-->
-						<div data-role="collapsible" data-theme="a">
-							<h2>Show History</h2>
-							<div class="ui-grid-a">
-								<div class="ui-block-a">
-									<a data-role="button" onclick="boughtHistory()">Items bought</a>
+				<p>Primary options (e.g. primary payment option) are highlighted in yellow</p>
+				<div data-role="collapsible" data-collapsed="false" data-theme="a" data-content-theme="c">
+					<h2>Profile Information</h2>
+					<ul id="user-info" data-role="listview" data-inset="true" data-inline="true">
+					</ul>
+				</div><!--/collapsible-->
+				<div data-role="collapsible" data-theme="a" data-content-theme="c">
+					<h2>Shipping Addresses</h2>
+					<ul id="shipaddress-list" data-role="listview" data-inline="true">
+					</ul>
+				</div><!--/collapsible-->
+				<div data-role="collapsible" data-theme="a" data-content-theme="c">
+					<h2>Payment Options</h2>
+					<ul id="paymentType-list" data-role="listview" data-inline="true">
+					</ul>
+				</div><!--/collapsible-->
+				<div data-role="collapsible" data-theme="a" data-content-theme="c">
+					<h2>Ratings by User</h2>
+					<ul id="ratings-list" data-role="listview" data-inline="true">
+					</ul>
+				</div><!--/collapsible-->
+				<div data-role="collapsible" data-theme="a" data-content-theme="c">
+					<h2>Your Orders</h2>
+					<ul id="orders-list" data-role="listview" data-inline="true"> 
+					</ul>
+				</div><!--/collapsible-->
+				<div data-role="collapsible" data-theme="a" data-content-theme="c">
+					<h2>Current Bids</h2>
+					<ul id="currentBids-list" data-role="listview" data-inline="true">
+					</ul>
+				</div><!--/collapsible-->
+				<div data-role="collapsible" data-theme="a" data-content-theme="c">
+					<h2>Current Sales</h2>
+					<ul id="currentSales-list" data-role="listview" data-inline="true">
+					</ul>
+				</div><!--/collapsible-->
+				<div data-role="collapsible" data-theme="a">
+					<h2>Show History</h2>
+					<div class="ui-grid-a">
+						<div class="ui-block-a">
+							<a data-role="button" onclick="boughtHistory()">Items bought</a>
+						</div>
+						<div class="ui-block-b">
+							<a data-role="button" onclick="sellHistory()">Items sold</a>
+						</div>
+					</div><!-- /grid-a -->
+					<form id="ratings-form">
+						<ul id="bought-history" data-role="listview" data-inset="true" data-inline="true">
+							<li>Product bought #9000 from <a onclick="GetSellerProfile(1)">user2</a>
+								<div data-role="fieldcontain">
+									<label for="slider-mini">Rate this seller:</label>
+									<input type="text" data-type="range" name="slider-mini" id="slider-mini" value="2" min="0" max="4" step="1" data-highlight="true" data-mini="true" /><input type="submit" value="Submit" />
 								</div>
-								<div class="ui-block-b">
-									<a data-role="button" onclick="sellHistory()">Items sold</a>
-								</div>
-							</div><!-- /grid-a -->
-							<form id="ratings-form">
-								<ul id="bought-history" data-role="listview" data-inset="true" data-inline="true">
-									<li>Product bought #9000 from <a onclick="GetSellerProfile(1)">user2</a>
-										<div data-role="fieldcontain">
-											<label for="slider-mini">Rate this seller:</label>
-											<input type="text" data-type="range" name="slider-mini" id="slider-mini" value="2" min="0" max="4" step="1" data-highlight="true" data-mini="true" /><input type="submit" value="Submit" />
-										</div>
-									</li>
-								</ul>
-							</form>
-							<ul id="sell-history" data-role="listview" data-inset="true" data-inline="true">
-								<li>Nelson's sexy bikini</li>
-							</ul>
+							</li>
+						</ul>
+					</form>
+					<ul id="sell-history" data-role="listview" data-inset="true" data-inline="true">
+						<li>Nelson's sexy bikini</li>
+					</ul>
 <!-- 							<select name="flip-1" id="flip-1" data-role="slider">
-								<option value="itemsBought">Items Bought</option>
-								<option value="itemsSold">Items Sold</option>
-							</select>  -->
-						</div><!--/collapsible-->
+						<option value="itemsBought">Items Bought</option>
+						<option value="itemsSold">Items Sold</option>
+					</select>  -->
+				</div><!--/collapsible-->
 			</div><!-- /content -->
 		</div><!-- /page -->
 
@@ -283,27 +283,22 @@
 			</div>
 			<div data-role="content">
 				<h4 id="seller-ratings-average"></h2>
-				<div class="ui-grid-a" align="center">
-					<div class="ui-block-a">
-						<div data-role="collapsible" data-collapsed="false" data-theme="a" data-content-theme="c">
-							<h2>Seller Information</h2>
-							<ul id="seller-info" data-role="listview" data-inset="true">
-							</ul>
-						</div><!--/collapsible-->
-						<div data-role="collapsible" data-theme="a" data-content-theme="c">
-							<h2>Ratings by User</h2>
-							<ul id="seller-ratings-list" data-role="listview">
-							</ul>
-						</div><!--/collapsible-->
-					</div>
-					<div class="ui-block-b">
-						<div data-role="collapsible" data-theme="a" data-content-theme="c">
-							<h2>Items for Sale</h2>
-							<ul id="seller-sales-list" data-role="listview">
-							</ul>
-						</div><!--/collapsible-->
-					</div><!--/block-b -->
-				</div><!-- /grid-a -->
+				<div data-role="collapsible" data-collapsed="false" data-theme="a" data-content-theme="c">
+					<h2>Seller Information</h2>
+					<ul id="seller-info" data-role="listview" data-inset="true">
+					</ul>
+				</div><!--/collapsible-->
+				<div data-role="collapsible" data-theme="a" data-content-theme="c">
+					<h2>Ratings by User</h2>
+					<ul id="seller-ratings-list" data-role="listview">
+					</ul>
+				</div><!--/collapsible-->
+
+				<div data-role="collapsible" data-theme="a" data-content-theme="c">
+					<h2>Items for Sale</h2>
+					<ul id="seller-sales-list" data-role="listview">
+					</ul>
+				</div><!--/collapsible-->
 			</div><!-- /content -->
 		</div><!-- /page -->
 
