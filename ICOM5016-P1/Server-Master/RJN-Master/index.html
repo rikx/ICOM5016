@@ -262,7 +262,7 @@
 			</div><!-- /content -->
 		</div><!-- /page -->
 
-		<div id="admin-account" data-role="page">
+		<div id="admin" data-role="page">
 			<div data-role="header" data-theme="e" data-position="fixed">
 				<div class="ui-grid-b" align="center">
 					<div class="ui-block-a"><h3 id="adminTitle"></h3></div>
@@ -280,14 +280,14 @@
 			<div data-role="content">
 				<h3>Admin Tools</h3>
 				<div class="ui-grid-b" align="center">
-					<div class="ui-block-a"><a href="ViewCategories()" data-role="button">Manage Categories</a></div>
-					<div class="ui-block-b"><a href="ViewUsers()" data-role="button">Manage Users</a></div>
-					<div class="ui-block-c"><a onclick="ViewReports()" data-role="button">View Reports</a></div>
+					<div class="ui-block-a"><a onclick="ManageCategories()" data-role="button">Manage Categories</a></div>
+					<div class="ui-block-b"><a onclick="ManageUsers()" data-role="button">Manage Users</a></div>
+					<div class="ui-block-c"><a onclick="ManageReports()" data-role="button">View Reports</a></div>
 				</div>
+				<ul id="manage-categories-list" style="display: none" data-role="listview"></ul>
+				<ul id="manage-users-list" style="display: none" data-role="listview"></ul>
+				<ul id="manage-reports-list" style="display: none" data-role="listview"></ul>
 			</div><!-- /content -->
-			<div data-role="footer">
-				<h1>Admin Page</h1>
-			</div>
 		</div><!-- /page -->
 
 		<div id="register-account" data-role="page">

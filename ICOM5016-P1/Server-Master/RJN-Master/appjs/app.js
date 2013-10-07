@@ -288,87 +288,82 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 		contentType: "application/json",
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
-			if(currentUser.type == "user"){
-				$('#ratings-average').empty();
-				var user = currentUser;
-				$("#userTitle").html(user.username);
+			$('#ratings-average').empty();
+			var user = currentUser;
+			$("#userTitle").html(user.username);
 
-				//Populate user information list
-				var infoList = $("#user-info");
-				infoList.empty();
-				infoList.append('<li><strong>Account ID: </strong>' + user.id + '</li></li>'+
-					'<li><strong>First Name: </strong>' + user.firstname + '</li></li><li><strong>Last Name: </strong>' + user.lastname + 
-					'</li></li><li><strong>Email: </strong>' + user.email + '</li><li><strong>Primary Shipping Address: </strong>' + user.shipAddress+'</li>'	
-				);
-				infoList.listview("refresh");
+			//Populate user information list
+			var infoList = $("#user-info");
+			infoList.empty();
+			infoList.append('<li><strong>Account ID: </strong>' + user.id + '</li></li>'+
+				'<li><strong>First Name: </strong>' + user.firstname + '</li></li><li><strong>Last Name: </strong>' + user.lastname + 
+				'</li></li><li><strong>Email: </strong>' + user.email + '</li><li><strong>Primary Shipping Address: </strong>' + user.shipAddress+'</li>'	
+			);
+			infoList.listview("refresh");
 
-				var paymentTypes = data.paymentTypes;
-				var ratings = data.ratingsList;
-				var sellingProducts = data.sellingProducts;
-				var shippingAddresses = data.shippingAddresses;
+			var paymentTypes = data.paymentTypes;
+			var ratings = data.ratingsList;
+			var sellingProducts = data.sellingProducts;
+			var shippingAddresses = data.shippingAddresses;
 
-				var shipAddressList = $('#shipaddress-list');
-				var payList = $('#paymentType-list');
-				var ratingsList = $('#ratings-list');
-				var sellingList = $('#currentSales-list');
+			var shipAddressList = $('#shipaddress-list');
+			var payList = $('#paymentType-list');
+			var ratingsList = $('#ratings-list');
+			var sellingList = $('#currentSales-list');
 
-				shipAddressList.empty();
-				payList.empty();
-				ratingsList.empty();
-				sellingList.empty();
+			shipAddressList.empty();
+			payList.empty();
+			ratingsList.empty();
+			sellingList.empty();
 
-				var maxLength = Math.max(shippingAddresses.length, paymentTypes.length, ratings.length, sellingProducts.length); 
+			var maxLength = Math.max(shippingAddresses.length, paymentTypes.length, ratings.length, sellingProducts.length); 
 
-				var avgRating = 0;
-				var rCount = 0;
-				for(var i=0; i < maxLength; ++i){
-					//Populate Address List
-					if(i < shippingAddresses.length){
-						shipAddressList.append('<li><strong> Address name: '+ shippingAddresses[i].address +'</strong>'+
-						'<a onclick=EditAddress('+shippingAddresses[i].id+') data-icon="gear">Edit</a>'+
-						'<a onclick=DeleteAddress('+shippingAddresses[i].id+') data-icon="trash">Delete</a></li>'
-						);
-					}
-					//Populate Payment Options list
-					if(i < paymentTypes.length){
-						//Need to add a check later for type if its credit card or paypal
-						payList.append('<li>Card Ending with '+ paymentTypes[i].cNumber.substr(15)+
-						'<a onclick=EditPayment('+paymentTypes[i].id+') data-icon="gear">Edit</a>'+
-						'<a onclick=DeletePayment('+paymentTypes[i].id+') data-icon="trash">Delete</a>'+
-						'<strong>Billing Address: </strong>'+paymentTypes[i].billAddress+'</li>'
-						);
-					}
-					//Populate Ratings by User list
-					if(i < ratings.length){
-						ratingsList.append('<li>User of id '+ ratings[i].raterId + ' - '+ ConvertToStars(ratings[i].rating) +'</li>');
-						avgRating += ratings[i].rating;
-						rCount++;
-					}
-					//Populate Current Sales list
-					if(i < sellingProducts.length){
-						sellingList.append('<li><a onclick=GetProduct('+sellingProducts[i].id+')><h4>'+sellingProducts[i].name+'</h4></a>'+
-						'<a onclick=EditProduct('+sellingProducts[i].id+') data-icon="gear">Edit</a>'+
-						'<a onclick=DeleteProduct('+sellingProducts[i].id+') data-icon="trash">Delete</a></li>'
-						);
-					}
+			var avgRating = 0;
+			var rCount = 0;
+			for(var i=0; i < maxLength; ++i){
+				//Populate Address List
+				if(i < shippingAddresses.length){
+					shipAddressList.append('<li><strong> Address name: '+ shippingAddresses[i].address +'</strong>'+
+					'<a onclick=EditAddress('+shippingAddresses[i].id+') data-icon="gear">Edit</a>'+
+					'<a onclick=DeleteAddress('+shippingAddresses[i].id+') data-icon="trash">Delete</a></li>'
+					);
 				}
-				shipAddressList.append('<li><a href="" data-role="button">Add new shipping address</a></li>');
-				payList.append('<li><a href="" data-role="button">Add new payment option</a></li>');
-				sellingList.append('<li><a href="" data-role="button">Add new sale</a></li>');
-
-				shipAddressList.listview("refresh");
-				payList.listview("refresh");
-				ratingsList.listview("refresh");
-				sellingList.listview("refresh");
-
-				//Populate average rating header
-				avgRating = avgRating / rCount;
-				//$('#ratingsdiv').prepend("<h2>Rating: " + avgRating + "</h2>");
-				$('#ratings-average').append("Rating: " + ConvertToStars(avgRating));
+				//Populate Payment Options list
+				if(i < paymentTypes.length){
+					//Need to add a check later for type if its credit card or paypal
+					payList.append('<li>Card Ending with '+ paymentTypes[i].cNumber.substr(15)+
+					'<a onclick=EditPayment('+paymentTypes[i].id+') data-icon="gear">Edit</a>'+
+					'<a onclick=DeletePayment('+paymentTypes[i].id+') data-icon="trash">Delete</a>'+
+					'<strong>Billing Address: </strong>'+paymentTypes[i].billAddress+'</li>'
+					);
+				}
+				//Populate Ratings by User list
+				if(i < ratings.length){
+					ratingsList.append('<li>User of id '+ ratings[i].raterId + ' - '+ ConvertToStars(ratings[i].rating) +'</li>');
+					avgRating += ratings[i].rating;
+					rCount++;
+				}
+				//Populate Current Sales list
+				if(i < sellingProducts.length){
+					sellingList.append('<li><a onclick=GetProduct('+sellingProducts[i].id+')><h4>'+sellingProducts[i].name+'</h4></a>'+
+					'<a onclick=EditProduct('+sellingProducts[i].id+') data-icon="gear">Edit</a>'+
+					'<a onclick=DeleteProduct('+sellingProducts[i].id+') data-icon="trash">Delete</a></li>'
+					);
+				}
 			}
-			else{
-				$.mobile.navigate("#admin-account");
-			}
+			shipAddressList.append('<li><a href="" data-role="button">Add new shipping address</a></li>');
+			payList.append('<li><a href="" data-role="button">Add new payment option</a></li>');
+			sellingList.append('<li><a href="" data-role="button">Add new sale</a></li>');
+
+			shipAddressList.listview("refresh");
+			payList.listview("refresh");
+			ratingsList.listview("refresh");
+			sellingList.listview("refresh");
+
+			//Populate average rating header
+			avgRating = avgRating / rCount;
+			//$('#ratingsdiv').prepend("<h2>Rating: " + avgRating + "</h2>");
+			$('#ratings-average').append("Rating: " + ConvertToStars(avgRating));
 		},
 		error: function(data, textStatus, jqXHR){
 			console.log("textStatus: " + textStatus);
@@ -414,7 +409,7 @@ function ConvertToStars(rating){
 	};
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-//										ACCOUNT	DETAILS												  //
+//										USER ACCOUNT DETAILS										  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 $(document).on('pagebeforeshow', "#update-account", function(event, ui){
@@ -425,6 +420,7 @@ $(document).on('pagebeforeshow', "#update-account", function(event, ui){
 	//not finished - missing the logic for changing password
 });
 
+//User helper functions
 function boughtHistory(){
     $('#bought-history').show();
     $('#sell-history').hide();
@@ -433,6 +429,82 @@ function boughtHistory(){
 function sellHistory(){
     $('#bought-history').hide();
     $('#sell-history').show();
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//										ADMIN ACCOUNT 										     	  //
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+$(document).on('pagebeforeshow', "#admin", function( event, ui ) {
+	// currentUser has been set at this point
+	$.ajax({
+		url : "http://localhost:3412/Server-Master/admin/" + currentUser.id,
+		method: 'get',
+		contentType: "application/json",
+		dataType:"json",
+		success : function(data, textStatus, jqXHR){
+			var user = currentUser;
+			$('#adminTitle').html(user.username);
+			var categories = data.categoryList;
+			var users = data.userList;
+			
+			var maxLength = Math.max(categories.length, users.length); 
+
+			var categoryList = $('#manage-categories-list');
+			var userList = $('#manage-users-list');
+
+			categoryList.empty();
+			userList.empty();
+
+			for(var i=0; i < maxLength; ++i){
+				if(i < categories.length){
+					categoryList.append('<li><strong>Category name: '+ categories[i].name +'</strong>'+
+					'<a onclick=EditCategory('+categories[i].id+') data-icon="gear">Edit</a>'+
+					'<a onclick=DeleteCategory('+categories[i].id+') data-icon="trash">Delete</a></li>'
+					);
+				}
+				if(i < users.length){
+					userList.append('<li><strong>User name: '+ users[i].username +'</strong>'+
+					'<a onclick=EditAccount('+users[i].id+') data-icon="gear">Edit</a>'+
+					'<a onclick=DeleteAccount('+users[i].id+') data-icon="trash">Delete</a></li>'
+					);
+				}
+			}
+			categoryList.listview("refresh");
+			userList.listview("refresh");
+		},
+		error: function(data, textStatus, jqXHR){
+			console.log("textStatus: " + textStatus);
+			$.mobile.loading("hide");
+			if (data.status == 404){
+				alert("Admin not found.");
+			}
+			else {
+				alert("Internal Server Error.");
+			}
+		}
+	});
+});
+
+//Admin helper functions
+function ManageCategories(){
+	document.location.href="#admin";	
+    $('#manage-categories-list').show();
+    $('#manage-users-list').hide();
+    $('#manage-reports-list').hide();
+}
+
+function ManageUsers(){
+	document.location.href="#admin";	
+    $('#manage-categories-list').hide();
+    $('#manage-users-list').show();
+    $('#manage-reports-list').hide();
+}
+
+function ManageReports(){
+	document.location.href="#admin";	
+    $('#manage-categories-list').hide();
+    $('#manage-users-list').hide();
+    $('#manage-reports-list').show();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -703,7 +775,7 @@ function GetUserAccount(){
 		$.mobile.navigate("#login");
 	}
 	else if (currentUser.type == "admin"){
-		$.mobile.navigate("#admin-account");
+		$.mobile.navigate("#admin");
 	}
 	else {
 		$.mobile.navigate("#account");
@@ -826,9 +898,8 @@ function UpdateAccount(){
 	});
 }
 
-function DeleteAccount(){
+function DeleteAccount(id){
 	$.mobile.loading("show");
-	var id = currentUser.id;
 	$.ajax({
 		url : "http://localhost:3412/Server-Master/account/" + id,
 		method: 'delete',

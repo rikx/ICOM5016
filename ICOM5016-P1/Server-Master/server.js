@@ -551,6 +551,70 @@ app.post('/Server-Master/home/:userNameLogin', function(req, res) {
 	}
 });
 
+// REST Operation - HTTP GET to read a admin account based on its id
+app.get('/Server-Master/admin/:id', function(req, res){
+	var id = req.params.id;
+	console.log("GET admin account: " + id);
+
+	for (var i=0; i < categoryList.length; ++i){
+	}
+	for (var i=0; i < userList.length; ++i){
+	}
+
+	var response = {"categoryList": categoryList, "userList" : userList}
+	res.json(response);
+
+/*
+	var shippingAddresses = new Array();
+	var paymentTypes = new Array();
+	var ratersList = new Array();
+	var productsSale = new Array();
+
+	if ((id < 0) || (id >= userNextId)){
+		// not found
+		res.statusCode = 404;
+		res.send("Admin not found.");
+	}
+	else {
+		var maxLength = Math.max(shipAddressList.length, payTypeList.length, ratingsList.length, productList.length); 
+		var target = -1;
+		for (var i=0; i < userList.length; ++i){
+			//if user is found,
+			if (userList[i].id == id){
+				target = i;
+				for(var x=0; x < maxLength; ++x){
+					//return his shipping addresses
+					if(x < shipAddressList.length && userList[i].id == shipAddressList[x].userId){
+						shippingAddresses.push(shipAddressList[x]);
+					}
+					//return his payment types
+					if(x < payTypeList.length && userList[i].id == payTypeList[x].userId){
+						paymentTypes.push(payTypeList[x]);
+					}
+					//return his ratings
+					if(x < ratingsList.length && userList[i].id == ratingsList[x].sellerId){
+						ratersList.push(ratingsList[x]);
+					}
+					//return his products on sale
+					if(x < productList.length && userList[i].id == productList[x].sellerId){
+						productsSale.push(productList[x]);
+					}
+				}
+				break;	
+			}
+		}
+		if (target == -1){
+			res.statusCode = 404;
+			res.send("User not found.");
+		}
+		else {
+			var response = {"user" : userList[target], "shippingAddresses" : shippingAddresses, "paymentTypes" : paymentTypes, 
+							"ratingsList" : ratersList, "sellingProducts" : productsSale};
+  			res.json(response);	
+  		}	
+	}*/
+});
+
 // REST Operation - HTTP GET to read a user account based on its id
 app.get('/Server-Master/account/:id', function(req, res) {
 	var id = req.params.id;
