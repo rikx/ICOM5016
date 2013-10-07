@@ -819,6 +819,7 @@ function LogIn(){
 				//add code to clear login form data here
 				$.mobile.loading("hide");
 				currentUser = data.user;
+				$('#loginusername, #loginpassword').val("");
 				$.mobile.navigate("#home");
 			},
 			error: function(data, textStatus, jqXHR){
