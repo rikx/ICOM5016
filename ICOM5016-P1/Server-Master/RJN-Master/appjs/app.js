@@ -297,7 +297,7 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 			infoList.empty();
 			infoList.append('<li><strong>Account ID: </strong>' + user.id + '</li></li>'+
 				'<li><strong>First Name: </strong>' + user.firstname + '</li></li><li><strong>Last Name: </strong>' + user.lastname + 
-				'</li></li><li><strong>Email: </strong>' + user.email + '</li><li><strong>Primary Shipping Address: </strong>' + user.shipAddress+'</li>'	
+				'</li></li><li><strong>Email: </strong>' + user.email + '</li>'	
 			);
 			infoList.listview("refresh");
 
@@ -323,19 +323,35 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 			for(var i=0; i < maxLength; ++i){
 				//Populate Address List
 				if(i < shippingAddresses.length){
-					shipAddressList.append('<li><strong> Address name: '+ shippingAddresses[i].address +'</strong>'+
-					'<a onclick=EditAddress('+shippingAddresses[i].id+') data-icon="gear">Edit</a>'+
-					'<a onclick=DeleteAddress('+shippingAddresses[i].id+') data-icon="trash">Delete</a></li>'
-					);
+					if(i!=0){
+						shipAddressList.append('<li><strong> Address name: '+ shippingAddresses[i].address +'</strong>'+
+						'<a onclick=EditAddress('+shippingAddresses[i].id+') data-icon="gear">Edit</a>'+
+						'<a onclick=DeleteAddress('+shippingAddresses[i].id+') data-icon="trash">Delete</a></li>'
+						);
+					}
+					else{
+						shipAddressList.append('<li data-theme="e"><strong> Address name: '+ shippingAddresses[i].address +'</strong>'+
+						'<a onclick=EditAddress('+shippingAddresses[i].id+') data-icon="gear">Edit</a>'+
+						'<a onclick=DeleteAddress('+shippingAddresses[i].id+') data-icon="trash">Delete</a></li>'
+						);
+					}
 				}
 				//Populate Payment Options list
 				if(i < paymentTypes.length){
 					//Need to add a check later for type if its credit card or paypal
-					payList.append('<li>Card Ending with '+ paymentTypes[i].cNumber.substr(15)+
-					'<a onclick=EditPayment('+paymentTypes[i].id+') data-icon="gear">Edit</a>'+
-					'<a onclick=DeletePayment('+paymentTypes[i].id+') data-icon="trash">Delete</a>'+
-					'<strong>Billing Address: </strong>'+paymentTypes[i].billAddress+'</li>'
-					);
+					if(i!=0){
+						payList.append('<li>Card Ending with '+ paymentTypes[i].cNumber.substr(15)+
+						'<a onclick=EditPayment('+paymentTypes[i].id+') data-icon="gear">Edit</a>'+
+						'<a onclick=DeletePayment('+paymentTypes[i].id+') data-icon="trash">Delete</a>'+
+						'<strong>Billing Address: </strong>'+paymentTypes[i].billAddress+'</li>'
+						);
+					}
+					else{
+						payList.append('<li data-theme="e">Card Ending with '+ paymentTypes[i].cNumber.substr(15)+
+						'<a onclick=EditPayment('+paymentTypes[i].id+') data-icon="gear">Edit</a>'+
+						'<a onclick=DeletePayment('+paymentTypes[i].id+') data-icon="trash">Delete</a>'+
+						'<strong>Billing Address: </strong>'+paymentTypes[i].billAddress+'</li>'
+						);					}
 				}
 				//Populate Ratings by User list
 				if(i < ratings.length){
@@ -472,9 +488,7 @@ $(document).on('pagebeforeshow', "#seller-profile", function(event, ui){
 				}
 				//Populate Current Sales list
 				if(i < sales.length){
-					sellingList.append('<li><a onclick=GetProduct('+sales[i].id+')><h4>'+sales[i].name+'</h4></a>'+
-					'<a onclick=EditProduct('+sales[i].id+') data-icon="gear">Edit</a>'+
-					'<a onclick=DeleteProduct('+sales[i].id+') data-icon="trash">Delete</a></li>'
+					sellingList.append('<li><a onclick=GetProduct('+sales[i].id+')><h4>'+sales[i].name+'</h4></li>'
 					);
 				}
 			}

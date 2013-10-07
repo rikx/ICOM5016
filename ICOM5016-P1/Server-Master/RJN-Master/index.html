@@ -166,7 +166,7 @@
 			<div data-role="content" data-theme="c">	
 				<form id="login-form">
 					<fieldset data-role="controlgroup">
-					<ul>
+					<ul data-role="list">
 					<li><label for="loginusername"> Name: <input id="loginusername" name="username" type="text"/></label></li>
 					<li><label for="loginpassword"> Password: <input id="loginpassword" name="password" type="password"/></label></li>
 					<li><a data-role="button" onclick="LogIn()" href="#">Log In</a></li>
@@ -197,43 +197,40 @@
 			</div>
 			<div data-role="content">
 				<h4 id="ratings-average"></h2>
-				<div class="ui-grid-a" align="center">
-					<div class="ui-block-a">
+					<p>Primary options (e.g. primary payment option) are highlighted in yellow</p>
 						<div data-role="collapsible" data-collapsed="false" data-theme="a" data-content-theme="c">
 							<h2>Profile Information</h2>
-							<ul id="user-info" data-role="listview" data-inset="true">
+							<ul id="user-info" data-role="listview" data-inset="true" data-inline="true">
 							</ul>
 						</div><!--/collapsible-->
 						<div data-role="collapsible" data-theme="a" data-content-theme="c">
 							<h2>Shipping Addresses</h2>
-							<ul id="shipaddress-list" data-role="listview">
+							<ul id="shipaddress-list" data-role="listview" data-inline="true">
 							</ul>
 						</div><!--/collapsible-->
 						<div data-role="collapsible" data-theme="a" data-content-theme="c">
 							<h2>Payment Options</h2>
-							<ul id="paymentType-list" data-role="listview">
+							<ul id="paymentType-list" data-role="listview" data-inline="true">
 							</ul>
 						</div><!--/collapsible-->
 						<div data-role="collapsible" data-theme="a" data-content-theme="c">
 							<h2>Ratings by User</h2>
-							<ul id="ratings-list" data-role="listview">
+							<ul id="ratings-list" data-role="listview" data-inline="true">
 							</ul>
 						</div><!--/collapsible-->
-					</div>
-					<div class="ui-block-b">
 						<div data-role="collapsible" data-theme="a" data-content-theme="c">
 							<h2>Your Orders</h2>
-							<ul id="orders-list" data-role="listview">
+							<ul id="orders-list" data-role="listview" data-inline="true"> 
 							</ul>
 						</div><!--/collapsible-->
 						<div data-role="collapsible" data-theme="a" data-content-theme="c">
 							<h2>Current Bids</h2>
-							<ul id="currentBids-list" data-role="listview">
+							<ul id="currentBids-list" data-role="listview" data-inline="true">
 							</ul>
 						</div><!--/collapsible-->
 						<div data-role="collapsible" data-theme="a" data-content-theme="c">
 							<h2>Current Sales</h2>
-							<ul id="currentSales-list" data-role="listview">
+							<ul id="currentSales-list" data-role="listview" data-inline="true">
 							</ul>
 						</div><!--/collapsible-->
 						<div data-role="collapsible" data-theme="a">
@@ -247,7 +244,7 @@
 								</div>
 							</div><!-- /grid-a -->
 							<form id="ratings-form">
-								<ul id="bought-history" data-role="listview" data-inset="true">
+								<ul id="bought-history" data-role="listview" data-inset="true" data-inline="true">
 									<li>Product bought #9000 from <a onclick="GetSellerProfile(1)">user2</a>
 										<div data-role="fieldcontain">
 											<label for="slider-mini">Rate this seller:</label>
@@ -256,7 +253,7 @@
 									</li>
 								</ul>
 							</form>
-							<ul id="sell-history" data-role="listview" data-inset="true">
+							<ul id="sell-history" data-role="listview" data-inset="true" data-inline="true">
 								<li>Nelson's sexy bikini</li>
 							</ul>
 <!-- 							<select name="flip-1" id="flip-1" data-role="slider">
@@ -264,8 +261,6 @@
 								<option value="itemsSold">Items Sold</option>
 							</select>  -->
 						</div><!--/collapsible-->
-					</div><!--/block-b -->
-				</div><!-- /grid-a -->
 			</div><!-- /content -->
 		</div><!-- /page -->
 

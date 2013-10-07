@@ -792,7 +792,9 @@ var Rating = modules.Rating;
 //id, seller id, rater id, rating
 var ratingsList = new Array(
 	new Rating (0, 1, 4),
-	new Rating (0, 2, 0)
+	new Rating (0, 2, 0),
+	new Rating (1, 0, 3),
+	new Rating (2, 2, 2)
 	);
 
 var ratingsNextId = 0;
