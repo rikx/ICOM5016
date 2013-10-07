@@ -21,8 +21,7 @@ $(document).on('pagebeforeshow', "#home", function( event, ui ) {
 
 				//when home, print parent==null
 				if(!category.parent) {	
-					list.append("<li><a onclick=GetSubCategory("+category.id+")><h2>"+category.name+"</h2></a>"+
-					"<a onclick=editCategory("+category.id+") data-icon='gear' >Edit</a></li>");
+					list.append("<li><a onclick=GetSubCategory("+category.id+")><h2>"+category.name+"</h2></a></li>");
 				}
 			
 	
@@ -144,8 +143,7 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 			if(data.childType == true){
 					for (var i=0; i < len; ++i){
 					child = childrenList[i];		
-					list.append("<li><a onclick=GetSubCategory("+child.id+")><h2>"+child.name+"</h2></a>"+
-					'<a onclick=editCategory('+child.id+') data-icon="gear">Edit</a></li>');	
+					list.append("<li><a onclick=GetSubCategory("+child.id+")><h2>"+child.name+"</h2></a></li>");	
 				}
 			}
 			//when childrenList contains products
