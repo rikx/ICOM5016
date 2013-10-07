@@ -118,7 +118,9 @@ $(document).on('pagebeforeshow', "#invoice", function( event, ui ) {
 
 var SortType="none";
 //var currentHistory = "";
-$.mobile.changePage.defaults.allowSamePageTransition = true;//F*CK YEAH RICK
+$.mobile.changePage.defaults.allowSamePageTransition = true;
+$.mobile.defaultPageTransition = 'none';
+$.mobile.defaultDialogTransition = 'none';
 
 $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 	//currentHistory will be used later to display breadcrumb trail on page as you go deeper into the category hierarchy
