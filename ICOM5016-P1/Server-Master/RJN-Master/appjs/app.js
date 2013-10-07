@@ -351,9 +351,9 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 					);
 				}
 			}
-			shipAddressList.append('<li><a href="" data-role="button">Add new shipping address</a></li>');
-			payList.append('<li><a href="" data-role="button">Add new payment option</a></li>');
-			sellingList.append('<li><a href="" data-role="button">Add new sale</a></li>');
+			shipAddressList.append('<li><a onclick=AddAddress() data-role="button">Add new shipping address</a></li>');
+			payList.append('<li><a onclick=AddPayment() data-role="button">Add new payment option</a></li>');
+			sellingList.append('<li><a onclick=AddProduct() data-role="button">Add new sale</a></li>');
 
 			shipAddressList.listview("refresh");
 			payList.listview("refresh");
@@ -998,18 +998,6 @@ function DeleteAccount(){
 	});	
 }
 
-function EditAddress(id){
-
-}
-function DeleteAddress(id){
-
-}
-function EditPaymentType(id){
-
-}
-function DeletePaymentType(id){
-
-}
 //--------------- LOG CURRENT USER ACCOUNT and resets global variables to their initial state---------------//
 function LogOut(){
 	var uExit = confirm("Do you want to log out?");
@@ -1026,12 +1014,239 @@ function LogOut(){
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
+//											THE USER ADDRESS										  //
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var currentAddress = {}; //address obtained in GetAddress PS: These Annoy Rick so they are fun
+
+function GetAddress(id){
+	$.mobile.loading("show");
+	$.ajax({
+		url : "http://localhost:3412/Server-Master/address/" + id,
+		method: 'get',
+		contentType: "application/json",
+		dataType:"json",
+		success : function(data, textStatus, jqXHR){
+			currentAddress = data.address;
+			$.mobile.loading("hide");
+			$.mobile.navigate("#address-view");// Not Implemented in This Phase
+		},
+		error: function(data, textStatus, jqXHR){
+			console.log("textStatus: " + textStatus);
+			$.mobile.loading("hide");
+			if (data.status == 404){
+				alert("Address not found.");
+			}
+			else {
+				alert("Internal Server Error.");
+			}
+		}
+	});
+}
+
+function AddAddress(){
+$.mobile.loading("show");
+	var form = $("#addAddress-form");// Not Implemented in Thi Phase
+	var formData = form.serializeArray();
+	console.log("form Data: " + formData);
+	var newAddress = ConverToJSON(formData);
+	console.log("New Address: " + JSON.stringify(newAddress));
+	var newAddressJSON = JSON.stringify(newAddress);
+	$.ajax({
+		url : "http://localhost:3412/Server-Master/address/"+currentUser.id,
+		method: 'post',
+		data : newAddressJSON,
+		contentType: "application/json",
+		dataType:"json",
+		success : function(data, textStatus, jqXHR){
+			$.mobile.loading("hide");
+			$.mobile.navigate("#account");
+		},
+		error: function(data, textStatus, jqXHR){
+			console.log("textStatus: " + textStatus);
+			$.mobile.loading("hide");
+			alert("Data could not be added!");
+		}
+	});
+}
+
+function EditAddress(id){
+$.mobile.loading("show");
+	var form = $("#addAddress-form");// Not Implemented in Thi Phase
+	var formData = form.serializeArray();
+	console.log("form Data: " + formData);
+	var updAddress = ConverToJSON(formData);
+	updAddress.id = currentAddress.id;
+	console.log("Updated Address: " + JSON.stringify(updAddress));
+	var updAddressJSON = JSON.stringify(updAddress);
+	$.ajax({
+		url : "http://localhost:3412/Server-Master/address/" + updAddress.id,
+		method: 'put',
+		data : updAddressJSON,
+		contentType: "application/json",
+		dataType:"json",
+		success : function(data, textStatus, jqXHR){
+			$.mobile.loading("hide");
+			$.mobile.navigate("#account");
+		},
+		error: function(data, textStatus, jqXHR){
+			console.log("textStatus: " + textStatus);
+			$.mobile.loading("hide");
+			if (data.status == 404){
+				alert("Data could not be updated!");
+			}
+			else {
+				alert("Internal Error.");		
+			}
+		}
+	});
+}
+
+function DeleteAddress(id){
+$.mobile.loading("show");
+	var id = currentAddress.id;
+		$.ajax({
+			url : "http://localhost:3412/Server-Master/address/" + id,
+			method: 'delete',
+			contentType: "application/json",
+			dataType:"json",
+			success : function(data, textStatus, jqXHR){
+				$.mobile.loading("hide");
+				$.mobile.navigate("#account");
+			},
+			error: function(data, textStatus, jqXHR){
+				console.log("textStatus: " + textStatus);
+				$.mobile.loading("hide");
+				if (data.status == 404){
+					alert("Address not found.");
+				}
+				else {
+					alert("Internal Server Error.");
+				}
+			}
+		});	
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//											THE USER PAYMENTS										  //
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var currentPayment = {}; //payment obtained in GetPayment PS: These Annoy Rick so they are fun
+
+function GetPayment(id){
+	$.mobile.loading("show");
+	$.ajax({
+		url : "http://localhost:3412/Server-Master/payment/" + id,
+		method: 'get',
+		contentType: "application/json",
+		dataType:"json",
+		success : function(data, textStatus, jqXHR){
+			currentPayment = data.payment;
+			$.mobile.loading("hide");
+			$.mobile.navigate("#payment-view");// Not Implemented in This Phase
+		},
+		error: function(data, textStatus, jqXHR){
+			console.log("textStatus: " + textStatus);
+			$.mobile.loading("hide");
+			if (data.status == 404){
+				alert("Payment not found.");
+			}
+			else {
+				alert("Internal Server Error.");
+			}
+		}
+	});
+}
+
+function AddPayment(){
+$.mobile.loading("show");
+	var form = $("#addPayment-form");// Not Implemented in This Phase
+	var formData = form.serializeArray();
+	console.log("form Data: " + formData);
+	var newPayment = ConverToJSON(formData);
+	console.log("New Payment: " + JSON.stringify(newPayment));
+	var newPaymentJSON = JSON.stringify(newPayment);
+	$.ajax({
+		url : "http://localhost:3412/Server-Master/payment/"+currentUser.id,
+		method: 'post',
+		data : newPaymentJSON,
+		contentType: "application/json",
+		dataType:"json",
+		success : function(data, textStatus, jqXHR){
+			$.mobile.loading("hide");
+			$.mobile.navigate("#account");
+		},
+		error: function(data, textStatus, jqXHR){
+			console.log("textStatus: " + textStatus);
+			$.mobile.loading("hide");
+			alert("Data could not be added!");
+		}
+	});
+}
+
+function EditPayment(id){
+$.mobile.loading("show");
+	var form = $("#addPayment-form");// Not Implemented in This Phase
+	var formData = form.serializeArray();
+	console.log("form Data: " + formData);
+	var updPayment = ConverToJSON(formData);
+	updPayment.id = currentPayment.id;
+	console.log("Updated Payment: " + JSON.stringify(updPayment));
+	var updPaymentJSON = JSON.stringify(updPayment);
+	$.ajax({
+		url : "http://localhost:3412/Server-Master/payment/" + updPayment.id,
+		method: 'put',
+		data : updPaymentJSON,
+		contentType: "application/json",
+		dataType:"json",
+		success : function(data, textStatus, jqXHR){
+			$.mobile.loading("hide");
+			$.mobile.navigate("#account");
+		},
+		error: function(data, textStatus, jqXHR){
+			console.log("textStatus: " + textStatus);
+			$.mobile.loading("hide");
+			if (data.status == 404){
+				alert("Data could not be updated!");
+			}
+			else {
+				alert("Internal Error.");		
+			}
+		}
+	});
+}
+
+function DeletePayment(id){
+$.mobile.loading("show");
+	var id = currentPayment.id;
+		$.ajax({
+			url : "http://localhost:3412/Server-Master/payment/" + id,
+			method: 'delete',
+			contentType: "application/json",
+			dataType:"json",
+			success : function(data, textStatus, jqXHR){
+				$.mobile.loading("hide");
+				$.mobile.navigate("#account");
+			},
+			error: function(data, textStatus, jqXHR){
+				console.log("textStatus: " + textStatus);
+				$.mobile.loading("hide");
+				if (data.status == 404){
+					alert("Payment not found.");
+				}
+				else {
+					alert("Internal Server Error.");
+				}
+			}
+		});	
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 //											THE PRODUCT												  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-var currentProduct = {}; //--??
+var currentProduct = {}; //product obtained in GetProduct
 
-//--------------- GET PRODUCT by id.  ---------------//
 function GetProduct(id){
 	$.mobile.loading("show");
 	$.ajax({
@@ -1056,11 +1271,87 @@ function GetProduct(id){
 		}
 	});
 }
-function EditProduct(id){
 
+function AddProduct(){
+	$.mobile.loading("show");
+	var form = $("#addProduct-form");// Not Implemented in This Phase
+	var formData = form.serializeArray();
+	console.log("form Data: " + formData);
+	var newProduct = ConverToJSON(formData);
+	console.log("New Product: " + JSON.stringify(newProduct));
+	var newProductJSON = JSON.stringify(newProduct);
+	$.ajax({
+		url : "http://localhost:3412/Server-Master/product/"+currentUser.id,
+		method: 'post',
+		data : newProductJSON,
+		contentType: "application/json",
+		dataType:"json",
+		success : function(data, textStatus, jqXHR){
+			$.mobile.loading("hide");
+			$.mobile.navigate("#account");
+		},
+		error: function(data, textStatus, jqXHR){
+			console.log("textStatus: " + textStatus);
+			$.mobile.loading("hide");
+			alert("Data could not be added!");
+		}
+	});
+}
+
+function EditProduct(id){
+$.mobile.loading("show");
+	var form = $("#addProduct-form");// Not Implemented in This Phase
+	var formData = form.serializeArray();
+	console.log("form Data: " + formData);
+	var updProduct = ConverToJSON(formData);
+	updProduct.id = currentProduct.id;
+	console.log("Updated Product: " + JSON.stringify(updProduct));
+	var updProductJSON = JSON.stringify(updProduct);
+	$.ajax({
+		url : "http://localhost:3412/Server-Master/product/" + updProduct.id,
+		method: 'put',
+		data : updProductJSON,
+		contentType: "application/json",
+		dataType:"json",
+		success : function(data, textStatus, jqXHR){
+			$.mobile.loading("hide");
+			$.mobile.navigate("#account");
+		},
+		error: function(data, textStatus, jqXHR){
+			console.log("textStatus: " + textStatus);
+			$.mobile.loading("hide");
+			if (data.status == 404){
+				alert("Data could not be updated!");
+			}
+			else {
+				alert("Internal Error.");		
+			}
+		}
+	});
 }
 function DeleteProduct(id){
-
+	$.mobile.loading("show");
+	var id = currentProduct.id;
+		$.ajax({
+			url : "http://localhost:3412/Server-Master/product/" + id,
+			method: 'delete',
+			contentType: "application/json",
+			dataType:"json",
+			success : function(data, textStatus, jqXHR){
+				$.mobile.loading("hide");
+				$.mobile.navigate("#account");
+			},
+			error: function(data, textStatus, jqXHR){
+				console.log("textStatus: " + textStatus);
+				$.mobile.loading("hide");
+				if (data.status == 404){
+					alert("Product not found.");
+				}
+				else {
+					alert("Internal Server Error.");
+				}
+			}
+		});	
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //											THE CART												  //

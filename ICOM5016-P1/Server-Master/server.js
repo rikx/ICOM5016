@@ -377,6 +377,95 @@ app.get('/Server-Master/product/:id', function(req, res) {
 	}
 });
 
+// REST Operation - HTTP POST to add a new product
+app.post('/Server-Master/product/:sellerId', function(req, res) {
+	console.log("POST");
+
+  	if(!req.body.hasOwnProperty('name')||!req.body.hasOwnProperty('parent')||!req.body.hasOwnProperty('instantPrice')
+			||!req.body.hasOwnProperty('bidPrice')||!req.body.hasOwnProperty('description')||!req.body.hasOwnProperty('model')
+			||!req.body.hasOwnProperty('brand')||!req.body.hasOwnProperty('dimensions')){
+				
+    	res.statusCode = 400;
+    	return res.send('Error: Missing fields for product.');
+  	}
+
+  	var newProduct = new Product(req.body.name,req.body.parent,sellerId,
+  								 req.body.instantPrice,req.body.bidPrice,req.body.description,
+  								 req.body.model,req.body.brand,req.body.dimensions,0);
+  								 
+  	console.log("New Product: " + JSON.stringify(newProduct));
+  	newProduct.id = productNextId++;
+  	productList.push(newProduct);
+  	res.json(true);
+});
+
+//REST Operation - HTTP PUT to edit product based on its id
+app.put('/Server-Master/product/:id', function(req, res) {
+	var id = req.params.id;
+		console.log("PUT product: " + id);
+
+	if ((id < 0) || (id >= productNextId)){
+		// not found
+		res.statusCode = 404;
+		res.send("Product not found.");
+	}
+	else if(!req.body.hasOwnProperty('name')||!req.body.hasOwnProperty('parent')||!req.body.hasOwnProperty('instantPrice')
+			||!req.body.hasOwnProperty('bidPrice')||!req.body.hasOwnProperty('description')||!req.body.hasOwnProperty('model')
+			||!req.body.hasOwnProperty('brand')||!req.body.hasOwnProperty('dimensions')){
+				
+    	res.statusCode = 400;
+    	return res.send('Error: Missing fields for product.');
+  	}
+	else {
+		var target = -1;
+		for (var i=0; i < productList.length; ++i){
+			if (productList[i].id == id){
+				target = i;
+				break;	
+			}
+		}
+		if (target == -1){
+			res.statusCode = 404;
+			res.send("Product not found.");			
+		}	
+		else {
+			var theProduct= productList[target];
+			theProduct.name = req.body.name;
+			var response = {"product" : theProduct};
+  			res.json(response);		
+  		}
+	}
+});
+
+//REST Operation - HTTP DELETE to delete product based on its id
+app.del('/Server-Master/product/:id', function(req, res) {
+	var id = req.params.id;
+		console.log("DELETE product: " + id);
+
+	if ((id < 0) || (id >= productNextId)){
+		// not found
+		res.statusCode = 404;
+		res.send("Product not found.");
+	}
+	else {
+		var target = -1;
+		for (var i=0; i < productList.length; ++i){
+			if (productList[i].id == id){
+				target = i;
+				break;	
+			}
+		}
+		if (target == -1){
+			res.statusCode = 404;
+			res.send("Product not found.");			
+		}	
+		else {
+			productList.splice(target, 1);
+  			res.json(true);
+  		}		
+	}
+});
+
 app.get('/Server-Master/product/:id/bid-history', function(req, res) {
 	var id = req.params.id;
 	console.log("GET bid history for product : " + id);
@@ -451,6 +540,120 @@ for (var i=0; i < shipAddressList.length;++i){
 	shipAddressList[i].id = shipAddressNextId++;
 }
 
+//SHIPADDRESS REST CALLS
+
+// REST Operation - HTTP GET to read an address based on its id
+app.get('/Server-Master/account/address/:id', function(req, res) {
+	var id = req.params.id;
+		console.log("GET shipAddress: " + id);
+	if ((id < 0) || (id >= shipAddressNextId)){
+		// not found
+		res.statusCode = 404;
+		res.send("Address not found.");
+	}
+	else {
+		var target = -1;
+		for (var i=0; i < shipAddressList.length; ++i){
+			if (shipAddressList[i].id == id){
+				target = i;
+				break;	
+			}
+		}
+		if (target == -1){
+			res.statusCode = 404;
+			res.send("Address not found.");
+		}
+		else {
+			var response = {"address" : shipAddressList[target]};
+  			res.json(response);	
+  		}	
+	}
+});
+
+// REST Operation - HTTP POST to add a new address
+app.post('/Server-Master/account/address/:userId', function(req, res) {
+	console.log("POST");
+	
+  	if(!req.body.hasOwnProperty('address')){
+				
+    	res.statusCode = 400;
+    	return res.send('Error: Missing fields for address.');
+  	}
+
+  	var newAddress = new ShippingAddress(userId,req.body.address);
+  								 
+  	console.log("New Address: " + JSON.stringify(newAddress));
+  	newAddress.id = shipAddressNextId++;
+  	shipAddressList.push(newAddress);
+  	res.json(true);
+});
+
+//REST Operation - HTTP PUT to edit address based on its id
+app.put('/Server-Master/account/address/:id', function(req, res) {
+	var id = req.params.id;
+		console.log("PUT address: " + id);
+
+	if ((id < 0) || (id >= shipAddressNextId)){
+		// not found
+		res.statusCode = 404;
+		res.send("Address not found.");
+	}
+	else if(!req.body.hasOwnProperty('address')){
+				
+    	res.statusCode = 400;
+    	return res.send('Error: Missing fields for address.');
+  	}
+	else {
+		var target = -1;
+		for (var i=0; i < shipAddressList.length; ++i){
+			if (shipAddressList[i].id == id){
+				target = i;
+				break;	
+			}
+		}
+		if (target == -1){
+			res.statusCode = 404;
+			res.send("Address not found.");			
+		}	
+		else {
+			var theAddress= shipAddressList[target];
+			theAddress.address = req.body.address;
+			var response = {"address" : theAddress};
+  			res.json(response);		
+  		}
+	}
+});
+
+//REST Operation - HTTP DELETE to delete address based on its id
+app.del('/Server-Master/account/address/:id', function(req, res) {
+	var id = req.params.id;
+		console.log("DELETE address: " + id);
+
+	if ((id < 0) || (id >= shipAddressNextId)){
+		// not found
+		res.statusCode = 404;
+		res.send("Address not found.");
+	}
+	else {
+		var target = -1;
+		for (var i=0; i < shipAddressList.length; ++i){
+			if (shipAddressList[i].id == id){
+				target = i;
+				break;	
+			}
+		}
+		if (target == -1){
+			res.statusCode = 404;
+			res.send("Address not found.");			
+		}	
+		else {
+			shipAddressList.splice(target, 1);
+  			res.json(true);
+  		}		
+	}
+});
+//SHIPADDRESS REST CALLS END
+
 /* Payment Options List */
 var PaymentType = modules.PaymentType;
 
@@ -465,6 +668,123 @@ var paymentNextId = 0;
 for (var i=0; i < payTypeList.length;++i){
 	payTypeList[i].id = paymentNextId++;
 }
+
+//PAYMENT REST CALLS
+
+// REST Operation - HTTP GET to read a payment based on its id
+app.get('/Server-Master/account/payment/:id', function(req, res) {
+	var id = req.params.id;
+		console.log("GET payment: " + id);
+	if ((id < 0) || (id >= paymentNextId)){
+		// not found
+		res.statusCode = 404;
+		res.send("Payment not found.");
+	}
+	else {
+		var target = -1;
+		for (var i=0; i < payTypeList.length; ++i){
+			if (payTypeList[i].id == id){
+				target = i;
+				break;	
+			}
+		}
+		if (target == -1){
+			res.statusCode = 404;
+			res.send("Payment not found.");
+		}
+		else {
+			var response = {"payment" : payTypeList[target]};
+  			res.json(response);	
+  		}	
+	}
+});
+
+// REST Operation - HTTP POST to add a new payment
+app.post('/Server-Master/account/payment/:userId', function(req, res) {
+	console.log("POST");
+	
+  	if(!req.body.hasOwnProperty('type')||!req.body.hasOwnProperty('cNumber')||!req.body.hasOwnProperty('billAddress')){
+				
+    	res.statusCode = 400;
+    	return res.send('Error: Missing fields for payment.');
+  	}
+
+  	var newPayment = new PaymentType(userId,req.body.type,req.body.cNumber,req.body.billAddress);
+  								 
+  	console.log("New Payment: " + JSON.stringify(newPayment));
+  	newPayment.id = paymentNextId++;
+  	payTypeList.push(newPayment);
+  	res.json(true);
+});
+
+//REST Operation - HTTP PUT to edit payment based on its id
+app.put('/Server-Master/account/payment/:id', function(req, res) {
+	var id = req.params.id;
+		console.log("PUT payment: " + id);
+
+	if ((id < 0) || (id >= paymentNextId)){
+		// not found
+		res.statusCode = 404;
+		res.send("Payment not found.");
+	}
+	else if(!req.body.hasOwnProperty('type')||!req.body.hasOwnProperty('cNumber')||!req.body.hasOwnProperty('billAddress')){
+				
+    	res.statusCode = 400;
+    	return res.send('Error: Missing fields for payment.');
+  	}
+	else {
+		var target = -1;
+		for (var i=0; i < payTypeList.length; ++i){
+			if (payTypeList[i].id == id){
+				target = i;
+				break;	
+			}
+		}
+		if (target == -1){
+			res.statusCode = 404;
+			res.send("Payment not found.");			
+		}	
+		else {
+			var thePayment= payTypeList[target];
+			thePayment.type = req.body.type;
+			thePayment.cNumber = req.body.cNumber;
+			thePayment.billAddress = req.body.billAddress;
+			var response = {"payment" : thePayment};
+  			res.json(response);		
+  		}
+	}
+});
+
+//REST Operation - HTTP DELETE to delete payment based on its id
+app.del('/Server-Master/account/payment/:id', function(req, res) {
+	var id = req.params.id;
+		console.log("DELETE payment: " + id);
+
+	if ((id < 0) || (id >= paymentNextId)){
+		// not found
+		res.statusCode = 404;
+		res.send("Payment not found.");
+	}
+	else {
+		var target = -1;
+		for (var i=0; i < payTypeList.length; ++i){
+			if (payTypeList[i].id == id){
+				target = i;
+				break;	
+			}
+		}
+		if (target == -1){
+			res.statusCode = 404;
+			res.send("Payment not found.");			
+		}	
+		else {
+			payTypeList.splice(target, 1);
+  			res.json(true);
+  		}		
+	}
+});
+
+//PAYMENT REST CALLS END
 
 /* User Ratings List */
 var Rating = modules.Rating;
