@@ -898,8 +898,9 @@ function UpdateAccount(){
 	});
 }
 
-function DeleteAccount(id){
+function DeleteAccount(){
 	$.mobile.loading("show");
+	var id = currentUser.id;
 	$.ajax({
 		url : "http://localhost:3412/Server-Master/account/" + id,
 		method: 'delete',
