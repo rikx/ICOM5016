@@ -118,12 +118,12 @@ $(document).on('pagebeforeshow', "#invoice", function( event, ui ) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 var SortType="none";
-
+//var currentHistory = "";
 $.mobile.changePage.defaults.allowSamePageTransition = true;//F*CK YEAH RICK
 
 $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 	//currentHistory will be used later to display breadcrumb trail on page as you go deeper into the category hierarchy
-	//currentHistory = currentHistory + "/" + currentCategory.id;
+	//var currentHistory = currentHistory + "/" + currentCategory.id;
 	
 	$.ajax({
 		url : "http://localhost:3412/Server-Master/home/categories/" + currentCategory.id + "/"+SortType,
@@ -506,7 +506,6 @@ function ConverToJSON(formData){
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 var currentCategory = {}; //-- ??
-var currentHistory = ""; //-- ??
 
 //--------------- POST NEW CATEGORY (ADMIN ONLY) ---------------//
 function SaveCategory(){
@@ -795,37 +794,63 @@ function RegisterAccount(){
 }
 
 //NOT finished yet
-/*function UpdateAccount(){
+function UpdateAccount(){
 	$.mobile.loading("show");
-	var form = $("#account-view-form");
+	var form = $('#update-account-form');
 	var formData = form.serializeArray();
 	console.log("form Data: " + formData);
-	var updCategory = ConverToJSON(formData);
-	updCategory.id = currentCategory.id;
-	console.log("Updated Category: " + JSON.stringify(updCategory));
-	var updCategoryJSON = JSON.stringify(updCategory);
+	var updAccount = ConverToJSON(formData);
+	updAccount.id = currentUser.id;
+	console.log("Updated account: " + JSON.stringify(updAccount));
+	var updAccountJSON = JSON.stringify(updAccount);
 	$.ajax({
-		url : "http://localhost:3412/Server-Master/account/" + updCategory.id,
+		url : "http://localhost:3412/Server-Master/account/" + updAccount.id,
 		method: 'put',
-		data : updCategoryJSON,
+		data : updAccountJSON,
 		contentType: "application/json",
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
 			$.mobile.loading("hide");
-			$.mobile.navigate("#home");
+			$.mobile.navigate("#account");
 		},
 		error: function(data, textStatus, jqXHR){
 			console.log("textStatus: " + textStatus);
 			$.mobile.loading("hide");
 			if (data.status == 404){
-				alert("Data could not be updated!");
+				alert("Account data could not be updated!");
 			}
 			else {
 				alert("Internal Error.");		
 			}
 		}
 	});
-}*/
+}
+
+function DeleteAccount(){
+	$.mobile.loading("show");
+	var id = currentUser.id;
+	$.ajax({
+		url : "http://localhost:3412/Server-Master/account/" + id,
+		method: 'delete',
+		contentType: "application/json",
+		dataType:"json",
+		success : function(data, textStatus, jqXHR){
+			$.mobile.loading("hide");
+			currentUser = {"id": null};
+			$.mobile.navigate("#home");
+		},
+		error: function(data, textStatus, jqXHR){
+			console.log("textStatus: " + textStatus);
+			$.mobile.loading("hide");
+			if (data.status == 404){
+				alert("User not found.");
+			}
+			else {
+				alert("Internal Server Error.");
+			}
+		}
+	});	
+}
 
 function EditAddress(id){
 
@@ -937,8 +962,7 @@ function sortByType(type){
 	
 	SortType=type;
 	 	
-	document.location.href="#browse";
-			
+	document.location.href="#browse";			
 	
 }
 
