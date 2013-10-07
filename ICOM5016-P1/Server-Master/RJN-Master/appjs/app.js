@@ -109,6 +109,7 @@ $(document).on('pagebeforeshow', "#invoice", function( event, ui ) {
 			list.listview("refresh");	
 			billing.listview("refresh");
 			shipping.listview("refresh");
+			Cart = [];
 	
 });
 
@@ -301,7 +302,7 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 			//Populate user information list
 			var infoList = $("#user-info");
 			infoList.empty();
-			infoList.append('<li><strong>Account ID: </strong>' + user.id + '</li></li>'+
+			infoList.append('<li><img src="http://images3.wikia.nocookie.net/__cb20120320232553/glee/images/thumb/9/90/Neutral-feel-like-a-sir-clean-l.png/1280px-Neutral-feel-like-a-sir-clean-l.png" /></li><li><strong>Account ID: </strong>' + user.id + '</li></li>'+
 				'<li><strong>First Name: </strong>' + user.firstname + '</li></li><li><strong>Last Name: </strong>' + user.lastname + 
 				'</li></li><li><strong>Email: </strong>' + user.email + '</li>'	
 			);
@@ -605,6 +606,7 @@ $(document).on('pagebeforeshow', "#product-view", function( event, ui ) {
 	var product = currentProduct;
 	$("#productTitle").html(product.name);
 	$('#seller-details').attr("onclick", "GetSellerProfile("+currentProduct.sellerId+")");
+	$('#bidButton').attr("onclick", "PlaceBid("+currentProduct.sellerId+")");
 	$("#showBidPrice").html(accounting.formatMoney(product.bidPrice));
 	$("#numOfBids").html('<a href="#bidhistory">'+product.numBids+'</a>');
 	$("#showBuyoutPrice").html(accounting.formatMoney(product.instantPrice));
@@ -1374,6 +1376,41 @@ function DeleteProduct(id){
 				}
 			}
 		});	
+}
+
+function PlaceBid(id){
+	$.mobile.loading("show");
+	var form = $('input[name="bidInput"]').val();
+	var formData = form.serializeArray();
+	console.log("form Data: " + formData);
+	var newBid = ConverToJSON(formData);
+	console.log("Updated Category: " + JSON.stringify(newBid));
+	var newBidJSON = JSON.stringify(newBid);
+	$.ajax({
+		url : "http://localhost:3412/Server-Master/home/" + id,
+		method: 'put',
+		data : newBidJSON,
+		contentType: "application/json",
+		dataType:"json",
+		success : function(data, textStatus, jqXHR){
+			$.mobile.loading("hide");
+			$.mobile.navigate("#home");
+		},
+		error: function(data, textStatus, jqXHR){
+			console.log("textStatus: " + textStatus);
+			$.mobile.loading("hide");
+			if (data.status == 404){
+				alert("Bid could not be placed!");
+			}
+			else {
+				alert("Internal Error.");		
+			}
+		}
+	});
+}
+function Buyout(){
+	addToCart();
+	checkout();
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //											THE CART												  //

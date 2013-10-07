@@ -26,7 +26,7 @@
 						<div data-role="controlgroup" data-type="horizontal">
 							
 							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
-							<a href="" 						data-role="button" data-icon="search"		 data-iconpos="top" title="Browse"	></a>
+<!-- 							<a href="" 						data-role="button" data-icon="search"		 data-iconpos="top" title="Browse"	></a> -->
 							<a onclick="GetUserAccount()"		data-role="button" data-icon="user"			 data-iconpos="top" title="Account"	></a>
 							<a href="#cart" 				data-role="button" data-icon="shopping-cart" data-iconpos="top" title="Cart"	></a><!-- /// onclick="GetCart()">/// -->
 							<!-- <a data-role="button" data-inline="true" onclick="LogOut()">Logout</a> --> <!-- Add this dynamically later -->
@@ -58,7 +58,7 @@
 					<div class="ui-block-c">
 						<div data-role="controlgroup" data-type="horizontal">
 							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
-							<a href="" 						data-role="button" data-icon="search"		 data-iconpos="top" title="Browse"	></a>
+<!-- 							<a href="" 						data-role="button" data-icon="search"		 data-iconpos="top" title="Browse"	></a> -->
 							<a onclick="GetUserAccount()"	data-role="button" data-icon="user"			 data-iconpos="top" title="Account"	></a>
 							<a href="#cart" 				data-role="button" data-icon="shopping-cart" data-iconpos="top" title="Cart"	></a><!-- /// onclick="GetCart()">/// -->
 							<!-- <a data-role="button" data-inline="true" onclick="LogOut()">Logout</a> --> <!-- Add this dynamically later -->
@@ -86,10 +86,19 @@
 		</div><!-- /page -->
 
 		<div id="add-category" data-role="page">
-			<div data-role="header" data-theme="b" data-position="fixed">
-				<a data-role="button" data-rel="back" href="#home">Cancel</a>
-				<h1>New Category</h1>
-				<a data-role="button" id="SaveNewCategory" data-rel="back" onclick="SaveCategory()">Save</a>
+			<div data-role="header" data-theme="e" data-position="fixed">
+				<div class="ui-grid-b" align="center">
+					<div class="ui-block-a"><h3>New Category</h3></div>
+					<div class="ui-block-b"></div>
+					<div class="ui-block-c">
+						<div data-role="controlgroup" data-type="horizontal">
+							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
+							<a onclick="GetUserAccount()"	data-role="button" data-icon="user"			 data-iconpos="top" title="Account"	></a>
+							<a onclick="SaveCategory()"   data-role="button" data-icon="save"          data-iconpos="top" title="Save"  id="SaveNewCategory"></a>
+							<!-- <a data-role="button" data-inline="true" onclick="LogOut()">Logout</a> --> <!-- Add this dynamically later -->
+						</div>
+					</div>
+				</div><!-- /grid-b -->
 			</div>
 			<div data-role="content">
 				<h2 align="center">Enter the new category info</h2>
@@ -106,19 +115,22 @@
 				 	</fieldset>
 				</form>
 			</div><!-- /content -->
-			<div data-role="footer">
-				<div data-role="controlgroup" data-type="horizontal" align="center">
-							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
-							<a onclick="GetUserAccount()"	data-role="button" data-icon="star"			 data-iconpos="top" title="Admin"	></a>
-				</div>
-			</div><!-- /footer -->
 		</div><!-- /page -->
 
 		<div id="category-view" data-role="page">
 			<div data-role="header" data-theme="e" data-position="fixed">
-				<a data-role="button" data-rel="back" href="#home">Cancel</a>
-				<h1>Category Info</h1>
-				<a data-role="button" id="SaveNewInfo" data-rel="back" onclick="UpdateCategory()">Save</a>
+				<div class="ui-grid-b" align="center">
+					<div class="ui-block-a"><h3>Category Info</h3></div>
+					<div class="ui-block-b"></div>
+					<div class="ui-block-c">
+						<div data-role="controlgroup" data-type="horizontal">
+							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
+							<a onclick="GetUserAccount()"	data-role="button" data-icon="user"			 data-iconpos="top" title="Account"	></a>
+							<a onclick="UpdateCategory()"   data-role="button" data-icon="save"          data-iconpos="top" title="Save"  id="SaveNewInfo"></a>
+							<!-- <a data-role="button" data-inline="true" onclick="LogOut()">Logout</a> --> <!-- Add this dynamically later -->
+						</div>
+					</div>
+				</div><!-- /grid-b -->
 			</div>
 			<div data-role="content">
 				<h2 align="center">Enter new info</h2>
@@ -138,12 +150,6 @@
 					<a id="Del-Button" data-icon="delete" data-role="button" data-inline="true" onclick="DeleteCategory()">Delete</a>
 				</center>
 			</div>
-			<div data-role="footer">
-				<div data-role="controlgroup" data-type="horizontal" align="center">
-					<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
-					<a onclick="GetUserAccount()"	data-role="button" data-icon="star"			 data-iconpos="top" title="Admin"	></a>
-				</div>
-			</div><!-- /footer -->
 		</div><!-- /page -->
 
 		<!--                        -->
@@ -187,7 +193,7 @@
 						<div data-role="controlgroup" data-type="horizontal">
 							
 							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
-							<a href="" 						data-role="button" data-icon="search"		 data-iconpos="top" title="Browse"	></a>
+	<!-- 						<a href="" 						data-role="button" data-icon="search"		 data-iconpos="top" title="Browse"	></a> -->
 							<a href="#update-account"		data-role="button" data-icon="gear"			 data-iconpos="top" title="Edit"	></a>
 							<a onclick="LogOut()"			data-role="button" data-icon="off" 			 data-iconpos="top" title="Logout"	></a>
 							
@@ -269,7 +275,7 @@
 						<div data-role="controlgroup" data-type="horizontal">
 							
 							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
-							<a href="" 						data-role="button" data-icon="search"		 data-iconpos="top" title="Browse"	></a>
+<!-- 							<a href="" 						data-role="button" data-icon="search"		 data-iconpos="top" title="Browse"	></a> -->
 							<a onclick="GetUserAccount()"		data-role="button" data-icon="user"			 data-iconpos="top" title="Account"	></a>
 <!-- 							<a onclick="LogOut()"			data-role="button" data-icon="off" 			 data-iconpos="top" title="Logout"	></a> add this dynamically later if user is logged in--> 
 							
@@ -353,9 +359,7 @@
 	  					<li><label for="lastname"> Last Name: <input id="new-lastname" name="lastname" type="text"/></label></li>
 	 					<li><label for="email"> Email: <input id="new-email" name="email" type="text"/></label></li>
 	 					<li><label for="password"> Password: <input id="new-password" name="password" type="password"/></label></li>
-	 					<li><label for="confirmpassword"> Confirm Password: <input id="new-confirmpassword" name="confirmpassword" type="password"/></label></li>
-	 					<li><label for="shipaddress"> Shipping Address: <input id="new-shipaddress" name="shipaddress" type="text" /></label></li>
-	 					<li><label for="billaddress"> Billing Address: <input id="new-billaddress" name="billaddress" type="text" /></label></li>	 					
+	 					<li><label for="confirmpassword"> Confirm Password: <input id="new-confirmpassword" name="confirmpassword" type="password"/></label></li> 					
 	  			  	</ul>
 				 	</fieldset>
 				</form>
@@ -510,10 +514,10 @@
 				<p>Current bid: <strong id="showBidPrice"></strong> &nbsp;|&nbsp; Number of bids: <strong id="numOfBids"></strong></p>
 				
 				<div data-role="fieldcontain">
-					<input name="bidInput" type="text" data-mini="true" /><a id="bidButton" data-role="button" data-inline="true" data-theme="e" data-mini="true">Bid</a>
+					<input name="bidInput" type="text" data-mini="true" /><a id="bidButton" onclick="PlaceBid()" data-role="button" data-inline="true" data-theme="e" data-mini="true">Bid</a>
 				</div>
 				<p>Buyout Price: <strong id="showBuyoutPrice"></strong>
-				<a id="buyoutButton" data-role="button" data-inline="true" data-theme="b" data-mini="true">Buyout</a></p>
+				<a id="buyoutButton" onclick="Buyout()" data-role="button" data-inline="true" data-theme="b" data-mini="true">Buyout</a></p>
 			</div><!-- /content -->
 		</div><!-- /page -->
 
