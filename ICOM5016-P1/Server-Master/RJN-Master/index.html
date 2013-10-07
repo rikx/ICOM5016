@@ -169,7 +169,7 @@
 					<ul data-role="list">
 					<li><label for="loginusername"> Name: <input id="loginusername" name="username" type="text"/></label></li>
 					<li><label for="loginpassword"> Password: <input id="loginpassword" name="password" type="password"/></label></li>
-					<li><a data-role="button" onclick="LogIn()" href="#">Log In</a></li>
+					<li><a id="clickLogIn" data-role="button" onclick="LogIn()" href="#">Log In</a></li>
 				    <!-- <input type="submit" value="Submit Button" onclick="LogIn(); return false;"/> -->
 				    <li><a data-role="button" href="#register-account" rel="external">New User? Register here</a></li>
 					</ul>
@@ -235,14 +235,10 @@
 				</div><!--/collapsible-->
 				<div data-role="collapsible" data-theme="a">
 					<h2>Show History</h2>
-					<div class="ui-grid-a">
-						<div class="ui-block-a">
+					
 							<a data-role="button" onclick="boughtHistory()">Items bought</a>
-						</div>
-						<div class="ui-block-b">
 							<a data-role="button" onclick="sellHistory()">Items sold</a>
-						</div>
-					</div><!-- /grid-a -->
+						
 					<form id="ratings-form">
 						<ul id="bought-history" data-role="listview" data-inset="true" data-inline="true">
 							<li>Product bought #9000 from <a onclick="GetSellerProfile(1)">user2</a>
@@ -319,11 +315,15 @@
 			</div>
 			<div data-role="content">
 				<h3>Admin Tools</h3>
-				<div class="ui-grid-b" align="center">
-					<div class="ui-block-a"><a onclick="ManageCategories()" data-role="button">Manage Categories</a></div>
-					<div class="ui-block-b"><a onclick="ManageUsers()" data-role="button">Manage Users</a></div>
-					<div class="ui-block-c"><a onclick="ManageReports()" data-role="button">View Reports</a></div>
-				</div>
+				<ul>
+					
+					<li>
+						<a onclick="ManageCategories()" data-role="button">Manage Categories</a>
+						<a onclick="ManageUsers()" data-role="button">Manage Users</a>
+						<a onclick="ManageReports()" data-role="button">View Reports</a>
+					</li>
+					
+				</ul>
 				<ul id="manage-categories-list" style="display: none" data-role="listview"></ul>
 				<ul id="manage-users-list" style="display: none" data-role="listview"></ul>
 				<ul id="manage-reports-list" style="display: none" data-role="listview"></ul>
