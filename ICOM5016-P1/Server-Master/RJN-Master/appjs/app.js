@@ -430,7 +430,75 @@ function sellHistory(){
     $('#bought-history').hide();
     $('#sell-history').show();
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//										SELLER PROFILE DETAILS										  //
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+var currentSellerId = "";
+$(document).on('pagebeforeshow', "#seller-profile", function(event, ui){
+	$.ajax({
+		url : "http://localhost:3412/Server-Master/seller/" + currentSellerId,
+		method: 'get',
+		contentType: "application/json",
+		dataType:"json",
+		success : function(data, textStatus, jqXHR){
+			var seller = data.sellerDetails;
+			var ratings = data.ratings;
+			var sales = data.sellingProducts;
 
+			$.mobile.loading("hide");
+			$("#sellerTitle").html(seller.username);
+			
+			var maxLength = Math.max(ratings.length, sales.length); 
+
+			var infoList = $('#seller-info');
+			var ratingsList = $('#seller-ratings-list');
+			var sellingList= $('#seller-sales-list');
+
+			infoList.empty();
+			ratingsList.empty();
+			sellingList.empty();
+
+			//Populate Seller Profile
+			infoList.append('<li>Contact Information: '+seller.email+'</li><li>Description: '+seller.description+'</li>');
+
+			var avgRating = 0;
+			var rCount = 0;
+			for(var i=0; i < maxLength; ++i){
+				//Populate Ratings by User list
+				if(i < ratings.length){
+					ratingsList.append('<li>User of id '+ ratings[i].raterId + ' - '+ ConvertToStars(ratings[i].rating) +'</li>');
+					avgRating += ratings[i].rating;
+					rCount++;
+				}
+				//Populate Current Sales list
+				if(i < sales.length){
+					sellingList.append('<li><a onclick=GetProduct('+sales[i].id+')><h4>'+sales[i].name+'</h4></a>'+
+					'<a onclick=EditProduct('+sales[i].id+') data-icon="gear">Edit</a>'+
+					'<a onclick=DeleteProduct('+sales[i].id+') data-icon="trash">Delete</a></li>'
+					);
+				}
+			}
+
+			infoList.listview("refresh");
+			ratingsList.listview("refresh");
+			sellingList.listview("refresh");
+			
+			//Populate average rating header
+			avgRating = avgRating / rCount;
+			$('#seller-ratings-average').append("Rating: " + ConvertToStars(avgRating));
+		},
+		error: function(data, textStatus, jqXHR){
+			console.log("textStatus: " + textStatus);
+			$.mobile.loading("hide");
+			if (data.status == 404){
+				alert("Seller not found.");
+			}
+			else {
+				alert("Internal Server Error.");
+			}
+		}
+	});
+});
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //										ADMIN ACCOUNT 										     	  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -608,7 +676,7 @@ function SaveCategory(){
 }
 
 //--------------- GET CATEGORY DETAILS (ADMIN ONLY) ---------------//
-function editCategory(id){
+function EditCategory(id){
 	$.mobile.loading("show");
 	$.ajax({
 		url : "http://localhost:3412/Server-Master/home/" + id,
@@ -821,7 +889,12 @@ function GetUserAccount(){
 		});
 	}
 }*/
-
+// GET SELLER RATING PAGE
+function GetSellerProfile(id){
+	$.mobile.loading("show");
+	currentSellerId = id;
+	$.mobile.navigate("#seller-profile");
+}
 //--------------- REGISTER NEW USER ACCOUNT - Checks if passwords do not match before sending information, and cheks if username is already taken ---------------//
 function RegisterAccount(){
 	if($('#newusername').val() == ""){

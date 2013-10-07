@@ -537,7 +537,7 @@ app.post('/Server-Master/home/:userNameLogin', function(req, res) {
 		}
 		if (found && target == -1){
 			res.statusCode = 409;
-			rese.send("Username exists but entered password does not match");
+			res.send("Username exists but entered password does not match");
 		}
 		else if (found == false && target == -1){
 			res.statusCode = 404;
@@ -613,6 +613,46 @@ app.get('/Server-Master/admin/:id', function(req, res){
   			res.json(response);	
   		}	
 	}*/
+});
+
+// REST Operation - HTTP GET to read a seller profile based on its id
+app.get('/Server-Master/seller/:id', function(req, res) {
+	var id = req.params.id;
+	console.log("GET seller: " + id);
+
+	if ((id < 0) || (id >= userNextId)){
+		// not found
+		res.statusCode = 404;
+		res.send("Seller not found.");
+	}
+	else {
+		var seller = {};
+		var ratersList = new Array();
+		var sellingProducts = new Array();
+		var target = -1;
+		for (var i=0; i < userList.length; ++i){
+			//if user is found,
+			if (userList[i].id == id){
+				target = i;
+				var maxLength = Math.max(ratingsList.length, productList.length); 
+				
+				for(var x=0; x < maxLength; ++x){
+					//return his ratings
+					if(x < ratingsList.length && userList[i].id == ratingsList[x].sellerId){
+						ratersList.push(ratingsList[x]);
+					}
+					//return his products on sale
+					if(x < productList.length && userList[i].id == productList[x].sellerId){
+						sellingProducts.push(productList[x]);
+					}
+				}
+				var seller = {"username" : userList[i].username, "email" : userList[i].email, "description" : "Hi im a good seller"};
+				break;
+			}
+		}
+		var response = {"sellerDetails": seller, "ratings" : ratersList, "sellingProducts" : sellingProducts};
+		res.json(response);
+	}
 });
 
 // REST Operation - HTTP GET to read a user account based on its id
