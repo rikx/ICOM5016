@@ -615,15 +615,15 @@ $(document).on('pagebeforeshow', "#report", function( event, ui ) {
 		success : function(data, textStatus, jqXHR){
 			$('#reportType-title').html(reportType);
 			var reportInfo = data.report;
-			var reportList = $('manage-reports-list');
+			var reportList = $('#manage-reports-list');
 			reportList.empty();
 
 			for(var i = 0; i < reportInfo.length; ++i){
-				reportList.append('<li><a onclick=GetProduct('+reportInfo.id+')><h2>'+reportInfo.name+'</h2>'+
+				reportList.append('<li><a onclick=GetProduct('+reportInfo[i].id+')><h2>'+reportInfo[i].name+'</h2>'+
 					'<p><img src="http://3.bp.blogspot.com/-nU8O8xLuSvs/TdjWsU3X2DI/AAAAAAAAAIs/Lsa3Y92DGy0/s320/112.jpg" /></p>'+
-					'<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(reportInfo.bidPrice) + '</h4></p>'+
-					'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(reportInfo.instantPrice) + '</h4></p></a>'+
-					'<a onclick=EditProduct('+reportInfo.id+') data-icon="gear">Edit</a></li>');	
+					'<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(reportInfo[i].bidPrice) + '</h4></p>'+
+					'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(reportInfo[i].instantPrice) + '</h4></p></a>'+
+					'<a onclick=EditProduct('+reportInfo[i].id+') data-icon="gear">Edit</a></li>');	
 			}
 			reportList.listview("refresh");
 		},
