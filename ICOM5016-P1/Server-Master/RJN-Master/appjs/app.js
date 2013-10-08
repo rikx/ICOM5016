@@ -183,42 +183,6 @@ $(document).on('pagebeforeshow', "#category-view", function( event, ui ) {
 	$("#upd-name").val(currentCategory.name);
 });
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-//										PRODUCT DETAILS PAGE										  //
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-$(document).on('pagebeforeshow', "#edit-product-view", function( event, ui ) {
-	// currentProduct has been set at this point
-	$("#edit-name").val(currentProduct.name);
-	$("edit-parent").val(currentProduct.parent);
-    $("edit-instantPrice").val(currentProduct.instantPrice);
-	$("edit-bidPrice").val(currentProduct.bidPrice);
-	$("edit-description").val(currentProduct.description);
-	$("edit-model").val(currentProduct.model);
-	$("edit-brand").val(currentProduct.brand);
-	$("edit-dimensions").val(currentProduct.dimensions);
-});
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-//										ADDRESS DETAILS PAGE										  //
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-$(document).on('pagebeforeshow', "#edit-address-view", function( event, ui ) {
-	// currentAddress has been set at this point
-	$("#edit-address").val(currentAddress.address);
-});
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-//										PAYMENT DETAILS PAGE										  //
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-$(document).on('pagebeforeshow', "#edit-payment-view", function( event, ui ) {
-	// currentPayment has been set at this point
-	$("#edit-type").val(currentPayment.type);
-	$("#edit-cNumber").val(currentPayment.cNumber);
-	$("#edit-billAddress").val(currentPayment.billAddress);
-});
-
 //--------------- Enter Button Fixes - Juan ---------------//
 $(document).ready(function(){
     $("#upd-name").keypress(function(e){
@@ -581,6 +545,10 @@ $(document).on('pagebeforeshow', "#admin", function( event, ui ) {
 			categoryList.empty();
 			userList.empty();
 
+			//Adds the Add buttons at the top of the lists
+			categoryList.append('<li><a href="#add-category" data-role="button">Add new category</a></li>');
+			userList.append('<li><a href="#register-account" data-role="button">Add new user</a></li>');
+
 			for(var i=0; i < maxLength; ++i){
 				if(i < categories.length){
 					categoryList.append('<li><strong>Category name: '+ categories[i].name +'</strong>'+
@@ -642,7 +610,7 @@ $(document).on('pagebeforeshow', "#product-view", function( event, ui ) {
 	var product = currentProduct;
 	$("#productTitle").html(product.name);
 	$('#seller-details').attr("onclick", "GetSellerProfile("+currentProduct.sellerId+")");
-	$('#bidButton').attr("onclick", "PlaceBid("+currentProduct.sellerId+")");
+	$('#bidButton').attr("onclick", "PlaceBid("+currentProduct.id+")");
 	$("#showBidPrice").html(accounting.formatMoney(product.bidPrice));
 	$("#numOfBids").html('<a href="#bidhistory">'+product.numBids+'</a>');
 	$("#showBuyoutPrice").html(accounting.formatMoney(product.instantPrice));
@@ -666,6 +634,7 @@ $(document).on('pagebeforeshow', '#bidhistory', function( event, ui ){
 		contentType: "application/json",
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
+			$('#history-product-name').html(currentProduct.name);
 			var product = currentProduct;
 			var bidHistory = data.bidHistory;
 			var list = $('#bidhistory-list');
@@ -1089,7 +1058,7 @@ function GetAddress(id){
 		success : function(data, textStatus, jqXHR){
 			currentAddress = data.address;
 			$.mobile.loading("hide");
-			$.mobile.navigate("#address-view");
+			$.mobile.navigate("#address-view");// Not Implemented in This Phase
 		},
 		error: function(data, textStatus, jqXHR){
 			console.log("textStatus: " + textStatus);
@@ -1106,7 +1075,7 @@ function GetAddress(id){
 
 function AddAddress(){
 $.mobile.loading("show");
-	var form = $("#address-form");
+	var form = $("#addAddress-form");// Not Implemented in Thi Phase
 	var formData = form.serializeArray();
 	console.log("form Data: " + formData);
 	var newAddress = ConverToJSON(formData);
@@ -1132,7 +1101,7 @@ $.mobile.loading("show");
 
 function EditAddress(id){
 $.mobile.loading("show");
-	var form = $("#address-view-form");
+	var form = $("#addAddress-form");// Not Implemented in Thi Phase
 	var formData = form.serializeArray();
 	console.log("form Data: " + formData);
 	var updAddress = ConverToJSON(formData);
@@ -1203,7 +1172,7 @@ function GetPayment(id){
 		success : function(data, textStatus, jqXHR){
 			currentPayment = data.payment;
 			$.mobile.loading("hide");
-			$.mobile.navigate("#payment-view");
+			$.mobile.navigate("#payment-view");// Not Implemented in This Phase
 		},
 		error: function(data, textStatus, jqXHR){
 			console.log("textStatus: " + textStatus);
@@ -1220,7 +1189,7 @@ function GetPayment(id){
 
 function AddPayment(){
 $.mobile.loading("show");
-	var form = $("#payment-form");
+	var form = $("#addPayment-form");// Not Implemented in This Phase
 	var formData = form.serializeArray();
 	console.log("form Data: " + formData);
 	var newPayment = ConverToJSON(formData);
@@ -1246,7 +1215,7 @@ $.mobile.loading("show");
 
 function EditPayment(id){
 $.mobile.loading("show");
-	var form = $("#payment-view-form");
+	var form = $("#addPayment-form");// Not Implemented in This Phase
 	var formData = form.serializeArray();
 	console.log("form Data: " + formData);
 	var updPayment = ConverToJSON(formData);
@@ -1334,7 +1303,7 @@ function GetProduct(id){
 
 function AddProduct(){
 	$.mobile.loading("show");
-	var form = $("#product-form");
+	var form = $("#addProduct-form");// Not Implemented in This Phase
 	var formData = form.serializeArray();
 	console.log("form Data: " + formData);
 	var newProduct = ConverToJSON(formData);
@@ -1360,7 +1329,7 @@ function AddProduct(){
 
 function EditProduct(id){
 $.mobile.loading("show");
-	var form = $("#product-view-form");
+	var form = $("#addProduct-form");// Not Implemented in This Phase
 	var formData = form.serializeArray();
 	console.log("form Data: " + formData);
 	var updProduct = ConverToJSON(formData);
@@ -1375,7 +1344,7 @@ $.mobile.loading("show");
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
 			$.mobile.loading("hide");
-			$.mobile.navigate("#product-view");
+			$.mobile.navigate("#account");
 		},
 		error: function(data, textStatus, jqXHR){
 			console.log("textStatus: " + textStatus);
@@ -1416,33 +1385,41 @@ function DeleteProduct(id){
 
 function PlaceBid(id){
 	$.mobile.loading("show");
-	var form = $('input[name="bidInput"]').val();
-	var formData = form.serializeArray();
-	console.log("form Data: " + formData);
-	var newBid = ConverToJSON(formData);
-	console.log("Updated Category: " + JSON.stringify(newBid));
-	var newBidJSON = JSON.stringify(newBid);
-	$.ajax({
-		url : "http://localhost:3412/Server-Master/home/" + id,
-		method: 'put',
-		data : newBidJSON,
-		contentType: "application/json",
-		dataType:"json",
-		success : function(data, textStatus, jqXHR){
-			$.mobile.loading("hide");
-			$.mobile.navigate("#home");
-		},
-		error: function(data, textStatus, jqXHR){
-			console.log("textStatus: " + textStatus);
-			$.mobile.loading("hide");
-			if (data.status == 404){
-				alert("Bid could not be placed!");
+	if(currentUser.id == null){
+		$.mobile.navigate('#login');
+	}
+	else{
+		var form = $('input[name="bidInput"]').val();
+		var formData = form.serializeArray();
+		console.log("form Data: " + formData);
+		var newBid = ConverToJSON(formData);
+		console.log("Updated Bid for product "+id+": " + JSON.stringify(newBid));
+		var newBidJSON = JSON.stringify(newBid);
+		$.ajax({
+			url : "http://localhost:3412/Server-Master/home/product/" + id+"/bid",
+			method: 'put',
+			data : newBidJSON,
+			contentType: "application/json",
+			dataType:"json",
+			success : function(data, textStatus, jqXHR){
+				$.mobile.loading("hide");
+				$.mobile.navigate("#product-view");
+			},
+			error: function(data, textStatus, jqXHR){
+				console.log("textStatus: " + textStatus);
+				$.mobile.loading("hide");
+				if(data.status == 404){
+					alert("Product not found.");
+				}
+				else if (data.status == 400){
+					alert("Bid could not be placed!");
+				}
+				else {
+					alert("Internal Server Error.");		
+				}
 			}
-			else {
-				alert("Internal Error.");		
-			}
-		}
-	});
+		});
+	}
 }
 function Buyout(){
 	addToCart();
