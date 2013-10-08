@@ -372,9 +372,9 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 					);
 				}
 			}
-			shipAddressList.append('<li><a onclick=AddAddress() data-role="button">Add new shipping address</a></li>');
-			payList.append('<li><a onclick=AddPayment() data-role="button">Add new payment option</a></li>');
-			sellingList.append('<li><a onclick=AddProduct() data-role="button">Add new sale</a></li>');
+			shipAddressList.append('<li><a href="#add-address" data-role="button">Add new shipping address</a></li>');
+			payList.append('<li><a href="#add-payment" data-role="button">Add new payment option</a></li>');
+			sellingList.append('<li><a href="#add-product" data-role="button">Add new sale</a></li>');
 
 			shipAddressList.listview("refresh");
 			payList.listview("refresh");
