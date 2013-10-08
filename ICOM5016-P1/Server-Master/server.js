@@ -466,9 +466,45 @@ app.del('/Server-Master/product/:id', function(req, res) {
 	}
 });
 
+app.put('/Server-Master/home/product/:id/bid', function(req, res) {
+	var id = req.params.id;
+	console.log("PUT bid on product id " + id);
+
+	var bid = req.body.bid;
+
+	if ((id < 0) || (id >= productNextId)){
+		// not found
+		res.statusCode = 404;
+		res.send("Product not found.");
+	}
+	else {
+		var target = -1;
+		for (var i=0; i < productList.length; ++i){
+			if (productList[i].id == id){
+				target = i;
+				var currentBid = productList[i].bidPrice;
+				if(currentBid <= bid){
+					currentBid = bid;
+				}
+				else{
+					res.statusCode = 400;
+					res.send("Placed bid is bellow current highest bid");
+				}
+				break;
+			}
+		}
+		if (target == -1){
+			res.statusCode = 404;
+			res.send("Product not found.");
+		}
+		else {
+  			res.json(true);	
+  		}	
+	}
+});
 app.get('/Server-Master/product/:id/bid-history', function(req, res) {
 	var id = req.params.id;
-	console.log("GET bid history for product : " + id);
+	console.log("GET bid history for product id " + id);
 	var bidHistory = new Array();
 
 	if ((id < 0) || (id >= productNextId)){
@@ -878,11 +914,6 @@ app.get('/Server-Master/admin/:id', function(req, res){
 	var id = req.params.id;
 	console.log("GET admin account: " + id);
 
-	for (var i=0; i < categoryList.length; ++i){
-	}
-	for (var i=0; i < userList.length; ++i){
-	}
-
 	var response = {"categoryList": categoryList, "userList" : userList}
 	res.json(response);
 
@@ -937,6 +968,21 @@ app.get('/Server-Master/admin/:id', function(req, res){
 	}*/
 });
 
+app.get('/Server-Master/admin/:id/report/:reportType', function(req, res){
+	var reportType = req.params.reportType;
+	console.log("GET report " + reportType);
+	var response = {};
+	if(reportType == "byProduct"){
+		response = {"report" : productList};
+	}
+	else if (reportType == "all Products") {
+		response = {"report" : productList};
+	}
+	else {
+		response = {"report" : productList};
+	}
+	res.json(response);
+});
 // REST Operation - HTTP GET to read a seller profile based on its id
 app.get('/Server-Master/seller/:id', function(req, res) {
 	var id = req.params.id;
@@ -1070,7 +1116,7 @@ app.put('/Server-Master/account/:id', function(req, res) {
 	}
 });
 
-// Missing REST Operation for deleting user
+//REST Operation - HTTP DEL for deleting user
 app.del('/Server-Master/account/:id', function(req, res) {
 	var id = req.params.id;
 		console.log("DELETE account: " + id);

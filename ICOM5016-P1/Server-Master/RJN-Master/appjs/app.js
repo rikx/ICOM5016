@@ -69,8 +69,6 @@ $(document).on('pagebeforeshow', "#cart", function( event, ui ) {
 			cList.append('<li><h2><strong> Total: ' + accounting.formatMoney(total) + '</strong></h2></li>');
 			cList.listview("refresh");
 			
-		
-	
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -585,6 +583,7 @@ function ManageCategories(){
     $('#manage-categories-list').show();
     $('#manage-users-list').hide();
     $('#manage-reports-list').hide();
+    $('#reports-form').hide();
 }
 
 function ManageUsers(){
@@ -592,6 +591,7 @@ function ManageUsers(){
     $('#manage-categories-list').hide();
     $('#manage-users-list').show();
     $('#manage-reports-list').hide();
+    $('#reports-form').hide();
 }
 
 function ManageReports(){
@@ -599,6 +599,62 @@ function ManageReports(){
     $('#manage-categories-list').hide();
     $('#manage-users-list').hide();
     $('#manage-reports-list').show();
+    $('#reports-form').show();
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//										REPORTS	DETAILS												  //
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var reportType = "";
+$(document).on('pagebeforeshow', "#report", function( event, ui ) {
+	$.ajax({
+		url : "http://localhost:3412/Server-Master/admin/"+currentUser.id+"/report/" + reportType,
+		method: 'get',
+		contentType: "application/json",
+		dataType:"json",
+		success : function(data, textStatus, jqXHR){
+			$('#reportType-title').html(reportType);
+			var reportInfo = data.report;
+			var reportList = $('manage-reports-list');
+			reportList.empty();
+
+			for(var i = 0; i < reportInfo.length; ++i){
+				reportList.append('<li><a onclick=GetProduct('+reportInfo.id+')><h2>'+reportInfo.name+'</h2>'+
+					'<p><img src="http://3.bp.blogspot.com/-nU8O8xLuSvs/TdjWsU3X2DI/AAAAAAAAAIs/Lsa3Y92DGy0/s320/112.jpg" /></p>'+
+					'<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(reportInfo.bidPrice) + '</h4></p>'+
+					'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(reportInfo.instantPrice) + '</h4></p></a>'+
+					'<a onclick=EditProduct('+reportInfo.id+') data-icon="gear">Edit</a></li>');	
+			}
+			reportList.listview("refresh");
+		},
+		error: function(data, textStatus, jqXHR){
+			console.log("textStatus: " + textStatus);
+			$.mobile.loading("hide");
+			if (data.status == 404){
+				alert("Admin not found.");
+			}
+			else {
+				alert("Internal Server Error.");
+			}
+		}
+	});
+});
+function ReportByProduct(){
+	$.mobile.loading("hide");
+	reportType = "by Product";
+	$.mobile.navigate('#report');
+}
+
+function ReportAllProducts(){
+	$.mobile.loading("hide");
+	reportType = "all Products";
+	$.mobile.navigate('#report');
+}
+
+function ReportByRevenue(){
+	$.mobile.loading("hide");
+	reportType = "by Revenue";
+	$.mobile.navigate('#report');
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1389,16 +1445,16 @@ function PlaceBid(id){
 		$.mobile.navigate('#login');
 	}
 	else{
-		var form = $('input[name="bidInput"]').val();
+/*		var form = $('input[name="bidInput"]').val();
 		var formData = form.serializeArray();
 		console.log("form Data: " + formData);
 		var newBid = ConverToJSON(formData);
 		console.log("Updated Bid for product "+id+": " + JSON.stringify(newBid));
-		var newBidJSON = JSON.stringify(newBid);
+		var newBidJSON = JSON.stringify(newBid);*/
 		$.ajax({
 			url : "http://localhost:3412/Server-Master/home/product/" + id+"/bid",
 			method: 'put',
-			data : newBidJSON,
+			data : JSON.stringify({"bid" : $('input[name="bidInput"]').val()}),
 			contentType: "application/json",
 			dataType:"json",
 			success : function(data, textStatus, jqXHR){

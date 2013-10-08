@@ -333,9 +333,52 @@
 				</ul>
 				<ul id="manage-categories-list" style="display: none" data-role="listview"></ul>
 				<ul id="manage-users-list" style="display: none" data-role="listview"></ul>
+				<form id="reports-form" style="display: none">
+					<div data-role="fieldcontain">
+					    <label for="name">Select Day:</label>
+					    <input type="text" name="report-day" id="report-day" value=""  />
+					</div>
+					<div data-role="fieldcontain">
+					    <label for="name">Select Month:</label>
+					    <input type="text" name="report-month" id="report-month" value=""  />
+					</div>	
+					<div data-role="fieldcontain">
+					    <label for="name">Select Year:</label>
+					    <input type="text" name="report-year" id="report-year" value=""  />
+					</div>
+					<ul>
+						<li>
+							<a onclick="ReportByProduct()" data-role="button">Report by Product</a>
+							<a onclick="ReportAllProducts()" data-role="button">Report by all Products</a>
+							<a onclick="ReportByRevenue()" data-role="button">Report by Revenue</a>
+						</li>
+					</ul>
+				</from>
 				<ul id="manage-reports-list" style="display: none" data-role="listview"></ul>
 			</div><!-- /content -->
 		</div><!-- /page -->
+
+		<div id="report" data-role="page">
+			<div data-role="header" data-theme="e" data-position="fixed">
+				<div class="ui-grid-b" align="center">
+					<div class="ui-block-a"><h3>Reports <span id="#reportType-title"></span></h3></div>
+					<div class="ui-block-b"></div>
+					<div class="ui-block-c">
+						<div data-role="controlgroup" data-type="horizontal">
+							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
+<!-- 							<a href="" 						data-role="button" data-icon="search"		 data-iconpos="top" title="Browse"	></a> -->
+							<a href="#update-account"		data-role="button" data-icon="gear"			 data-iconpos="top" title="Edit"	></a>
+							<a onclick="LogOut()"			data-role="button" data-icon="off" 			 data-iconpos="top" title="Logout"	></a>
+						</div>
+					</div>
+				</div><!-- /grid-b -->
+			</div>
+			<div data-role="content">
+				<h3 align="center">Report Results<span id="report-day"></span><span id="report-month"></span><span id="report-year"></span></h3>
+				<ul id>
+				</ul>
+			</div>
+		</div><!--/page -->
 
 		<div id="register-account" data-role="page">
 			<div data-role="header" data-theme="e" data-position="fixed">
