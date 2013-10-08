@@ -252,8 +252,9 @@
 							<li>Product bought #9000 from <a onclick="GetSellerProfile(1)">user2</a>
 								<div data-role="fieldcontain">
 									<label for="slider-mini">Rate this seller:</label>
-									<input type="text" data-type="range" name="slider-mini" id="slider-mini" value="2" min="0" max="4" step="1" data-highlight="true" data-mini="true" /><input type="submit" value="Submit" />
+									<input id="rating-slider" type="text" data-type="range" name="slider-mini" id="slider-mini" value="2" min="0" max="4" step="1" data-highlight="true" data-mini="true" />
 								</div>
+								<a onclick="SubmitRating(1)" data-icon="ok">Submit</a>
 							</li>
 						</ul>
 					</form>

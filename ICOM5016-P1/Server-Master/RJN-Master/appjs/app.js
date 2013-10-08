@@ -451,6 +451,34 @@ function sellHistory(){
     $('#bought-history').hide();
     $('#sell-history').show();
 }
+
+function SubmitRating(id){
+	$.mobile.loading("show");
+	var form = $("#rating-slider");
+	$.ajax({
+		url : "http://localhost:3412/Server-Master/seller/" + id,
+		method: 'post',
+		data : JSON.stringify({"rater": currentUser.id,"rating" : form.val()}),
+		contentType: "application/json",
+		dataType:"json",
+		success : function(data, textStatus, jqXHR){
+			$.mobile.loading("hide");
+		},
+		error: function(data, textStatus, jqXHR){
+			console.log("textStatus: " + textStatus);
+			$.mobile.loading("hide");
+			if(data.status == 404){
+				alert("Seller not found.");
+			}
+			else if (data.status == 400){
+				alert("Rating could not be saved!");
+			}
+			else {
+				alert("Internal Server Error.");		
+			}
+		}
+	});
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //										SELLER PROFILE DETAILS										  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////

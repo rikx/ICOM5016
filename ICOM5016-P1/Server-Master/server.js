@@ -326,7 +326,8 @@ var Product = modules.Product;
 //Product: name,parent,sellerId,instantPrice,bidPrice,description,model,brand,dimensions,numOfBids
 var productList = new Array(
 	new Product("MyPhone", 13, 0, 500, 400, "Brand new, still in box Myphone.", "MyPhone5X", "Mapple", '10"x8"x0.5"',0),
--  new Product("Viperus", 38, 0, 901, 700, "Honyota Viperus Wheels. Its so fast your skin flies off.", "Viperus XLR", "Honyota", '15" diameter with 2" thickness',0),
+    new Product("Viperus", 38, 0, 901, 700, "Honyota Viperus Wheels. Its so fast your skin flies off.", "Viperus XLR", "Honyota", '15" diameter with 2" thickness',0),
+    new Product("Test Product 1", 41, 1, 9001, 42, "Test of product printing", "model", "brand", "dimensions",2),
 	new Product("Test Product 7", 7, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
 	new Product("Test Product 8", 8, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
 	new Product("Test Product 9", 9, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
@@ -496,6 +497,7 @@ app.del('/Server-Master/product/:id', function(req, res) {
 	}
 });
 
+//REST Operation - HTTP PUT to update current bid on product by id
 app.put('/Server-Master/home/product/:id/bid', function(req, res) {
 	var id = req.params.id;
 	console.log("PUT bid on product id " + id);
@@ -532,6 +534,8 @@ app.put('/Server-Master/home/product/:id/bid', function(req, res) {
   		}	
 	}
 });
+
+//REST Operation - HTTP GET to read bid history of a product by its id
 app.get('/Server-Master/product/:id/bid-history', function(req, res) {
 	var id = req.params.id;
 	console.log("GET bid history for product id " + id);
@@ -998,6 +1002,7 @@ app.get('/Server-Master/admin/:id', function(req, res){
 	}*/
 });
 
+// REST Operation - HTTP GET to read report based on reportType
 app.get('/Server-Master/admin/:id/report/:reportType', function(req, res){
 	var reportType = req.params.reportType;
 	console.log("GET report " + reportType);
@@ -1013,6 +1018,7 @@ app.get('/Server-Master/admin/:id/report/:reportType', function(req, res){
 	}
 	res.json(response);
 });
+
 // REST Operation - HTTP GET to read a seller profile based on its id
 app.get('/Server-Master/seller/:id', function(req, res) {
 	var id = req.params.id;
@@ -1050,6 +1056,30 @@ app.get('/Server-Master/seller/:id', function(req, res) {
 		}
 		var response = {"sellerDetails": seller, "ratings" : ratersList, "sellingProducts" : sellingProducts};
 		res.json(response);
+	}
+});
+
+//REST Operation - HTTP POST to set rating on product sale for a seller by id
+app.post('/Server-Master/seller/:id', function(req, res) {
+	var id = req.params.id;
+	console.log("POST rating on seller id " + id);
+
+	var rating = req.body.rating;
+	var rater = req.body.rater;
+
+	if ((id < 0) || (id >= userNextId)){
+		// not found
+		res.statusCode = 404;
+		res.send("Seller not found.");
+	}
+	else {
+		//id, seller id, rater id, rating
+	  	var newRating = new Rating(id,rater,rating);
+	  								 
+	  	console.log("New Rating: " + JSON.stringify(newRating));
+	  	newRating.id = ratingsNextId++;
+	  	ratingsList.push(newRating);
+	  	res.json(true);
 	}
 });
 
