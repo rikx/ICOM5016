@@ -11,6 +11,7 @@
 		<script src="js/jquery.mobile-1.3.1.js"></script>
 		<script src="js/accounting.js"></script>
 		<script src="appjs/app.js"></script>
+		<script src="appjs/auction.js"></script>
 		
 		
 	</head>
@@ -724,8 +725,8 @@
 				<h3 align="center">Options</h3>
 				<a id="seller-details" data-role="button">Seller Details</a>
 				<a data-role="button" onclick="addToCart()">Add to Cart</a>
+				<p>Time left on auction: <strong id="auction-timer"></strong></p><a onclick='AuctionTimer()' data-role="button">Show Time</a>
 				<p>Current bid: <strong id="showBidPrice"></strong> &nbsp;|&nbsp; Number of bids: <strong id="numOfBids"></strong></p>
-				
 				<div data-role="fieldcontain">
 					<input name="bidInput" type="text" data-mini="true" /><a id="bidButton" onclick="PlaceBid()" data-role="button" data-inline="true" data-theme="e" data-mini="true">Bid</a>
 				</div>
