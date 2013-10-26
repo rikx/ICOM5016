@@ -6,7 +6,7 @@ CREATE TABLE categories
 (
   cid bigserial NOT NULL,
   cname character(20),
-  cparent character(20),
+  cparent bigint,
   CONSTRAINT "category id" PRIMARY KEY (cid)
 )
 WITH (

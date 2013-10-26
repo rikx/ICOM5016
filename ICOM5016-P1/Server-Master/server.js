@@ -112,8 +112,25 @@ var categoryNextId = 42;
 app.get('/Server-Master/home', function(req, res) {
 	console.log("GET categories");
 
-	var response = {"categories" : categoryList};
-  	res.json(response);
+//  PHASE 1 CODE
+/*	var response = {"categories" : categoryList};
+  	res.json(response);*/
+
+//  PHASE 2 CODE
+    var client = new pg.Client(dbConnInfo);
+	client.connect();
+
+	var query = client.query("SELECT cid as id, cname as name from categories where cparent IS NULL");
+	
+	query.on("row", function (row, result) {
+    	result.addRow(row);
+	});
+	query.on("end", function (result) {
+		var response = {"categories" : result.rows};
+		console.log("row count: " + result.rowCount);
+		client.end();
+  		res.json(response);
+ 	});
 });
 
 
