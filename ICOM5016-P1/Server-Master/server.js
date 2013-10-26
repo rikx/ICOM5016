@@ -327,16 +327,16 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 				var query;
 				switch(SortType) {
 					case "name":
-				  		query = client.query("SELECT * from products where pcategory = $1 order by pname", [id]);
+				  		query = client.query("SELECT pid as id, pname as name, pinstant_price as instantPrice, pimage_filename as image from products where pcategory = $1 order by pname", [id]);
 				  		break; 
 				  	case "price":
-				  		query = client.query("SELECT * from products where pcategory = $1 order by pinstant_price", [id]);
+				  		query = client.query("SELECT pid as id, pname as name, pinstant_price as instantPrice, pimage_filename as image from products where pcategory = $1 order by pinstant_price", [id]);
 				  		break;
 				  	case "brand":
-				  		query = client.query("SELECT * from products where pcategory = $1 order by pbrand", [id]);
+				  		query = client.query("SELECT pid as id, pname as name, pinstant_price as instantPrice, pimage_filename as image from products where pcategory = $1 order by pbrand", [id]);
 				  		break;
 				  	default:
-				  		query = client.query("SELECT * from products where pcategory = $1", [id]);
+				  		query = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, pimage_filename as image from products where pcategory = $1", [id]);
 				};
 				query.on("row", function (row, result) {
 			    	result.addRow(row);

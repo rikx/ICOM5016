@@ -156,11 +156,11 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 				for (var i=0; i < childrenList.length; ++i){
 					product = childrenList[i];
 					//<li><img src="http://3.bp.blogspot.com/-nU8O8xLuSvs/TdjWsU3X2DI/AAAAAAAAAIs/Lsa3Y92DGy0/s320/112.jpg" /></li>	
-					list.append('<li><a onclick=GetProduct('+product.pid+')><h2>'+product.pname+'</h2>'+
-					'<p><img src="http://3.bp.blogspot.com/-nU8O8xLuSvs/TdjWsU3X2DI/AAAAAAAAAIs/Lsa3Y92DGy0/s320/112.jpg" /></p>'+
+					list.append('<li><a onclick=GetProduct('+product.id+')><h2>'+product.name+'</h2>'+
+					'<p><img src='+product.image+' /></p>'+ 
 					//USE THIS LATER WHEN WE HAVE AUCTION TABLES SET UP TO GET THIS VALUE: '<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(child.bidPrice) + '</h4></p>'+
-					'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(product.pinstant_price) + '</h4></p></a>'+
-					'<a onclick=EditProduct('+product.pid+') data-icon="gear">Edit</a></li>');	
+					'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(product.instant_price) + '</h4></p></a>'+
+					'<a onclick=EditProduct('+product.id+') data-icon="gear">Edit</a></li>');	
 				}
 			}
 			list.listview("refresh");	
