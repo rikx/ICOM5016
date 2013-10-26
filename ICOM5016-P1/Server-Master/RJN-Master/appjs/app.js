@@ -134,30 +134,33 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 		//dataType:"json",
 		success : function(data, textStatus, jqXHR){
 			$("#browseTitle").html(data.parent.name);
-			var childrenList = data.children;
-			var len = childrenList.length;
+			var childrenList;
 			var list = $("#browse-list");
 			list.empty();
 			$("#sortTypes").html('');
-			var child;
+
 			//when childrenList contains sub-categories
-			if(data.childType == true){
-					for (var i=0; i < len; ++i){
-					child = childrenList[i];		
-					list.append("<li><a onclick=GetSubCategory("+child.id+")><h2>"+child.name+"</h2></a></li>");	
+			if (data.childType == true){
+				childrenList = data.children;
+				var category;
+				for (var i=0; i < childrenList.length; ++i){
+					category = childrenList[i];		
+					list.append("<li><a onclick=GetSubCategory("+category.id+")><h2>"+category.name+"</h2></a></li>");	
 				}
 			}
 			//when childrenList contains products
-			else{
+			else {
+				childrenList = data.products;
+				var product;
 				$("#sortTypes").html('<button onclick=sortByType("name")>SortByName</button><button onclick=sortByType("brand")>SortByBrand</button><button onclick=sortByType("price")>SortByPrice</button>');
-				for (var i=0; i < len; ++i){
-					child = childrenList[i];
+				for (var i=0; i < childrenList.length; ++i){
+					product = childrenList[i];
 					//<li><img src="http://3.bp.blogspot.com/-nU8O8xLuSvs/TdjWsU3X2DI/AAAAAAAAAIs/Lsa3Y92DGy0/s320/112.jpg" /></li>	
-					list.append('<li><a onclick=GetProduct('+child.id+')><h2>'+child.name+'</h2>'+
+					list.append('<li><a onclick=GetProduct('+product.pid+')><h2>'+product.pname+'</h2>'+
 					'<p><img src="http://3.bp.blogspot.com/-nU8O8xLuSvs/TdjWsU3X2DI/AAAAAAAAAIs/Lsa3Y92DGy0/s320/112.jpg" /></p>'+
-					'<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(child.bidPrice) + '</h4></p>'+
-					'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(child.instantPrice) + '</h4></p></a>'+
-					'<a onclick=EditProduct('+child.id+') data-icon="gear">Edit</a></li>');	
+					//USE THIS LATER WHEN WE HAVE AUCTION TABLES SET UP TO GET THIS VALUE: '<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(child.bidPrice) + '</h4></p>'+
+					'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(product.pinstant_price) + '</h4></p></a>'+
+					'<a onclick=EditProduct('+product.pid+') data-icon="gear">Edit</a></li>');	
 				}
 			}
 			list.listview("refresh");	

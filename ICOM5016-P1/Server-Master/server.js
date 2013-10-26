@@ -1,5 +1,7 @@
 // Express is the web framework 
 var express = require('express');
+var pg = require('pg');
+
 var app = express();
 var allowCrossDomain = function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
@@ -21,6 +23,9 @@ app.configure(function () {
 
 
 app.use(express.bodyParser());
+
+// Database connection string: pg://<username>:<password>@host:port/dbname 
+var dbConnInfo = "pg://rjnadmin:database@localhost:5432/rjnbaydb";
 
 var modules = require("./modules.js");
 
@@ -227,7 +232,7 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 	var id = req.params.id;
 	var SortType = req.params.SortType;
 
-	console.log("GET subcategories of " + id + " Sorted By: " + SortType);
+	//console.log("GET subcategories of " + id + " Sorted By: " + SortType);
 
 	if ((id < 0) || (id >= categoryNextId)){
 		// not found
@@ -235,22 +240,29 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 		res.send("Category not found.");
 	}
 	else {
+		//Phase 2 Code
+		var client = new pg.Client(dbConnInfo);
+		client.connect();
+        //End Phase 2 code
 		var theChildren = new Array();
 		var target = -1;
 		var theType = true; //content of theChildren are subcategories
+
 		for (var i=0; i < categoryList.length; ++i){
 			if (categoryList[i].id == id){
+				console.log("GET subcategories of category " + id);
 				target = i;
 			}
 			if (categoryList[i].parent == id){
-				theChildren.push(categoryList[i]);
+				theChildren.push(categoryList[i]);	
 			}		
 		}
 		if (target == -1){
 			res.statusCode = 404;
 			res.send("Parent category not found.");			
-		}	
-		else {
+		}
+//      PHASE 1 CODE	
+/*		else {
 			if (theChildren.length <1){
 				theType = false; //content of theChildren are products
 				
@@ -284,11 +296,46 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 			var response = {"children" : theChildren, "parent" : categoryList[target], "childType" : theType};
 			//console.log("History is: " + urlHistory);
 			res.json(response);
-		}
+		}*/
+
+//      PHASE 2 CODE
+        else {
+        	if (theChildren.length != 0) {
+        		var response = {"children" : theChildren, "parent" : categoryList[target], "childType" : theType};
+				res.json(response);
+        	}
+			else{
+				theType = false; //content of theChildren are products
+				console.log("GET products of category " +id+ ", sorted by " + SortType);
+				var query;
+				switch(SortType) {
+					case "name":
+				  		query = client.query("SELECT * from products where pcategory = $1 order by pname", [id]);
+				  		break; 
+				  	case "price":
+				  		query = client.query("SELECT * from products where pcategory = $1 order by pinstant_price", [id]);
+				  		break;
+				  	case "brand":
+				  		query = client.query("SELECT * from products where pcategory = $1 order by pbrand", [id]);
+				  		break;
+				  	default:
+				  		query = client.query("SELECT * from products where pcategory = $1", [id]);
+				};
+				query.on("row", function (row, result) {
+			    	result.addRow(row);
+				});
+				query.on("end", function (result) {
+					console.log("row count: " + result.rowCount);
+					var response = {"products" : result.rows, "parent" : categoryList[target], "childType" : theType};
+					res.json(response);
+					client.end();
+				});
+			}
+        }  
 	}
 });
 
-// REST Operation - HTTP GET to get category's children
+// REST Operation - HTTP GET to get category's parent id
 app.get('/Server-Master/subCategory/:id', function(req, res) {
 	var id = req.params.id;
 	console.log("GET subCategory: " + id);
@@ -298,6 +345,8 @@ app.get('/Server-Master/subCategory/:id', function(req, res) {
 		res.statusCode = 404;
 		res.send("Category not found.");
 	}
+
+//  PHASE 1 CODE
 	else {
 		var target = -1;
 		for (var i=0; i < categoryList.length; ++i){
@@ -311,10 +360,38 @@ app.get('/Server-Master/subCategory/:id', function(req, res) {
 		}	
 		else {
 			var response = {"parent" : categoryList[target]};
-			console.log(categoryList[target].parent);
+			console.log("Parent category: " + categoryList[target].parent);
   			res.json(response);
 		}
 	}
+
+//  PHASE 2 CODE
+/*    else {
+		var client = new pg.Client(dbConnInfo);
+		client.connect();
+
+		var target = -1;
+		for (var i=0; i < categoryList.length; ++i){
+			if (categoryList[i].id == id){
+				target = i;
+			}	
+		}
+		if (target == -1){
+			res.statusCode = 404;
+			res.send("Parent category not found.");			
+		}
+		var query = client.query("SELECT * from categories where cid = $1", [id]);
+		
+		query.on("row", function (row, result) {
+	    	result.addRow(row);
+		});
+		query.on("end", function (result) {
+			var response = {"category" : result.rows};
+			console.log("row count: " + result.rowCount);
+			client.end();
+	  		res.json(response);
+	 	});
+	}*/
 });
 
 /*==================================================================*/
