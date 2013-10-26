@@ -19,10 +19,11 @@ $(document).on('pagebeforeshow', "#home", function( event, ui ) {
 			for (var i=0; i < len; ++i){
 				category = categoryList[i];
 
-				//when home, print parent==null
-				if(!category.parent) {	
+//          PHASE 1 CODE
+                //when home, print parent==null
+				/*if(!category.parent) {	
 					list.append("<li><a onclick=GetSubCategory("+category.id+")><h2>"+category.name+"</h2></a></li>");
-				}
+				}*/
 			
 	
 					/*
@@ -33,7 +34,9 @@ $(document).on('pagebeforeshow', "#home", function( event, ui ) {
 					"<p>" + category.description + "</p>" +
 					"<p class=\"ui-li-aside\">" + accounting.formatMoney(category.price) + "</p>" +
 					"</a></li>");*/
-				
+
+//			PHASE 2 CODE
+			list.append("<li><a onclick=GetSubCategory("+category.id+")><h2>"+category.name+"</h2></a></li>");	
 			}
 			list.listview("refresh");	
 		},
@@ -61,7 +64,7 @@ $(document).on('pagebeforeshow', "#cart", function( event, ui ) {
 
 				for (var i=0; i < len; ++i){
 					product = Cart[i];
-					total=total+product.instantPrice;
+					total=total+product.instant_price;
 					list.append('<li><a onclick=GetProduct('+product.id+')><h2>'+product.name+'</h2></a>'+
 					'<a onclick=removeFromCart('+i+') data-icon="delete">Delete</a></li>');
 				}
@@ -97,10 +100,10 @@ $(document).on('pagebeforeshow', "#invoice", function( event, ui ) {
 
 				for (var i=0; i < len; ++i){
 					product = Cart[i];
-					total=total+product.instantPrice;
+					total=total+product.instant_price;
 					list.append('<li><h2><strong>'+product.name+' Item #:'+product.id+'</strong></h2>'+
 								'<p><h3>'+product.description+'</h3></p>'+
-								'<h3 align="right">'+accounting.formatMoney(product.instantPrice)+'</h3></li>');
+								'<h3 align="right">'+accounting.formatMoney(product.instant_price)+'</h3></li>');
 				}
 			list.append('<li><h2><strong> Total: ' + accounting.formatMoney(total) + '</strong></h2></li>');
 			
@@ -157,7 +160,7 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 					product = childrenList[i];
 					//<li><img src="http://3.bp.blogspot.com/-nU8O8xLuSvs/TdjWsU3X2DI/AAAAAAAAAIs/Lsa3Y92DGy0/s320/112.jpg" /></li>	
 					list.append('<li><a onclick=GetProduct('+product.id+')><h2>'+product.name+'</h2>'+
-					'<p><img src='+product.image+' /></p>'+ 
+					'<p><img src="'+product.image+'"" /></p>'+ 
 					//USE THIS LATER WHEN WE HAVE AUCTION TABLES SET UP TO GET THIS VALUE: '<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(child.bidPrice) + '</h4></p>'+
 					'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(product.instant_price) + '</h4></p></a>'+
 					'<a onclick=EditProduct('+product.id+') data-icon="gear">Edit</a></li>');	
@@ -653,7 +656,7 @@ $(document).on('pagebeforeshow', "#report", function( event, ui ) {
 				reportList.append('<li><a onclick=GetProduct('+reportInfo[i].id+')><h2>'+reportInfo[i].name+'</h2>'+
 					'<p><img src="http://3.bp.blogspot.com/-nU8O8xLuSvs/TdjWsU3X2DI/AAAAAAAAAIs/Lsa3Y92DGy0/s320/112.jpg" /></p>'+
 					'<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(reportInfo[i].bidPrice) + '</h4></p>'+
-					'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(reportInfo[i].instantPrice) + '</h4></p></a>'+
+					'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(reportInfo[i].instant_price) + '</h4></p></a>'+
 					'<a onclick=EditProduct('+reportInfo[i].id+') data-icon="gear">Edit</a></li>');	
 			}
 			reportList.listview("refresh");
@@ -696,17 +699,18 @@ $(document).on('pagebeforeshow', "#product-view", function( event, ui ) {
 	// currentProduct has been set at this point
 	var product = currentProduct;
 	$("#productTitle").html(product.name);
-	$('#seller-details').attr("onclick", "GetSellerProfile("+currentProduct.sellerId+")");
-	$('#bidButton').attr("onclick", "PlaceBid("+currentProduct.id+")");
-	$("#showBidPrice").html(accounting.formatMoney(product.bidPrice));
-	$("#numOfBids").html('<a href="#bidhistory">'+product.numBids+'</a>');
-	$("#showBuyoutPrice").html(accounting.formatMoney(product.instantPrice));
+	//$('#seller-details').attr("onclick", "GetSellerProfile("+product.sellerId+")");
+	$('#bidButton').attr("onclick", "PlaceBid("+product.id+")");
+	//$("#showBidPrice").html(accounting.formatMoney(product.bidPrice));
+	//$("#numOfBids").html('<a href="#bidhistory">'+product.numBids+'</a>');
+	$("#showBuyoutPrice").html(accounting.formatMoney(product.instant_price));
 	var list = $("#prod-details");
 	list.empty();
-	list.append('<li><img src="http://3.bp.blogspot.com/-nU8O8xLuSvs/TdjWsU3X2DI/AAAAAAAAAIs/Lsa3Y92DGy0/s320/112.jpg" /></li>'+
+	list.append('<li><img src="'+product.image+'"" /></li>'+
 	'<li><strong>Product ID: </strong>' + product.id + '</li></li><li><strong>Brand: </strong>' + product.brand + '</li></li>'+
-	'<li><strong>Model: </strong>' + product.model + '</li></li><li><strong>Description: </strong>' + product.description + '</li>'+
-	'<li><strong>Dimensions: </strong>'+product.dimensions+'</li>');
+	'<li><strong>Model: </strong>' + product.model + '</li></li><li><strong>Description: </strong>' + product.description + '</li>'//+
+	//'<li><strong>Dimensions: </strong>'+product.dimensions+'</li>'
+	);
 	list.listview("refresh");	
 });
 
@@ -1372,6 +1376,7 @@ function GetProduct(id){
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
 			currentProduct = data.product;
+			alert(currentProduct.name);
 			$.mobile.loading("hide");
 			$.mobile.navigate("#product-view");
 		},

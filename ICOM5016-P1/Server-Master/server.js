@@ -257,10 +257,6 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 		res.send("Category not found.");
 	}
 	else {
-		//Phase 2 Code
-		var client = new pg.Client(dbConnInfo);
-		client.connect();
-        //End Phase 2 code
 		var theChildren = new Array();
 		var target = -1;
 		var theType = true; //content of theChildren are subcategories
@@ -321,19 +317,23 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
         		var response = {"children" : theChildren, "parent" : categoryList[target], "childType" : theType};
 				res.json(response);
         	}
-			else{
+			else {
 				theType = false; //content of theChildren are products
 				console.log("GET products of category " +id+ ", sorted by " + SortType);
+
+				var client = new pg.Client(dbConnInfo);
+				client.connect();
+
 				var query;
 				switch(SortType) {
 					case "name":
-				  		query = client.query("SELECT pid as id, pname as name, pinstant_price as instantPrice, pimage_filename as image from products where pcategory = $1 order by pname", [id]);
+				  		query = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, pimage_filename as image from products where pcategory = $1 order by pname", [id]);
 				  		break; 
 				  	case "price":
-				  		query = client.query("SELECT pid as id, pname as name, pinstant_price as instantPrice, pimage_filename as image from products where pcategory = $1 order by pinstant_price", [id]);
+				  		query = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, pimage_filename as image from products where pcategory = $1 order by pinstant_price", [id]);
 				  		break;
 				  	case "brand":
-				  		query = client.query("SELECT pid as id, pname as name, pinstant_price as instantPrice, pimage_filename as image from products where pcategory = $1 order by pbrand", [id]);
+				  		query = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, pimage_filename as image from products where pcategory = $1 order by pbrand", [id]);
 				  		break;
 				  	default:
 				  		query = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, pimage_filename as image from products where pcategory = $1", [id]);
@@ -344,8 +344,8 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 				query.on("end", function (result) {
 					console.log("row count: " + result.rowCount);
 					var response = {"products" : result.rows, "parent" : categoryList[target], "childType" : theType};
-					res.json(response);
 					client.end();
+					res.json(response);
 				});
 			}
         }  
@@ -356,14 +356,13 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 app.get('/Server-Master/subCategory/:id', function(req, res) {
 	var id = req.params.id;
 	console.log("GET subCategory: " + id);
-	
+
+//  PHASE 1 CODE	
 	if ((id < 0) || (id >= categoryNextId)){
 		// not found
 		res.statusCode = 404;
 		res.send("Category not found.");
 	}
-
-//  PHASE 1 CODE
 	else {
 		var target = -1;
 		for (var i=0; i < categoryList.length; ++i){
@@ -377,36 +376,33 @@ app.get('/Server-Master/subCategory/:id', function(req, res) {
 		}	
 		else {
 			var response = {"parent" : categoryList[target]};
-			console.log("Parent category: " + categoryList[target].parent);
+			console.log("Parent category: " + categoryList[target].parent); //For testing purposes only
   			res.json(response);
 		}
 	}
 
-//  PHASE 2 CODE
-/*    else {
+//  PHASE 2 CODE - Though because of queries, we can simplify the GET of subqueries all into 1 GET from #browse instead of 2 gets from GetSubQuery(id) and # browse
+/*  else {
 		var client = new pg.Client(dbConnInfo);
 		client.connect();
 
-		var target = -1;
-		for (var i=0; i < categoryList.length; ++i){
-			if (categoryList[i].id == id){
-				target = i;
-			}	
-		}
-		if (target == -1){
-			res.statusCode = 404;
-			res.send("Parent category not found.");			
-		}
-		var query = client.query("SELECT * from categories where cid = $1", [id]);
+		var query = client.query("SELECT cparent as id, cname as name from categories where cid = $1", [id]);
 		
 		query.on("row", function (row, result) {
 	    	result.addRow(row);
 		});
 		query.on("end", function (result) {
-			var response = {"category" : result.rows};
-			console.log("row count: " + result.rowCount);
-			client.end();
-	  		res.json(response);
+			if (result.rowCount == 0){
+				res.statusCode = 404;
+				res.send("Category not found.");			
+			}
+			else {
+				var response = {"parent" : result.rows};
+				console.log("row count: " + result.rowCount);
+				console.log("Parent category: " + categoryList[target].parent); //For testing purposes only
+				client.end();
+		  		res.json(response);
+	  		}
 	 	});
 	}*/
 });
@@ -417,7 +413,7 @@ app.get('/Server-Master/subCategory/:id', function(req, res) {
 
 var Product = modules.Product;
 
-//Product: name,parent,sellerId,instantPrice,bidPrice,description,model,brand,dimensions,numOfBids
+//Product: name,parent,sellerId,instant_price,bidPrice,description,model,brand,dimensions,numOfBids
 var productList = new Array(
 	new Product("MyPhone", 13, 0, 500, 400, "Brand new, still in box Myphone.", "MyPhone5X", "Mapple", '10"x8"x0.5"',0),
     new Product("Viperus", 38, 0, 901, 700, "Honyota Viperus Wheels. Its so fast your skin flies off.", "Viperus XLR", "Honyota", '15" diameter with 2" thickness',0),
@@ -483,6 +479,7 @@ app.get('/Server-Master/product/:id', function(req, res) {
 		res.statusCode = 404;
 		res.send("Product not found.");
 	}
+//	PHASE 1 CODE
 	else {
 		var target = -1;
 		for (var i=0; i < productList.length; ++i){
@@ -500,6 +497,30 @@ app.get('/Server-Master/product/:id', function(req, res) {
   			res.json(response);	
   		}	
 	}
+//	PHASE 2 CODE
+
+/*    else {
+		var client = new pg.Client(dbConnInfo);
+		client.connect();
+
+		var query = client.query("SELECT pid as id, pname as name, pimage_filename as image, pinstant_price as instant_price, pbrand as brand, pmodel as model, pdescription as description, pdimensions as dimensions from products where pid = $1", [id]);
+		
+		query.on("row", function (row, result) {
+	    	result.addRow(row);
+		});
+		query.on("end", function (result) {
+			if (result.rowCount == 0){
+				res.statusCode = 404;
+				res.send("Product not found.");
+			}
+			else {
+				var response = {"product" : result.rows};
+				console.log("row count: " + result.rowCount);
+				client.end();
+		  		res.json(response);
+		  	}
+	 	});
+    }*/
 });
 
 // REST Operation - HTTP POST to add a new product
@@ -664,8 +685,25 @@ app.get('/Server-Master/product/:id/bid-history', function(req, res) {
 app.get('/Server-Master/search', function(req, res) {
 	console.log("GET products");
 
-	var response = {"ListOfProducts" : productList};
-  	res.json(response);
+//  PHASE 1 CODE
+/*	var response = {"ListOfProducts" : productList};
+  	res.json(response);*/
+
+//  PHASE 2 CODE
+  	var client = new pg.Client(dbConnInfo);
+	client.connect();
+
+	query = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, pimage_filename as image from products");
+	
+	query.on("row", function (row, result) {
+    	result.addRow(row);
+	});
+	query.on("end", function (result) {
+		var response = {"ListOfProducts" : result.rows};
+		console.log("row count: " + result.rowCount);
+		client.end();
+  		res.json(response);
+ 	});
 });
 //JUAN SEARCH TESTING END
 // Missing REST operations for posting, updating, and deleting a product.
