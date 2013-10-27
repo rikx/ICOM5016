@@ -272,8 +272,6 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 	var id = req.params.id;
 	var SortType = req.params.SortType;
 
-	//console.log("GET subcategories of " + id + " Sorted By: " + SortType);
-
 	if ((id < 0) || (id >= categoryNextId)){
 		// not found
 		res.statusCode = 404;
@@ -281,7 +279,6 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 	}
 	else {
 		var theType = true; // if remains true at end content of response is subcategories
-//      PHASE 1 CODE
 /*		var theChildren = new Array();
 		var target = -1;
 		for (var i=0; i < categoryList.length; ++i){
@@ -327,26 +324,30 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 					}
 				}
 						
-			var}
+			}		
 			var response = {"children" : theChildren, "parent" : categoryList[target], "childType" : theType};
-			//console.log("History is: " + urlHistory);
 			res.json(response);
-		}*/
+		}
+*/
 
 //      PHASE 2 CODE
 		var client = new pg.Client(dbConnInfo);
 		client.connect();
 
-		var query = client.query("SELECT cid as id, cname as name from categories where cparent = ", [id]);
+		// Query Code for getting subqueries
+		var query = client.query("SELECT cid as id, cname as name, cparent as parent from categories where cparent = $1", [id]);
 		query.on("row", function (row, result) {
 	    	result.addRow(row);
 		});
 		query.on("end", function (result) {
-			if(result.rowCount == 0){
+			if(result.rowCount > 0){
+				console.log("GET subcategories of " + id + " Sorted By: " + SortType);
 				console.log("row count: " + result.rowCount);
-				var response = {"children" : result.rows, "parent" : categoryList[target], "childType" : theType};
+				var response = {"categories" : result.rows, "type" : theType, "parent" : "Parent Category"};
 				res.json(response);
+				client.end();
 			}
+			// Query code for getting products
 			else {
 				theType = false; //content of theChildren are products
 				console.log("GET products of category " +id+ ", sorted by " + SortType);
@@ -354,16 +355,16 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 				var query2;
 				switch(SortType) {
 					case "name":
-				  		query2 = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, pimage_filename as image from products where pcategory = $1 order by pname", [id]);
+				  		query2 = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, pcategory as parent, pimage_filename as image from products where pcategory = $1 order by pname", [id]);
 				  		break; 
 				  	case "price":
-				  		query2 = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, pimage_filename as image from products where pcategory = $1 order by pinstant_price", [id]);
+				  		query2 = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, pcategory as parent, pimage_filename as image from products where pcategory = $1 order by pinstant_price", [id]);
 				  		break;
 				  	case "brand":
-				  		query2 = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, pimage_filename as image from products where pcategory = $1 order by pbrand", [id]);
+				  		query2 = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, pcategory as parent, pimage_filename as image from products where pcategory = $1 order by pbrand", [id]);
 				  		break;
 				  	default:
-				  		query2 = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, pimage_filename as image from products where pcategory = $1", [id]);
+				  		query2 = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, pcategory as parent, pimage_filename as image from products where pcategory = $1", [id]);
 				};
 				query2.on("row", function (row, result) {
 			    	result.addRow(row);
@@ -375,13 +376,13 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 					}
 					else {
 						console.log("row count: " + result.rowCount);
-						var response = {"products" : result.rows, "parent" : categoryList[target], "childType" : theType};
+						var response = {"products" : result.rows, "type" : theType, "parent" : "Parent Category"};
 						res.json(response);
+						client.end();
 					}
 				});
 			}
 		});
-		client.end();
 	}
 });
 

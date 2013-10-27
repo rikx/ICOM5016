@@ -136,28 +136,27 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 		contentType: "application/json",
 		//dataType:"json",
 		success : function(data, textStatus, jqXHR){
-			$("#browseTitle").html(data.parent.name);
-			var childrenList;
+			$("#browseTitle").html(data.parent);
 			var list = $("#browse-list");
 			list.empty();
 			$("#sortTypes").html('');
 
-			//when childrenList contains sub-categories
-			if (data.childType == true){
-				childrenList = data.children;
+			//when data contains sub-categories
+			if (data.type == true){
+				var categoriesList = data.categories;
 				var category;
-				for (var i=0; i < childrenList.length; ++i){
-					category = childrenList[i];		
+				for (var i=0; i < categoriesList.length; ++i){
+					category = categoriesList[i];		
 					list.append("<li><a onclick=GetSubCategory("+category.id+")><h2>"+category.name+"</h2></a></li>");	
 				}
 			}
-			//when childrenList contains products
+			//when data contains products
 			else {
-				childrenList = data.products;
+				var productsList = data.products;
 				var product;
 				$("#sortTypes").html('<button onclick=sortByType("name")>SortByName</button><button onclick=sortByType("brand")>SortByBrand</button><button onclick=sortByType("price")>SortByPrice</button>');
-				for (var i=0; i < childrenList.length; ++i){
-					product = childrenList[i];
+				for (var i=0; i < productsList.length; ++i){
+					product = productsList[i];
 					//<li><img src="http://3.bp.blogspot.com/-nU8O8xLuSvs/TdjWsU3X2DI/AAAAAAAAAIs/Lsa3Y92DGy0/s320/112.jpg" /></li>	
 					list.append('<li><a onclick=GetProduct('+product.id+')><h2>'+product.name+'</h2>'+
 					'<p><img src="'+product.image+'"" /></p>'+ 
