@@ -162,6 +162,29 @@ app.get('/Server-Master/home/:id', function(req, res) {
   			res.json(response);	
   		}	
 	}
+//  PHASE 2
+/*    else {
+	    var client = new pg.Client(dbConnInfo);
+		client.connect();
+
+		var query = client.query("SELECT cid as id, cname as name from categories where id = $1", [id]);
+		
+		query.on("row", function (row, result) {
+	    	result.addRow(row);
+		});
+		query.on("end", function (result) {
+	    	if(result.rowCount == 0){
+	    		res.statusCode = 404;
+	    		res.send("Category not found.");
+	    	}
+	    	else {
+				var response = {"category" : result.rows};
+				console.log("row count: " + result.rowCount);
+				client.end();
+	    		res.json(response);
+	    	}
+	 	});
+    }*/
 });
 
 // REST Operation - HTTP PUT to updated a category based on its id
@@ -257,10 +280,10 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 		res.send("Category not found.");
 	}
 	else {
-		var theChildren = new Array();
+		var theType = true; // if remains true at end content of response is subcategories
+//      PHASE 1 CODE
+/*		var theChildren = new Array();
 		var target = -1;
-		var theType = true; //content of theChildren are subcategories
-
 		for (var i=0; i < categoryList.length; ++i){
 			if (categoryList[i].id == id){
 				console.log("GET subcategories of category " + id);
@@ -274,8 +297,7 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 			res.statusCode = 404;
 			res.send("Parent category not found.");			
 		}
-//      PHASE 1 CODE	
-/*		else {
+		else {
 			if (theChildren.length <1){
 				theType = false; //content of theChildren are products
 				
@@ -305,50 +327,61 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 					}
 				}
 						
-			}
+			var}
 			var response = {"children" : theChildren, "parent" : categoryList[target], "childType" : theType};
 			//console.log("History is: " + urlHistory);
 			res.json(response);
 		}*/
 
 //      PHASE 2 CODE
-        else {
-        	if (theChildren.length != 0) {
-        		var response = {"children" : theChildren, "parent" : categoryList[target], "childType" : theType};
+		var client = new pg.Client(dbConnInfo);
+		client.connect();
+
+		var query = client.query("SELECT cid as id, cname as name from categories where cparent = ", [id]);
+		query.on("row", function (row, result) {
+	    	result.addRow(row);
+		});
+		query.on("end", function (result) {
+			if(result.rowCount == 0){
+				console.log("row count: " + result.rowCount);
+				var response = {"children" : result.rows, "parent" : categoryList[target], "childType" : theType};
 				res.json(response);
-        	}
+			}
 			else {
 				theType = false; //content of theChildren are products
 				console.log("GET products of category " +id+ ", sorted by " + SortType);
 
-				var client = new pg.Client(dbConnInfo);
-				client.connect();
-
-				var query;
+				var query2;
 				switch(SortType) {
 					case "name":
-				  		query = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, pimage_filename as image from products where pcategory = $1 order by pname", [id]);
+				  		query2 = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, pimage_filename as image from products where pcategory = $1 order by pname", [id]);
 				  		break; 
 				  	case "price":
-				  		query = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, pimage_filename as image from products where pcategory = $1 order by pinstant_price", [id]);
+				  		query2 = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, pimage_filename as image from products where pcategory = $1 order by pinstant_price", [id]);
 				  		break;
 				  	case "brand":
-				  		query = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, pimage_filename as image from products where pcategory = $1 order by pbrand", [id]);
+				  		query2 = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, pimage_filename as image from products where pcategory = $1 order by pbrand", [id]);
 				  		break;
 				  	default:
-				  		query = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, pimage_filename as image from products where pcategory = $1", [id]);
+				  		query2 = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, pimage_filename as image from products where pcategory = $1", [id]);
 				};
-				query.on("row", function (row, result) {
+				query2.on("row", function (row, result) {
 			    	result.addRow(row);
 				});
-				query.on("end", function (result) {
-					console.log("row count: " + result.rowCount);
-					var response = {"products" : result.rows, "parent" : categoryList[target], "childType" : theType};
-					client.end();
-					res.json(response);
+				query2.on("end", function (result) {
+					if(result.rowCount == 0){
+						res.statusCode = 404;
+						res.send("Parent category not found.");	
+					}
+					else {
+						console.log("row count: " + result.rowCount);
+						var response = {"products" : result.rows, "parent" : categoryList[target], "childType" : theType};
+						res.json(response);
+					}
 				});
 			}
-        }  
+		});
+		client.end();
 	}
 });
 
@@ -503,7 +536,7 @@ app.get('/Server-Master/product/:id', function(req, res) {
 		var client = new pg.Client(dbConnInfo);
 		client.connect();
 
-		var query = client.query("SELECT pid as id, pname as name, pimage_filename as image, pinstant_price as instant_price, pbrand as brand, pmodel as model, pdescription as description, pdimensions as dimensions from products where pid = $1", [id]);
+		var query = client.query("SELECT pid as id, pname as name, pimage_filename as image, pinstant_price as instant_price, pbrand as brand, pmodel as model, pdescription as description, pdimensions as dimensions from products where id = $1", [id]);
 		
 		query.on("row", function (row, result) {
 	    	result.addRow(row);
