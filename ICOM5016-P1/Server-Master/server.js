@@ -335,7 +335,7 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 		client.connect();
 
 		// Query Code for getting subqueries
-		var query = client.query("SELECT cid as id, cname as name, cparent as parent from categories where cparent = $1", [id]);
+		var query = client.query("SELECT c1.cid as id, c1.cname as name, c1.cparent as parent, parent_name from categories as c1, (SELECT cid, cname as parent_name from categories where cid = $1) AS c2 where cparent = $2 and cparent = c2.cid", [id, id]);
 		query.on("row", function (row, result) {
 	    	result.addRow(row);
 		});
@@ -343,7 +343,7 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 			if(result.rowCount > 0){
 				console.log("GET subcategories of " + id + " Sorted By: " + SortType);
 				console.log("row count: " + result.rowCount);
-				var response = {"categories" : result.rows, "type" : theType, "parent" : "Parent Category"};
+				var response = {"categories" : result.rows, "type" : theType, "parent" : result.rows[0].parent_name};
 				res.json(response);
 				client.end();
 			}
@@ -355,16 +355,16 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 				var query2;
 				switch(SortType) {
 					case "name":
-				  		query2 = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, pcategory as parent, pimage_filename as image from products where pcategory = $1 order by pname", [id]);
+				  		query2 = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, cid as parent, pimage_filename as image, cname as parent_name from products natural join categories where cid = $1 order by pname", [id]);
 				  		break; 
 				  	case "price":
-				  		query2 = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, pcategory as parent, pimage_filename as image from products where pcategory = $1 order by pinstant_price", [id]);
+				  		query2 = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, cid as parent, pimage_filename as image, cname as parent_name from products natural join categories where cid = $1 order by pinstant_price", [id]);
 				  		break;
 				  	case "brand":
-				  		query2 = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, pcategory as parent, pimage_filename as image from products where pcategory = $1 order by pbrand", [id]);
+				  		query2 = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, cid as parent, pimage_filename as image, cname as parent_name from products natural join categories where cid = $1 order by pbrand", [id]);
 				  		break;
 				  	default:
-				  		query2 = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, pcategory as parent, pimage_filename as image from products where pcategory = $1", [id]);
+				  		query2 = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, cid as parent, pimage_filename as image, cname as parent_name from products natural join categories where cid = $1", [id]);
 				};
 				query2.on("row", function (row, result) {
 			    	result.addRow(row);
@@ -376,7 +376,7 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 					}
 					else {
 						console.log("row count: " + result.rowCount);
-						var response = {"products" : result.rows, "type" : theType, "parent" : "Parent Category"};
+						var response = {"products" : result.rows, "type" : theType, "parent" : result.rows[0].parent_name};
 						res.json(response);
 						client.end();
 					}

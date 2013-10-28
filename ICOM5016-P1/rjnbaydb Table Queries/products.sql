@@ -12,8 +12,11 @@ CREATE TABLE products
   pdescription text,
   pimage_filename text,
   pdimensions integer[],
-  pcategory character varying(20),
-  CONSTRAINT "product id" PRIMARY KEY (pid)
+  cid integer NOT NULL,
+  CONSTRAINT "product id" PRIMARY KEY (pid),
+  CONSTRAINT "foreign key cid" FOREIGN KEY (cid)
+      REFERENCES categories (cid) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
   OIDS=FALSE
