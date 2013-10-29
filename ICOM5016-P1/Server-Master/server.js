@@ -343,6 +343,28 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 	    	result.addRow(row);
 		});
 		query.on("end", function (result) {
+			// Query code for getting category hierarchy of current subcategory
+/*			var history = "";
+			var hasParent = true;
+			var newID = id;
+			// While parent category is not null, get category name and add it to history string
+			while(hasParent){
+				var query = client.query("SELECT cname, cparent from categories where cid = $1", [newId]);
+				query.on("row", function (row, result){
+					result.addRow(row);
+				});
+				query.on("end", function (result){
+					if(result.rows[0].cparent == null){
+						hasParent = false;
+					}
+					else {
+						newID = result.rows[0].cparent;
+						history = history + "/" + result.rows[0].cname;
+						console.log("History: " + history);
+					}
+				});
+			}*/
+			// Responds with sub categories of id if they exist
 			if(result.rowCount > 0){
 				console.log("GET subcategories of " + id + " Sorted By: " + SortType);
 				console.log("row count: " + result.rowCount);
