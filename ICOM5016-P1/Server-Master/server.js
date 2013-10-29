@@ -337,13 +337,7 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 		var client = new pg.Client(dbConnInfo);
 		client.connect();
 
-		// Query Code for getting subqueries
-		var query = client.query("SELECT c1.cid as id, c1.cname as name, c1.cparent as parent, parent_name from categories as c1, (SELECT cid, cname as parent_name from categories where cid = $1) AS c2 where cparent = $2 and cparent = c2.cid", [id, id]);
-		query.on("row", function (row, result) {
-	    	result.addRow(row);
-		});
-		query.on("end", function (result) {
-			// Query code for getting category hierarchy of current subcategory
+		// Query code for getting category hierarchy of current subcategory
 /*			var history = "";
 			var hasParent = true;
 			var newID = id;
@@ -363,7 +357,14 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 						console.log("History: " + history);
 					}
 				});
-			}*/
+			}
+*/
+		// Query Code for getting subqueries
+		var query = client.query("SELECT c1.cid as id, c1.cname as name, c1.cparent as parent, parent_name from categories as c1, (SELECT cid, cname as parent_name from categories where cid = $1) AS c2 where cparent = $2 and cparent = c2.cid", [id, id]);
+		query.on("row", function (row, result) {
+	    	result.addRow(row);
+		});
+		query.on("end", function (result) {
 			// Responds with sub categories of id if they exist
 			if(result.rowCount > 0){
 				console.log("GET subcategories of " + id + " Sorted By: " + SortType);
@@ -372,7 +373,7 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 				res.json(response);
 				client.end();
 			}
-			// Query code for getting products
+			// If there are no subcategories, it GETs the products of this subcategory and responds with them
 			else {
 				theType = false; //content of theChildren are products
 				console.log("GET products of category " +id+ ", sorted by " + SortType);
