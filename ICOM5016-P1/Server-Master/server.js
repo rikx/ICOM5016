@@ -107,8 +107,8 @@ var categoryNextId = 42;
 // d) DELETE - Remove an individual object, or collection (Database delete operation)
 
 // REST Operation - HTTP GET to read all categories
-// Modify this so it only gets the categories whose parent == null, and it can be used in conjunction with the browse (children) page.
-// Then this get will be used for the actual home page
+// NOTE: For Phase 2-3, this get will be used for the actual home page that displays deals. 
+// For now, it gets the main categories whose parent == NULL and returns them on the #home page
 app.get('/Server-Master/home', function(req, res) {
 	console.log("GET categories");
 
@@ -144,6 +144,7 @@ app.get('/Server-Master/home/:id', function(req, res) {
 		res.statusCode = 404;
 		res.send("Category not found.");
 	}
+//  PHASE 1 CODE
 	else {
 		var target = -1;
 		for (var i=0; i < categoryList.length; ++i){
@@ -162,7 +163,7 @@ app.get('/Server-Master/home/:id', function(req, res) {
   			res.json(response);	
   		}	
 	}
-//  PHASE 2
+//  PHASE 2 CODE
 /*    else {
 	    var client = new pg.Client(dbConnInfo);
 		client.connect();
@@ -279,6 +280,8 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 	}
 	else {
 		var theType = true; // if remains true at end content of response is subcategories
+
+//		PHASE 1 CODE
 /*		var theChildren = new Array();
 		var target = -1;
 		for (var i=0; i < categoryList.length; ++i){
@@ -415,7 +418,9 @@ app.get('/Server-Master/subCategory/:id', function(req, res) {
 		}
 	}
 
-//  PHASE 2 CODE - Though because of queries, we can simplify the GET of subqueries all into 1 GET from #browse instead of 2 gets from GetSubQuery(id) and # browse
+//  PHASE 2 CODE
+//  NOTE: Because of queries, we can simplify the GET of subqueries all into 1 GET from #browse 
+//  instead of having 2 GETs (one from GetSubQuery(id) and the other that occurs in #browse)
 /*  else {
 		var client = new pg.Client(dbConnInfo);
 		client.connect();
@@ -536,7 +541,9 @@ app.get('/Server-Master/product/:id', function(req, res) {
 /*    else {
 		var client = new pg.Client(dbConnInfo);
 		client.connect();
-
+		
+		// Missing natural join with Auction table so it can query the current Bid price, 
+		// and a natural join with categories will yield the parent category name
 		var query = client.query("SELECT pid as id, pname as name, pimage_filename as image, pinstant_price as instant_price, pbrand as brand, pmodel as model, pdescription as description, pdimensions as dimensions from products where id = $1", [id]);
 		
 		query.on("row", function (row, result) {
@@ -727,6 +734,7 @@ app.get('/Server-Master/search', function(req, res) {
   	var client = new pg.Client(dbConnInfo);
 	client.connect();
 
+	// Missing natural join with Auction table so it can query the current Bid price
 	query = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, pimage_filename as image from products");
 	
 	query.on("row", function (row, result) {
@@ -740,7 +748,6 @@ app.get('/Server-Master/search', function(req, res) {
  	});
 });
 //JUAN SEARCH TESTING END
-// Missing REST operations for posting, updating, and deleting a product.
 
 /*==================================================================*/
 /*								Users								*/
@@ -1117,8 +1124,10 @@ app.get('/Server-Master/admin/:id', function(req, res){
 	var response = {"categoryList": categoryList, "userList" : userList}
 	res.json(response);
 
-/*
-	var shippingAddresses = new Array();
+//  PHASE 2 CODE 
+//  This was left to be used in PHASE 2 since you only had to regurn static data for PHASE 1
+//  This code requires modifications to work with DB queries
+/*	var shippingAddresses = new Array();
 	var paymentTypes = new Array();
 	var ratersList = new Array();
 	var productsSale = new Array();
@@ -1165,7 +1174,8 @@ app.get('/Server-Master/admin/:id', function(req, res){
 							"ratingsList" : ratersList, "sellingProducts" : productsSale};
   			res.json(response);	
   		}	
-	}*/
+	}
+*/
 });
 
 // REST Operation - HTTP GET to read report based on reportType
@@ -1313,7 +1323,8 @@ app.put('/Server-Master/account/:id', function(req, res) {
 		// not found
 		res.statusCode = 404;
 		res.send("User not found.");
-	}//Future Work: Take into consideration changing username and password in Phase 2
+	}
+	//Future Work: Take into consideration the being able to change username and password in Phase 2
 	else if(!req.body.hasOwnProperty('firstname') || !req.body.hasOwnProperty('lastname') ||
 		    !req.body.hasOwnProperty('email')){
     	res.statusCode = 400;
