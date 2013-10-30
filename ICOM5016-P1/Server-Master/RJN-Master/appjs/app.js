@@ -141,6 +141,12 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 			list.empty();
 			$("#sortTypes").html('');
 
+			//shows history breadcrumb
+/*			for (var i = 0; i < data.historyIDs.length; i++){
+				var names = data.historyNames;
+				var ids = data.historyIDs;
+				$('#breadcrumb-history').append('<a onclick="GetSubCategory('+ids[i].id+""+[i]'">'+names[i].name+""+[i]+'</a>');
+			}*/
 			//when data contains sub-categories
 			if (data.type == true){
 				var categoriesList = data.categories;

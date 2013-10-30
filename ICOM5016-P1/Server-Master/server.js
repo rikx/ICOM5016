@@ -338,26 +338,30 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 		client.connect();
 
 		// Query code for getting category hierarchy of current subcategory
-/*			var history = "";
-			var hasParent = true;
-			var newID = id;
-			// While parent category is not null, get category name and add it to history string
-			while(hasParent){
-				var query = client.query("SELECT cname, cparent from categories where cid = $1", [newId]);
-				query.on("row", function (row, result){
-					result.addRow(row);
-				});
-				query.on("end", function (result){
-					if(result.rows[0].cparent == null){
-						hasParent = false;
-					}
-					else {
-						newID = result.rows[0].cparent;
-						history = history + "/" + result.rows[0].cname;
-						console.log("History: " + history);
-					}
-				});
-			}
+/*		var historyNames = {};
+		var historyIDs = {"id0" : id};
+		var hasParent = true;
+		var newID = id;
+		// While parent category is not null, get category name and add it to history string
+		while(hasParent){
+			var count = 0;
+			var query = client.query("SELECT cname, cparent from categories where cid = $1", [newId]);
+			query.on("row", function (row, result){
+				result.addRow(row);
+			});
+			query.on("end", function (result){
+				if(result.rows[0].cparent == null){
+					hasParent = false;
+				}
+				else {
+					newID = result.rows[0].cparent;
+					historyNames.name+""+count = result.rows[0].cname;
+					count++; 
+					historyIDs.id+""+count = result.rows[0].cparent; 
+					console.log("History: " + historyNames);
+				}
+			});
+		}
 */
 		// Query Code for getting subqueries
 		var query = client.query("SELECT c1.cid as id, c1.cname as name, c1.cparent as parent, parent_name from categories as c1, (SELECT cid, cname as parent_name from categories where cid = $1) AS c2 where cparent = $2 and cparent = c2.cid", [id, id]);
@@ -370,6 +374,7 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 				console.log("GET subcategories of " + id + " Sorted By: " + SortType);
 				console.log("row count: " + result.rowCount);
 				var response = {"categories" : result.rows, "type" : theType, "parent" : result.rows[0].parent_name};
+				//, "historyNames" : historyNames, "historyIDs" : historyIDs};
 				res.json(response);
 				client.end();
 			}
@@ -403,6 +408,7 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 					else {
 						console.log("row count: " + result.rowCount);
 						var response = {"products" : result.rows, "type" : theType, "parent" : result.rows[0].parent_name};
+						//, "historyNames" : historyNames, "historyIDs" : historyIDs};
 						res.json(response);
 						client.end();
 					}
