@@ -126,15 +126,28 @@ app.get('/Server-Master/home', function(req, res) {
     	result.addRow(row);
 	});
 	query.on("end", function (result) {
-		var response = {"categories" : result.rows};
-		console.log("row count: " + result.rowCount);
-		client.end();
-  		res.json(response);
+		// Do we want this msg? 
+		if(result.rowCount == 0){
+			res.statusCode = 404;
+    		res.send("No categories not found.");
+		}
+		else{
+			var response;
+			if(result.rowCount > 1){
+				response = {"categories" : result.rows};
+			}
+	  		else {
+	  			response = {"categories" : result.rows[0]};
+	  		}
+  			console.log("row count: " + result.rowCount);
+	  		res.json(response);
+	  	}
+	  	client.end();
  	});
 });
 
 
-// REST Operation - HTTP GET to read a category based on its id
+// REST Operation - HTTP GET to read a category based on its id to load edit category page info
 app.get('/Server-Master/home/:id', function(req, res) {
 	var id = req.params.id;
 	console.log("GET category: " + id);
@@ -429,7 +442,7 @@ app.get('/Server-Master/subCategory/:id', function(req, res) {
 		res.statusCode = 404;
 		res.send("Category not found.");
 	}
-	else {
+/*	else {
 		var target = -1;
 		for (var i=0; i < categoryList.length; ++i){
 			if (categoryList[i].id == id){
@@ -445,12 +458,12 @@ app.get('/Server-Master/subCategory/:id', function(req, res) {
 			console.log("Parent category: " + categoryList[target].parent); //For testing purposes only
   			res.json(response);
 		}
-	}
+	}*/
 
 //  PHASE 2 CODE
 //  NOTE: Because of queries, we can simplify the GET of subqueries all into 1 GET from #browse 
 //  instead of having 2 GETs (one from GetSubQuery(id) and the other that occurs in #browse)
-/*  else {
+  else {
 		var client = new pg.Client(dbConnInfo);
 		client.connect();
 
@@ -465,14 +478,14 @@ app.get('/Server-Master/subCategory/:id', function(req, res) {
 				res.send("Category not found.");			
 			}
 			else {
-				var response = {"parent" : result.rows};
+				var response = {"parent" : result.rows[0]};
 				console.log("row count: " + result.rowCount);
-				console.log("Parent category: " + categoryList[target].parent); //For testing purposes only
+				//console.log("Parent category: " + categoryList[target].parent); //For testing purposes only
 				client.end();
 		  		res.json(response);
 	  		}
 	 	});
-	}*/
+	}
 });
 
 /*==================================================================*/
@@ -1148,7 +1161,7 @@ app.post('/Server-Master/home/:userNameLogin', function(req, res) {
 app.get('/Server-Master/admin/:id', function(req, res){
 	var id = req.params.id;
 	console.log("GET admin account: " + id);
-
+//  PHASE 1 CODE
 	var response = {"categoryList": categoryList, "userList" : userList}
 	res.json(response);
 
