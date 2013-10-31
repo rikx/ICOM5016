@@ -548,7 +548,7 @@ app.get('/Server-Master/product/:id', function(req, res) {
 		res.send("Product not found.");
 	}
 //	PHASE 1 CODE
-	else {
+/*	else {
 		var target = -1;
 		for (var i=0; i < productList.length; ++i){
 			if (productList[i].id == id){
@@ -564,16 +564,16 @@ app.get('/Server-Master/product/:id', function(req, res) {
 			var response = {"product" : productList[target]};
   			res.json(response);	
   		}	
-	}
+	}*/
 //	PHASE 2 CODE
 
-/*    else {
+    else {
 		var client = new pg.Client(dbConnInfo);
 		client.connect();
 		
 		// Missing natural join with Auction table so it can query the current Bid price, 
 		// and a natural join with categories will yield the parent category name
-		var query = client.query("SELECT pid as id, pname as name, pimage_filename as image, pinstant_price as instant_price, pbrand as brand, pmodel as model, pdescription as description, pdimensions as dimensions from products where id = $1", [id]);
+		var query = client.query("SELECT pid as id, pname as name, pimage_filename as image, pinstant_price as instant_price, pbrand as brand, pmodel as model, pdescription as description, pdimensions as dimensions from products where pid = $1", [id]);
 		
 		query.on("row", function (row, result) {
 	    	result.addRow(row);
@@ -586,11 +586,12 @@ app.get('/Server-Master/product/:id', function(req, res) {
 			else {
 				var response = {"product" : result.rows};
 				console.log("row count: " + result.rowCount);
-				client.end();
+				console.log(result.rows);
 		  		res.json(response);
+		  		client.end();
 		  	}
 	 	});
-    }*/
+    }
 });
 
 // REST Operation - HTTP POST to add a new product
