@@ -701,7 +701,8 @@ app.put('/Server-Master/home/product/:id/bid', function(req, res) {
 app.get('/Server-Master/product/:id/bid-history', function(req, res) {
 	var id = req.params.id;
 	console.log("GET bid history for product id " + id);
-	var bidHistory = new Array();
+//	PHASE 1 CODE - was not working properly, anyways
+/*	var bidHistory = new Array();
 
 	if ((id < 0) || (id >= productNextId)){
 		// not found
@@ -724,7 +725,20 @@ app.get('/Server-Master/product/:id/bid-history', function(req, res) {
 			var response = {"bidHistory" : bidHistory};
   			res.json(response);	
   		}	
-	}
+	}*/
+	var client = new pg.Client(dbConnInfo);
+	client.connect();
+
+	var query = client.query("", [id]);
+	query.on("row", function (row, result) {
+		result.addRow(row);
+	});
+	query.on("end", function (result) {
+		var response = {"bidHistory" : result.rows};
+		console.log("row count: " + result.rowCount);
+		res.json(response);
+		client.end();		
+	});
 });
 
 //JUAN SEARCH TESTING
@@ -742,7 +756,7 @@ app.get('/Server-Master/search', function(req, res) {
 
 	// Missing natural join with Auction table so it can query the current Bid price
 	// Also missing a where ILIKE %search_input% so it can do smart search
-	query = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, pimage_filename as image from products");
+	var query = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, pimage_filename as image from products");
 	
 	query.on("row", function (row, result) {
     	result.addRow(row);
@@ -750,8 +764,8 @@ app.get('/Server-Master/search', function(req, res) {
 	query.on("end", function (result) {
 		var response = {"ListOfProducts" : result.rows};
 		console.log("row count: " + result.rowCount);
+		res.json(response);
 		client.end();
-  		res.json(response);
  	});
 });
 //JUAN SEARCH TESTING END
@@ -792,11 +806,12 @@ for (var i=0; i < shipAddressList.length;++i){
 
 //SHIPADDRESS REST CALLS
 
-// REST Operation - HTTP GET to read an address based on its id
+// REST Operation - HTTP GET to read an address information based on its id
 app.get('/Server-Master/account/address/:id', function(req, res) {
 	var id = req.params.id;
 		console.log("GET shipAddress: " + id);
-	if ((id < 0) || (id >= shipAddressNextId)){
+//	PHASE 1 CODE
+/*	if ((id < 0) || (id >= shipAddressNextId)){
 		// not found
 		res.statusCode = 404;
 		res.send("Address not found.");
@@ -817,7 +832,28 @@ app.get('/Server-Master/account/address/:id', function(req, res) {
 			var response = {"address" : shipAddressList[target]};
   			res.json(response);	
   		}	
-	}
+	}*/
+//  PHASE 2 CODE
+    var client = new pg.Client(dbConnInfo);
+	client.connect();
+
+	var query = client.query("SELECT * from addresses where address_id = $1", [id]);
+	
+	query.on("row", function (row, result) {
+    	result.addRow(row);
+	});
+	query.on("end", function (result) {
+    	if(result.rowCount == 0){
+    		res.statusCode = 404;
+    		res.send("Address information not found.");
+    	}
+    	else {
+			var response = {"address" : result.rows[0]};
+			console.log("row count: " + result.rowCount);
+    		res.json(response);
+    		client.end();
+    	}
+ 	});
 });
 
 // REST Operation - HTTP POST to add a new address
@@ -921,11 +957,12 @@ for (var i=0; i < payTypeList.length;++i){
 
 //PAYMENT REST CALLS
 
-// REST Operation - HTTP GET to read a payment based on its id
+// REST Operation - HTTP GET to read an payment information based on its id
 app.get('/Server-Master/account/payment/:id', function(req, res) {
 	var id = req.params.id;
-		console.log("GET payment: " + id);
-	if ((id < 0) || (id >= paymentNextId)){
+		console.log("GET payment information: " + id);
+//  PHASE 1 CODE
+/*	if ((id < 0) || (id >= paymentNextId)){
 		// not found
 		res.statusCode = 404;
 		res.send("Payment not found.");
@@ -946,7 +983,28 @@ app.get('/Server-Master/account/payment/:id', function(req, res) {
 			var response = {"payment" : payTypeList[target]};
   			res.json(response);	
   		}	
-	}
+	}*/
+//  PHASE 2 CODE
+    var client = new pg.Client(dbConnInfo);
+	client.connect();
+
+	var query = client.query("SELECT * from payment_options where payment_id = $1", [id]);
+	
+	query.on("row", function (row, result) {
+    	result.addRow(row);
+	});
+	query.on("end", function (result) {
+    	if(result.rowCount == 0){
+    		res.statusCode = 404;
+    		res.send("Payment information not found.");
+    	}
+    	else {
+			var response = {"payment" : result.rows[0]};
+			console.log("row count: " + result.rowCount);
+    		res.json(response);
+    		client.end();
+    	}
+ 	});
 });
 
 // REST Operation - HTTP POST to add a new payment
@@ -1126,65 +1184,57 @@ app.post('/Server-Master/home/:userNameLogin', function(req, res) {
 // REST Operation - HTTP GET to read a admin account based on its id
 app.get('/Server-Master/admin/:id', function(req, res){
 	var id = req.params.id;
-	console.log("GET admin account: " + id);
 //  PHASE 1 CODE
-	var response = {"categoryList": categoryList, "userList" : userList}
-	res.json(response);
+/*	var response = {"categoryList": categoryList, "userList" : userList}
+	res.json(response);*/
 
 //  PHASE 2 CODE 
-//  This was left to be used in PHASE 2 since you only had to regurn static data for PHASE 1
-//  This code requires modifications to work with DB queries
-/*	var shippingAddresses = new Array();
-	var paymentTypes = new Array();
-	var ratersList = new Array();
-	var productsSale = new Array();
+	var client = new pg.Client(dbConnInfo);
+	client.connect();
 
-	if ((id < 0) || (id >= userNextId)){
-		// not found
-		res.statusCode = 404;
-		res.send("Admin not found.");
-	}
-	else {
-		var maxLength = Math.max(shipAddressList.length, payTypeList.length, ratingsList.length, productList.length); 
-		var target = -1;
-		for (var i=0; i < userList.length; ++i){
-			//if user is found,
-			if (userList[i].id == id){
-				target = i;
-				for(var x=0; x < maxLength; ++x){
-					//return his shipping addresses
-					if(x < shipAddressList.length && userList[i].id == shipAddressList[x].userId){
-						shippingAddresses.push(shipAddressList[x]);
-					}
-					//return his payment types
-					if(x < payTypeList.length && userList[i].id == payTypeList[x].userId){
-						paymentTypes.push(payTypeList[x]);
-					}
-					//return his ratings
-					if(x < ratingsList.length && userList[i].id == ratingsList[x].sellerId){
-						ratersList.push(ratingsList[x]);
-					}
-					//return his products on sale
-					if(x < productList.length && userList[i].id == productList[x].sellerId){
-						productsSale.push(productList[x]);
-					}
-				}
-				break;	
-			}
-		}
-		if (target == -1){
+	//variables for data to be returned
+	var query, adminInfo, categories, users; 
+
+	query = client.query("SELECT * from accounts where account_id = $1", [id]);
+	query.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query.on("end", function (result){
+		if(result.rowCount == 0){
+			// not found
 			res.statusCode = 404;
-			res.send("User not found.");
+			res.send("Admin not found.");
+			client.end();
 		}
 		else {
-			var response = {"user" : userList[target], "shippingAddresses" : shippingAddresses, "paymentTypes" : paymentTypes, 
-							"ratingsList" : ratersList, "sellingProducts" : productsSale};
-  			res.json(response);	
-  		}	
-	}
-*/
-});
+			adminInfo = result.rows;
+			console.log("GET admin account: " + id);
+			console.log("row count: " + result.rowCount);
+		}
+	});
 
+	query = client.query("SELECT cid as id, cname as name from categories");
+	query.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query.on("end", function (result){
+		categories = result.rows;
+		console.log("Categories row count: " + result.rowCount);
+	});
+
+	query = client.query("SELECT * from accounts");
+	query.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query.on("end", function (result){
+		users = result.rows;
+		console.log("Categories row count: " + result.rowCount);
+	});
+
+	var response = {"adminInfo" : adminInfo, "categoryList": categories, "userList" : users};
+	client.end();
+	res.json(response);
+});
 // REST Operation - HTTP GET to read report based on reportType
 app.get('/Server-Master/admin/:id/report/:reportType', function(req, res){
 	var reportType = req.params.reportType;
