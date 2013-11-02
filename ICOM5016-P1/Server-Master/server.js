@@ -1143,14 +1143,15 @@ app.post('/Server-Master/register', function(req, res) {
 });
 
 // REST Operation - HTTP POST to login user
-app.post('/Server-Master/home/:userNameLogin', function(req, res) {
-	console.log("POST login attempt: " + req.params.userNameLogin);
+app.post('/Server-Master/home/:username', function(req, res) {
+	console.log("POST login attempt: " + req.params.username);
 
   	if(!req.body.hasOwnProperty('username') || !req.body.hasOwnProperty('password') ) {
     	res.statusCode = 400;
     	return res.send('Error: Missing fields for user login.');
   	}
-  	else {
+//  PHASE 1 CODE
+/*  	else {
   		var userName = req.body.username;
   		var passWord = req.body.password;
   		var target = -1; 
@@ -1178,6 +1179,41 @@ app.post('/Server-Master/home/:userNameLogin', function(req, res) {
 			var response = {"user" : userList[target]};
 			res.json(response);	
 		}	 	
+	}*/
+//	PHASE 2 CODE
+	else {
+		var userName = req.body.username;
+  		var passWord = req.body.password;
+  		var foundUser, foundPassword = false;
+
+  		var client = new pg.Client(dbConnInfo);
+  		client.connect();
+
+  		var query = client.query("SELECT * from accounts where username = $1", [userName]);
+  		query.on("row", function (row, result){
+  			result.addRow(row);
+  		});
+  		query.on("end", function (result){
+  			if(result.rowCount == 0){
+  				res.statusCode = 404;
+				res.send("User not found.");
+  			}
+  			else {
+  				foundUser = true;
+  				var theUser = result.rows[0];
+  				if(passWord == theUser.password){
+  					//Future work: create global userCount variable and add userCount++ here to see how many users are currently logged in
+					console.log("Succesful login of user id: " + theUser.account_id + " of type: " + theUser.permission);
+					var response = {"user" : theUser};
+					res.json(response);	
+  				}
+				else {
+					res.statusCode = 409;
+					res.send("Username exists but entered password does not match");
+				}
+			}
+			client.end();
+  		});
 	}
 });
 

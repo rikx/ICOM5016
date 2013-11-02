@@ -299,7 +299,7 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 	$('#bought-history').hide();
 	$('#sell-history').hide();
 	$.ajax({
-		url : "http://localhost:3412/Server-Master/account/" + currentUser.id,
+		url : "http://localhost:3412/Server-Master/account/" + currentUser.account_id,
 		method: 'get',
 		contentType: "application/json",
 		dataType:"json",
@@ -311,8 +311,8 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 			//Populate user information list
 			var infoList = $("#user-info");
 			infoList.empty();
-			infoList.append('<li><img src="http://images3.wikia.nocookie.net/__cb20120320232553/glee/images/thumb/9/90/Neutral-feel-like-a-sir-clean-l.png/1280px-Neutral-feel-like-a-sir-clean-l.png" /></li><li><strong>Account ID: </strong>' + user.id + '</li></li>'+
-				'<li><strong>First Name: </strong>' + user.firstname + '</li></li><li><strong>Last Name: </strong>' + user.lastname + 
+			infoList.append('<li><img src=""'+user.photo_filename+' /></li><li><strong>Account ID: </strong>' + user.account_id + '</li></li>'+
+				'<li><strong>First Name: </strong>' + user.first_name + '</li></li><li><strong>Last Name: </strong>' + user.last_name + 
 				'</li></li><li><strong>Email: </strong>' + user.email + '</li>'	
 			);
 			infoList.listview("refresh");
@@ -916,7 +916,7 @@ function DeleteCategory(){
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //initial value is set to null for when noone is logged in
-var currentUser = {"id": null}; //-- ??
+var currentUser = {"account_id": null}; //-- ??
 /*var currentPaymentTypes = {}; //-- ??
 var currentRatingsList = {};
 var currentProductsSelling = {};
@@ -962,59 +962,20 @@ function LogIn(){
 }
 
 //--------------- GET USER ACCOUNT + PRIVILEGES(in the future). If user is user it loads user account; if admin, loads admin controls page ---------------//
-function GetUserAccount(){
+function GetAccount(){
 	$.mobile.loading("show");
-	if(currentUser.id == null){
+	if(currentUser.account_id == null){
 		$.mobile.loading("hide");
 		$.mobile.navigate("#login");
 	}
-	else if (currentUser.type == "admin"){
+	else if (currentUser.permission){
 		$.mobile.navigate("#admin");
 	}
 	else {
 		$.mobile.navigate("#account");
 	}
 }
-/*function GetUserAccount(){
-	$.mobile.loading("show");
-	if(currentUser.id == null){
-		$.mobile.navigate("#login");
-	}
-	else{
-		$.ajax({
-			url : "http://localhost:3412/Server-Master/account/" + currentUser.id,
-			method: 'get',
-			contentType: "application/json",
-			dataType:"json",
-			success : function(data, textStatus, jqXHR){
-				currentUser = data.user;
-				currentPaymentTypes = data.paymentTypes;
-				currentRatingsList = data.ratingsList;
-				currentProductsSelling = data.sellingProducts;
-				$.mobile.loading("hide");
-				if(currentUser.type == "user"){
-					$.mobile.navigate("#user-account");
-				}
-				else if(currentUser.type == "admin"){
-					$.mobile.navigate("#admin-account");
-				}
-				else {
-					$.mobile.navigate("#login");
-				}
-			},
-			error: function(data, textStatus, jqXHR){
-				console.log("textStatus: " + textStatus);
-				$.mobile.loading("hide");
-				if (data.status == 404){
-					alert("User not found.");
-				}
-				else {
-					alert("Internal Server Error.");
-				}
-			}
-		});
-	}
-}*/
+
 // GET SELLER RATING PAGE
 function GetSellerProfile(id){
 	$.mobile.loading("show");
