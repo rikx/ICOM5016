@@ -311,7 +311,7 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 			//Populate user information list
 			var infoList = $("#user-info");
 			infoList.empty();
-			infoList.append('<li><img src=""'+user.photo_filename+' /></li><li><strong>Account ID: </strong>' + user.account_id + '</li></li>'+
+			infoList.append('<li><img src="'+user.photo_filename+'" /></li><li><strong>Account ID: </strong>' + user.account_id + '</li></li>'+
 				'<li><strong>First Name: </strong>' + user.first_name + '</li></li><li><strong>Last Name: </strong>' + user.last_name + 
 				'</li></li><li><strong>Email: </strong>' + user.email + '</li>'	
 			);
@@ -445,11 +445,14 @@ function ConvertToStars(rating){
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 $(document).on('pagebeforeshow', "#update-account", function(event, ui){
+//  PHASE 1 CODE
 	$("#acc-fname").val(currentUser.firstname);
 	$("#acc-lname").val(currentUser.lastname);
 	$("#acc-email").val(currentUser.email);
 	$("#acc-shipaddress").val(currentUser.shipAddress);
 	//not finished - missing the logic for changing password
+//  PHASE 2 CODE
+
 });
 
 //User helper functions
