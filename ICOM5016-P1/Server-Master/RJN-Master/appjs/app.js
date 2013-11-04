@@ -163,12 +163,11 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 				$("#sortTypes").html('<button onclick=sortByType("name")>SortByName</button><button onclick=sortByType("brand")>SortByBrand</button><button onclick=sortByType("price")>SortByPrice</button>');
 				for (var i=0; i < productsList.length; ++i){
 					product = productsList[i];
-					//<li><img src="http://3.bp.blogspot.com/-nU8O8xLuSvs/TdjWsU3X2DI/AAAAAAAAAIs/Lsa3Y92DGy0/s320/112.jpg" /></li>	
-					list.append('<li><a onclick=GetProduct('+product.id+')><h2>'+product.name+'</h2>'+
-					'<p><img src="'+product.image+'"" /></p>'+ 
-					//USE THIS LATER WHEN WE HAVE AUCTION TABLES SET UP TO GET THIS VALUE: '<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(child.bidPrice) + '</h4></p>'+
+					list.append('<li><a onclick=GetProduct('+product.product_id+')><h2>'+product.name+'</h2>'+
+					'<p><img src="'+product.image_filename+'"" /></p>'+ 
+					'<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(product.current_bid) + '</h4></p>'+
 					'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(product.instant_price) + '</h4></p></a>'+
-					'<a onclick=EditProduct('+product.id+') data-icon="gear">Edit</a></li>');	
+					'<a onclick=EditProduct('+product.product_id+') data-icon="gear">Edit</a></li>');	
 				}
 			}
 			list.listview("refresh");	
@@ -707,19 +706,19 @@ $(document).on('pagebeforeshow', "#product-view", function( event, ui ) {
 	// currentProduct has been set at this point
 	var product = currentProduct;
 	$("#productTitle").html(product.name);
-	//$('#seller-details').attr("onclick", "GetSellerProfile("+product.sellerId+")");
-	$('#bidButton').attr("onclick", "PlaceBid("+product.id+")");
-	//$("#showBidPrice").html(accounting.formatMoney(product.bidPrice));
-	//$("#numOfBids").html('<a href="#bidhistory">'+product.numBids+'</a>');
+	$('#seller-details').attr("onclick", "GetSellerProfile("+product.seller_id+")");
+	$('#bidButton').attr("onclick", "PlaceBid("+product.product_id+")");
+	$("#showBidPrice").html(accounting.formatMoney(product.current_bid));
+	$("#numOfBids").html('<a href="#bidhistory">'+currentProduct.num_of_bids+'</a>');
 	$("#showBuyoutPrice").html(accounting.formatMoney(product.instant_price));
 	var list = $("#prod-details");
 	list.empty();
-	list.append('<li><img src="'+product.image+'"" /></li>'+
-	'<li><strong>Product ID: </strong>' + product.id + '</li></li><li><strong>Brand: </strong>' + product.brand + '</li></li>'+
-	'<li><strong>Model: </strong>' + product.model + '</li></li><li><strong>Description: </strong>' + product.description + '</li>'//+
-	//'<li><strong>Dimensions: </strong>'+product.dimensions+'</li>'
+	list.append('<li><img src="'+product.image_filename+'"" /></li>'+
+	'<li><strong>Product ID: </strong>' + product.product_id + '</li></li><li><strong>Brand: </strong>' + product.brand + '</li></li>'+
+	'<li><strong>Model: </strong>' + product.model + '</li></li><li><strong>Description: </strong>' + product.description + '</li>'+
+	'<li><strong>Dimensions: </strong>'+product.dimensions[0]+' cm x '+product.dimensions[1] +' cm x '+product.dimensions[2]+'cm </li>'
 	);
-	list.listview("refresh");	
+	list.listview("refresh");
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -728,7 +727,7 @@ $(document).on('pagebeforeshow', "#product-view", function( event, ui ) {
 
 $(document).on('pagebeforeshow', '#bidhistory', function( event, ui ){
 	$.ajax({
-		url : "http://localhost:3412/Server-Master/product/" + currentProduct.id + "/bid-history",
+		url : "http://localhost:3412/Server-Master/product/" + currentProduct.product_id + "/bid-history",
 		method: 'get',
 		contentType: "application/json",
 		dataType:"json",
@@ -739,7 +738,7 @@ $(document).on('pagebeforeshow', '#bidhistory', function( event, ui ){
 			var list = $('#bidhistory-list');
 			list.empty();
 			for(var i=0; i < bidHistory.length; ++i){
-				list.append('<li><strong>Bidder id: </strong>'+bidHistory.bidderId+' <strong>bid</strong> '+bidHistory.bidPrice+'</li>');
+				list.append('<li><strong>Bidder id: </strong>'+bidHistory.bidder_id+' <strong>bid</strong> '+bidHistory.bid_price+'</li>');
 			}
 			list.listview('refresh');
 		},
@@ -1345,6 +1344,7 @@ function GetProduct(id){
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
 			currentProduct = data.product;
+			alert("My product: " + currentProduct.name);
 			$.mobile.loading("hide");
 			$.mobile.navigate("#product-view");
 		},

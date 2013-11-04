@@ -128,6 +128,7 @@ app.get('/Server-Master/home', function(req, res) {
 	query.on("end", function (result) {
 		// Do we want this msg? 
 		if(result.rowCount == 0){
+			client.end();
 			res.statusCode = 404;
     		res.send("No categories not found.");
 		}
@@ -140,9 +141,9 @@ app.get('/Server-Master/home', function(req, res) {
 	  			response = {"categories" : result.rows[0]};
 	  		}
   			console.log("row count: " + result.rowCount);
+  			client.end();
 	  		res.json(response);
 	  	}
-	  	client.end();
  	});
 });
 
@@ -359,8 +360,8 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 			console.log("GET subcategories of " + id + " Sorted By: " + SortType);
 			console.log("row count: " + result.rowCount);
 			var response = {"categories" : result.rows, "type" : theType, "parent" : result.rows[0].parent_name};
-			res.json(response);
 			client.end();
+			res.json(response);
 		}
 		// If there are no subcategories, it GETs the products of this subcategory and responds with them
 		else {
@@ -370,30 +371,31 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 			var query2;
 			switch(SortType) {
 				case "name":
-			  		query2 = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, cid as parent, pimage_filename as image, cname as parent_name from products natural join categories where cid = $1 order by pname", [id]);
+			  		query2 = client.query("SELECT product_id, name, instant_price, cid as parent, image_filename, cname as parent_name, current_bid from products natural join categories natural join auctions where cid = $1 order by name", [id]);
 			  		break; 
 			  	case "price":
-			  		query2 = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, cid as parent, pimage_filename as image, cname as parent_name from products natural join categories where cid = $1 order by pinstant_price", [id]);
+			  		query2 = client.query("SELECT product_id, name, instant_price, cid as parent, image_filename, cname as parent_name, current_bid from products natural join categories natural join auctions where cid = $1 order by instant_price", [id]);
 			  		break;
 			  	case "brand":
-			  		query2 = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, cid as parent, pimage_filename as image, cname as parent_name from products natural join categories where cid = $1 order by pbrand", [id]);
+			  		query2 = client.query("SELECT product_id, name, instant_price, cid as parent, image_filename, cname as parent_name, current_bid from products natural join categories natural join auctions where cid = $1 order by brand", [id]);
 			  		break;
 			  	default:
-			  		query2 = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, cid as parent, pimage_filename as image, cname as parent_name from products natural join categories where cid = $1", [id]);
+			  		query2 = client.query("SELECT product_id, name, instant_price, cid as parent, image_filename, cname as parent_name, current_bid from products natural join categories natural join auctions where cid = $1", [id]);
 			};
 			query2.on("row", function (row, result) {
 		    	result.addRow(row);
 			});
 			query2.on("end", function (result) {
 				if(result.rowCount == 0){
+					client.end();
 					res.statusCode = 404;
 					res.send("Parent category not found.");	
 				}
 				else {
 					console.log("row count: " + result.rowCount);
 					var response = {"products" : result.rows, "type" : theType, "parent" : result.rows[0].parent_name};
-					res.json(response);
 					client.end();
+					res.json(response);
 				}
 			});
 		}
@@ -520,7 +522,6 @@ for (var i=0; i < productBidsList.length;++i){
 // REST Operation - HTTP GET to read a product based on its id
 app.get('/Server-Master/product/:id', function(req, res) {
 	var id = req.params.id;
-		console.log("GET product: " + id);
 //	PHASE 1 CODE
 /*	if ((id < 0) || (id >= productNextId)){
 		// not found
@@ -548,24 +549,25 @@ app.get('/Server-Master/product/:id', function(req, res) {
 	var client = new pg.Client(dbConnInfo);
 	client.connect();
 	
-	// Missing natural join with Auction table so it can query the current Bid price, 
-	// and a natural join with categories will yield the parent category name
-	var query = client.query("SELECT pid as id, pname as name, pimage_filename as image, pinstant_price as instant_price, pbrand as brand, pmodel as model, pdescription as description, pdimensions as dimensions from products where pid = $1", [id]);
+	// Query to get product information. Has natural join with auctions table so it can query the current_bid price, 
+	// and a natural join with count result that yeilds the num_of_bids for the product
+	var query = client.query("SELECT * from products natural join auctions natural join (SELECT auction_id, count(*) as num_of_bids from placed_bids natural join auctions where product_id = $1 group by auction_id) AS bids where product_id = $2", [id, id]);
 	
 	query.on("row", function (row, result) {
     	result.addRow(row);
 	});
 	query.on("end", function (result) {
 		if (result.rowCount == 0){
+			client.end();
 			res.statusCode = 404;
 			res.send("Product not found.");
 		}
 		else {
+			console.log("GET product: " + id);;
 			var response = {"product" : result.rows[0]};
-			console.log("row count: " + result.rowCount);
-			console.log(result.rows);
-	  		res.json(response);
-	  		client.end();
+			console.log("row count: " + result.rowCount); // for debuging purposes
+			client.end();
+			res.json(response);
 	  	}
  	});
 });
@@ -729,15 +731,15 @@ app.get('/Server-Master/product/:id/bid-history', function(req, res) {
 	var client = new pg.Client(dbConnInfo);
 	client.connect();
 
-	var query = client.query("", [id]);
+	var query = client.query("SELECT * from placed_bids natural join auctions where product_id = $1", [id]);
 	query.on("row", function (row, result) {
 		result.addRow(row);
 	});
 	query.on("end", function (result) {
 		var response = {"bidHistory" : result.rows};
 		console.log("row count: " + result.rowCount);
-		res.json(response);
-		client.end();		
+		client.end();
+		res.json(response);		
 	});
 });
 
@@ -756,7 +758,7 @@ app.get('/Server-Master/search', function(req, res) {
 
 	// Missing natural join with Auction table so it can query the current Bid price
 	// Also missing a where ILIKE %search_input% so it can do smart search
-	var query = client.query("SELECT pid as id, pname as name, pinstant_price as instant_price, pimage_filename as image from products");
+	var query = client.query("SELECT product_id, name, instant_price, image_filename from products");
 	
 	query.on("row", function (row, result) {
     	result.addRow(row);
@@ -764,8 +766,8 @@ app.get('/Server-Master/search', function(req, res) {
 	query.on("end", function (result) {
 		var response = {"ListOfProducts" : result.rows};
 		console.log("row count: " + result.rowCount);
-		res.json(response);
 		client.end();
+		res.json(response);
  	});
 });
 //JUAN SEARCH TESTING END
@@ -809,7 +811,6 @@ for (var i=0; i < shipAddressList.length;++i){
 // REST Operation - HTTP GET to read an address information based on its id
 app.get('/Server-Master/account/address/:id', function(req, res) {
 	var id = req.params.id;
-		console.log("GET shipAddress: " + id);
 //	PHASE 1 CODE
 /*	if ((id < 0) || (id >= shipAddressNextId)){
 		// not found
@@ -848,6 +849,7 @@ app.get('/Server-Master/account/address/:id', function(req, res) {
     		res.send("Address information not found.");
     	}
     	else {
+    		console.log("GET shipping address: " + id);
 			var response = {"address" : result.rows[0]};
 			console.log("row count: " + result.rowCount);
     		res.json(response);
@@ -1356,8 +1358,8 @@ app.post('/Server-Master/seller/:id', function(req, res) {
 app.get('/Server-Master/account/:id', function(req, res) {
 	var id = req.params.id;
 	console.log("GET user account: " + id);
-
-	var shippingAddresses = new Array();
+//  PHASE 1 CODE
+/*	var shippingAddresses = new Array();
 	var paymentTypes = new Array();
 	var ratersList = new Array();
 	var productsSale = new Array();
@@ -1404,7 +1406,58 @@ app.get('/Server-Master/account/:id', function(req, res) {
 							"ratingsList" : ratersList, "sellingProducts" : productsSale};
   			res.json(response);	
   		}	
-	}
+	}*/
+//  PHASE 2 CODE
+	var client = new pg.Client(dbConnInfo);
+	client.connect();
+
+	var theUser, theAddresses, thePaymentOptions;
+	//returns user profile information
+	var query = client.query("SELECT * from accounts where account_id = $1", [id]);
+	query.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query.on("end", function (result){
+		if(result.rowCount == 0){
+			client.end();
+			res.statusCode = 404;
+			res.send("User not found.");
+		}
+		else{
+			theUser = result.rows[0];
+		}
+	});
+	//returns user addresses
+	query = client.query("SELECT * from has_address natural join addresses where account_id = $1", [id]);
+	query.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query.on("end", function (result){
+		if(result.rowCount == 0){
+			theAddresses = null;
+		}
+		else {
+			theAddresses = result.rows;
+		}
+	});
+	//returns user payment options 
+	query = client.query("SELECT * from has_payment_option natural join payment_options where account_id = $1", [id]);
+	query.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query.on("end", function (result){
+		if(result.rowCount == 0){
+			thePaymentOptions = null;
+		}
+		else {
+			thePaymentOptions - result.rows;
+		}
+	});
+	client.end();
+	var response = {"user" : theUser, "shippingAddresses" : theAddresses, "paymentTypes" : thePaymentOptions, 
+					//"ratingsList" : ratersList, "sellingProducts" : productsSale
+				};
+	res.json(response);	
 });
 
 // REST Operation - HTTP PUT to updated an account based on its id
