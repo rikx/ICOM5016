@@ -740,11 +740,10 @@ $(document).on('pagebeforeshow', '#bidhistory', function( event, ui ){
 			$('#history-product-name').html(currentProduct.name);
 
 			var bidHistory = data.bidHistory;
-			alert(JSON.stringify(bidHistory));
 			var list = $('#bidhistory-list');
 			list.empty();
 			for(var i=0; i < bidHistory.length; ++i){
-				list.append('<li><strong>Bidder id: </strong>'+bidHistory.bidder_id+' <strong>bid</strong> '+bidHistory[0].accounting.formatMoney(bid_amount)+'</li>');
+				list.append('<li>Bidder id <strong>'+bidHistory[i].bidder_id+'</strong> bid <strong>'+accounting.formatMoney(bidHistory[i].bid_amount)+'</strong></li>');
 			}
 			list.listview('refresh');
 		},

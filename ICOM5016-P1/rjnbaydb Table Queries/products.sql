@@ -4,16 +4,16 @@
 
 CREATE TABLE products
 (
-  pid bigserial NOT NULL,
-  pname character varying(60) NOT NULL,
-  pinstant_price numeric(11,2),
-  pmodel character varying(20),
-  pbrand character varying(15),
-  pdescription text,
-  pimage_filename text,
+  product_id bigint NOT NULL DEFAULT nextval('products_pid_seq'::regclass),
+  name character varying(60) NOT NULL,
+  instant_price numeric(11,2),
+  model character varying(20),
+  brand character varying(15),
+  description text,
+  image_filename text,
   cid integer NOT NULL,
-  pdimensions character(3)[],
-  CONSTRAINT "product id" PRIMARY KEY (pid),
+  dimensions character(3)[],
+  CONSTRAINT "product id" PRIMARY KEY (product_id),
   CONSTRAINT "foreign key cid" FOREIGN KEY (cid)
       REFERENCES categories (cid) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
