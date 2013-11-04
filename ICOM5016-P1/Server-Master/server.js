@@ -368,6 +368,7 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 			theType = false; //content of theChildren are products
 			console.log("GET products of category " +id+ ", sorted by " + SortType);
 
+			//query2 returns sorted list based on SortType
 			var query2;
 			switch(SortType) {
 				case "name":
@@ -432,8 +433,6 @@ app.get('/Server-Master/subCategory/:id', function(req, res) {
 	}*/
 
 //  PHASE 2 CODE
-//  NOTE: Because of queries, we can simplify the GET of subqueries all into 1 GET from #browse 
-//  instead of having 2 GETs (one from GetSubQuery(id) and the other that occurs in #browse)
 	var client = new pg.Client(dbConnInfo);
 	client.connect();
 
@@ -565,6 +564,7 @@ app.get('/Server-Master/product/:id', function(req, res) {
 		else {
 			console.log("GET product: " + id);;
 			var response = {"product" : result.rows[0]};
+			console.log(response);
 			console.log("row count: " + result.rowCount); // for debuging purposes
 			client.end();
 			res.json(response);
@@ -702,7 +702,6 @@ app.put('/Server-Master/home/product/:id/bid', function(req, res) {
 //REST Operation - HTTP GET to read bid history of a product by its id
 app.get('/Server-Master/product/:id/bid-history', function(req, res) {
 	var id = req.params.id;
-	console.log("GET bid history for product id " + id);
 //	PHASE 1 CODE - was not working properly, anyways
 /*	var bidHistory = new Array();
 
@@ -736,8 +735,19 @@ app.get('/Server-Master/product/:id/bid-history', function(req, res) {
 		result.addRow(row);
 	});
 	query.on("end", function (result) {
+		console.log("GET bid history for product id " + id);
 		var response = {"bidHistory" : result.rows};
+/*		if(result.rowCount == 0){
+			response = {"bidHistory": "No bids"};
+		}*/
+/*		if(result.rowCount > 1){
+			response = {"bidHistory" : result.rows};
+		}
+  		else {
+  			response = {"bidHistory" : result.rows[0]};
+  		}*/
 		console.log("row count: " + result.rowCount);
+		console.log(response);
 		client.end();
 		res.json(response);		
 	});
@@ -1240,9 +1250,9 @@ app.get('/Server-Master/admin/:id', function(req, res){
 	query.on("end", function (result){
 		if(result.rowCount == 0){
 			// not found
+			client.end();
 			res.statusCode = 404;
 			res.send("Admin not found.");
-			client.end();
 		}
 		else {
 			adminInfo = result.rows;
@@ -1357,7 +1367,6 @@ app.post('/Server-Master/seller/:id', function(req, res) {
 // REST Operation - HTTP GET to read a user account based on its id
 app.get('/Server-Master/account/:id', function(req, res) {
 	var id = req.params.id;
-	console.log("GET user account: " + id);
 //  PHASE 1 CODE
 /*	var shippingAddresses = new Array();
 	var paymentTypes = new Array();
@@ -1424,6 +1433,7 @@ app.get('/Server-Master/account/:id', function(req, res) {
 			res.send("User not found.");
 		}
 		else{
+			console.log("GET user account: " + id);
 			theUser = result.rows[0];
 		}
 	});
@@ -1450,11 +1460,11 @@ app.get('/Server-Master/account/:id', function(req, res) {
 			thePaymentOptions = null;
 		}
 		else {
-			thePaymentOptions - result.rows;
+			thePaymentOptions = result.rows;
 		}
 	});
 	client.end();
-	var response = {"user" : theUser, "shippingAddresses" : theAddresses, "paymentTypes" : thePaymentOptions, 
+	var response = {"user" : theUser, "shippingAddresses" : theAddresses, "paymentOptions" : thePaymentOptions//, 
 					//"ratingsList" : ratersList, "sellingProducts" : productsSale
 				};
 	res.json(response);	
