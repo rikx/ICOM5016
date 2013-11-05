@@ -21,7 +21,7 @@ var Timer;
 var TotalSeconds;
 
 function CreateTimer(TimerID, Time) {
-	Timer = $('#TimerID');
+	Timer = document.getElementById(TimerID);
 	TotalSeconds = Time;
 
 	UpdateTimer()
@@ -30,7 +30,7 @@ function CreateTimer(TimerID, Time) {
 
 function Tick() {
 	if (TotalSeconds <= 0) {
-		Timer.html("Auction has ended");
+		Timer.innerHTML = "Auction has ended";
 	return;
 	}
 	TotalSeconds -= 1;

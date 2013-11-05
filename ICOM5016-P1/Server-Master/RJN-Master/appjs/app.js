@@ -1349,7 +1349,6 @@ function GetProduct(id){
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
 			currentProduct = data.product;
-			alert("My product: " + currentProduct.name);
 			$.mobile.loading("hide");
 			$.mobile.navigate("#product-view");
 		},
