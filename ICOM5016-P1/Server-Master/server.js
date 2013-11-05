@@ -550,7 +550,7 @@ app.get('/Server-Master/product/:id', function(req, res) {
 	
 	// Query to get product information. Has natural join with auctions table so it can query the current_bid price, 
 	// and a natural join with count result that yeilds the num_of_bids for the product
-	var query = client.query("SELECT * from products natural join auctions natural join (SELECT auction_id, count(*) as num_of_bids from placed_bids natural join auctions where product_id = $1 group by auction_id) AS bids where product_id = $2", [id, id]);
+	var query = client.query("SELECT * from products natural join auctions natural join (select account_id as seller_id, username from accounts) as seller natural join (SELECT auction_id, count(*) as num_of_bids from placed_bids natural join auctions where product_id = $1 group by auction_id) AS bids where product_id = $2", [id, id]);
 	
 	query.on("row", function (row, result) {
     	result.addRow(row);
@@ -564,7 +564,6 @@ app.get('/Server-Master/product/:id', function(req, res) {
 		else {
 			console.log("GET product: " + id);;
 			var response = {"product" : result.rows[0]};
-			console.log(response);
 			console.log("row count: " + result.rowCount); // for debuging purposes
 			client.end();
 			res.json(response);

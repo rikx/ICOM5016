@@ -737,7 +737,9 @@ $(document).on('pagebeforeshow', '#bidhistory', function( event, ui ){
 		contentType: "application/json",
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
-			$('#history-product-name').html(currentProduct.name);
+			var title = $('#history-product-name');
+			title.html(currentProduct.name);
+			title.attr('onclick', 'GetProduct('+currentProduct.product_id+')');
 
 			var bidHistory = data.bidHistory;
 			var list = $('#bidhistory-list');
@@ -751,7 +753,7 @@ $(document).on('pagebeforeshow', '#bidhistory', function( event, ui ){
 			console.log("textStatus: " + textStatus);
 			$.mobile.loading("hide");
 			if (data.status == 404){
-				alert("Product not found.");
+				alert("Bid history for product could not be found.");
 			}
 			else {
 				alert("Internal Server Error.");
