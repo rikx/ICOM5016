@@ -508,9 +508,10 @@ $(document).on('pagebeforeshow', "#seller-profile", function(event, ui){
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
 			$('#seller-ratings-average').empty();
-			var seller = data.sellerDetails;
+			var seller = data.seller;
 			var ratings = data.ratings;
-			var sales = data.sellingProducts;
+			var ratings_percentage = data.ratings_percentage;
+			var sales = data.selling;
 
 			$.mobile.loading("hide");
 			$("#sellerTitle").html(seller.username);
@@ -526,14 +527,14 @@ $(document).on('pagebeforeshow', "#seller-profile", function(event, ui){
 			sellingList.empty();
 
 			//Populate Seller Profile
-			infoList.append('<li>Contact Information: '+seller.email+'</li><li>Description: '+seller.description+'</li>');
+			infoList.append('<li>Contact Information: '+seller.email+'</li><li>Description: To be added later in PHASE 2 </li>'); //+seller.description+'</li>');
 
 			var avgRating = 0;
 			var rCount = 0;
 			for(var i=0; i < maxLength; ++i){
 				//Populate Ratings by User list
 				if(i < ratings.length){
-					ratingsList.append('<li>User of id '+ ratings[i].raterId + ' - '+ ConvertToStars(ratings[i].rating) +'</li>');
+					ratingsList.append('<li>' + ratings[i].username + ' - '+ ConvertToStars(ratings[i].rating) +'</li>');
 					avgRating += ratings[i].rating;
 					rCount++;
 				}

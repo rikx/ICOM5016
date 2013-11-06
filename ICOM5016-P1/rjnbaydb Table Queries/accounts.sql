@@ -10,13 +10,13 @@ CREATE TABLE accounts
   last_name character varying(20) NOT NULL,
   photo_filename text,
   email character varying(30),
-  rating numeric(1,1),
   permission boolean NOT NULL,
   creation_date date,
   primary_address bigint,
   primary_payment bigint,
   username character varying(12) NOT NULL,
   password character varying(30) NOT NULL,
+  description text,
   CONSTRAINT "primary key aid" PRIMARY KEY (account_id),
   CONSTRAINT address_id FOREIGN KEY (primary_address)
       REFERENCES addresses (address_id) MATCH SIMPLE

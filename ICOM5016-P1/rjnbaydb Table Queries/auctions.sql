@@ -8,6 +8,9 @@ CREATE TABLE auctions
   seller_id bigint NOT NULL,
   product_id bigint NOT NULL,
   current_bid numeric(11,2),
+  start_date date,
+  start_time time without time zone,
+  duration time without time zone,
   CONSTRAINT "primary key auction_id" PRIMARY KEY (auction_id),
   CONSTRAINT "foreign key product_id" FOREIGN KEY (product_id)
       REFERENCES products (product_id) MATCH SIMPLE

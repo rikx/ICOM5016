@@ -1302,9 +1302,9 @@ app.get('/Server-Master/admin/:id/report/:reportType', function(req, res){
 // REST Operation - HTTP GET to read a seller profile based on its id
 app.get('/Server-Master/seller/:id', function(req, res) {
 	var id = req.params.id;
-	console.log("GET seller: " + id);
 
-	if ((id < 0) || (id >= userNextId)){
+//  PHASE 1 CODE
+/*	if ((id < 0) || (id >= userNextId)){
 		// not found
 		res.statusCode = 404;
 		res.send("Seller not found.");
@@ -1336,7 +1336,58 @@ app.get('/Server-Master/seller/:id', function(req, res) {
 		}
 		var response = {"sellerDetails": seller, "ratings" : ratersList, "sellingProducts" : sellingProducts};
 		res.json(response);
-	}
+	}*/
+//	PHASE 2 CODE
+	var client = new pg.Client(dbConnInfo);
+	client.connect();
+
+	var sellerInfo, ratings, ratings_percentage, selling_products;
+	var query = client.query("SELECT username, email from accounts where account_id = $1", [id]);
+	query.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query.on("end", function (result){
+		if(result.rowCount == 0){
+			// not found
+			res.statusCode = 404;
+			res.send("Seller not found.");
+		}
+		else {
+			console.log("GET seller: " + id);
+			sellerInfo = result.rows;
+
+			// Query to get ratings for this seller
+			var query2 = client.query("SELECT username, ratings.rating from ratings natural join orders natural join products, accounts where buyer_id = account_id and seller_id = 3", [id]);
+			query2.on("row", function (row, result){
+				result.addRow(row);
+			});
+			query2.on("end", function (result){
+				if(result.rowCount == 0){
+					ratings = "Seller has not been rated.";
+				}
+				else {
+					ratings = result.rows;
+				}	
+			});
+
+		// Query to get % of ratings by rating value
+			var query3 = client.query("SELECT rating, round(100.0*count(*)/num_of_ratings::numeric,2) || '%' from ratings natural join orders natural join products natural join (SELECT count(*) as num_of_ratings from ratings) as r where seller_id = 3 group by rating, num_of_ratings",[id]);
+			query3.on("row", function (row, result){
+				result.addRow(row);
+			});
+			query3.on("end", function (result){
+				if(result.rowCount == 0){
+					ratings_percentage = "Seller has not been rated.";
+				}
+				else {
+					ratings_percentage = result.rows;
+				}
+			});
+			var response = {"seller" : sellerInfo, "ratings_percentage" : ratings_percentage, "ratings" : ratings, "selling" : selling_products};
+			client.end();
+			res.json(response);
+		}
+	})
 });
 
 //REST Operation - HTTP POST to set rating on product sale for a seller by id
