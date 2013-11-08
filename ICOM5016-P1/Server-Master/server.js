@@ -1275,7 +1275,7 @@ app.get('/Server-Master/admin/:id', function(req, res){
 	});
 	query.on("end", function (result){
 		users = result.rows;
-		console.log("Categories row count: " + result.rowCount);
+		console.log("Users row count: " + result.rowCount);
 	});
 
 	var response = {"adminInfo" : adminInfo, "categoryList": categories, "userList" : users};
@@ -1339,10 +1339,10 @@ app.get('/Server-Master/seller/:id', function(req, res) {
 	}*/
 //	PHASE 2 CODE
 	var client = new pg.Client(dbConnInfo);
-	client.connect();
 
 	var sellerInfo, ratings, ratings_percentage, selling_products;
-	var query = client.query("SELECT username, email from accounts where account_id = $1", [id]);
+	var query = client.query("SELECT username, email, description from accounts where account_id = $1", [id]);
+
 	query.on("row", function (row, result){
 		result.addRow(row);
 	});
@@ -1354,40 +1354,44 @@ app.get('/Server-Master/seller/:id', function(req, res) {
 		}
 		else {
 			console.log("GET seller: " + id);
-			sellerInfo = result.rows;
-
-			// Query to get ratings for this seller
-			var query2 = client.query("SELECT username, ratings.rating from ratings natural join orders natural join products, accounts where buyer_id = account_id and seller_id = 3", [id]);
-			query2.on("row", function (row, result){
-				result.addRow(row);
-			});
-			query2.on("end", function (result){
-				if(result.rowCount == 0){
-					ratings = "Seller has not been rated.";
-				}
-				else {
-					ratings = result.rows;
-				}	
-			});
-
-		// Query to get % of ratings by rating value
-			var query3 = client.query("SELECT rating, round(100.0*count(*)/num_of_ratings::numeric,2) || '%' from ratings natural join orders natural join products natural join (SELECT count(*) as num_of_ratings from ratings) as r where seller_id = 3 group by rating, num_of_ratings",[id]);
-			query3.on("row", function (row, result){
-				result.addRow(row);
-			});
-			query3.on("end", function (result){
-				if(result.rowCount == 0){
-					ratings_percentage = "Seller has not been rated.";
-				}
-				else {
-					ratings_percentage = result.rows;
-				}
-			});
-			var response = {"seller" : sellerInfo, "ratings_percentage" : ratings_percentage, "ratings" : ratings, "selling" : selling_products};
-			client.end();
-			res.json(response);
+			sellerInfo = result.rows[0];
 		}
-	})
+	});
+
+    // Query to get ratings for this seller
+	var query2 = client.query("SELECT username, ratings.rating from ratings natural join orders natural join products, accounts where buyer_id = account_id and seller_id = $1", [id]);
+	query2.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query2.on("end", function (result){
+		if(result.rowCount == 0){
+			ratings = "Seller has not been rated.";
+		}
+		else {
+			ratings = result.rows;
+			console.log("ratings good");
+		}	
+	});
+
+	// Query to get % of ratings by rating value
+	var query3 = client.query("SELECT rating, round(100.0*count(*)/num_of_ratings::numeric,2) || '%' from ratings natural join orders natural join products natural join (SELECT count(*) as num_of_ratings from ratings) as r where seller_id = $1 group by rating, num_of_ratings order by rating DESC", [id]);
+	query3.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query3.on("end", function (result){
+		if(result.rowCount == 0){
+			ratings_percentage = "Seller has not been rated.";
+		}
+		else {
+			ratings_percentage = result.rows;
+			console.log("ratings % good");
+		}
+	});
+
+	client.connect();
+	var response = {"seller" : sellerInfo, "ratings" : ratings, "ratings_percentage" : ratings_percentage}; //,"selling" : selling_products};
+	client.end();
+	res.json(response);
 });
 
 //REST Operation - HTTP POST to set rating on product sale for a seller by id
@@ -1470,7 +1474,7 @@ app.get('/Server-Master/account/:id', function(req, res) {
 	var client = new pg.Client(dbConnInfo);
 	client.connect();
 
-	var theUser, theAddresses, thePaymentOptions;
+	var theUser, theAddresses, thePaymentOptions, theRatings, theProducts;
 	//returns user profile information
 	var query = client.query("SELECT * from accounts where account_id = $1", [id]);
 	query.on("row", function (row, result){
@@ -1488,11 +1492,11 @@ app.get('/Server-Master/account/:id', function(req, res) {
 		}
 	});
 	//returns user addresses
-	query = client.query("SELECT * from has_address natural join addresses where account_id = $1", [id]);
-	query.on("row", function (row, result){
+	var query2 = client.query("SELECT * from has_address natural join addresses where account_id = $1", [id]);
+	query2.on("row", function (row, result){
 		result.addRow(row);
 	});
-	query.on("end", function (result){
+	query2.on("end", function (result){
 		if(result.rowCount == 0){
 			theAddresses = null;
 		}
@@ -1500,24 +1504,43 @@ app.get('/Server-Master/account/:id', function(req, res) {
 			theAddresses = result.rows;
 		}
 	});
-	//returns user payment options 
-	query = client.query("SELECT * from has_payment_option natural join payment_options where account_id = $1", [id]);
-	query.on("row", function (row, result){
+	//returns the ratings list for user
+	var query3 = client.query("SELECT username, rating from ratings natural join orders natural join products, accounts where buyer_id = account_id and seller_id = $1",[id]);
+	query3.on('row', function (row, result){
 		result.addRow(row);
 	});
-	query.on("end", function (result){
+	query3.on('end', function (result){
+		theRatings = result.rows;
+		console.log(theRatings);
+	});
+
+	//returns products being sold by user
+	var query4 = client.query("SELECT product_id, name, quantity from products where seller_id = $1",[id]);
+	query4.on('row', function (row, result){
+		result.addRow(row);
+	});
+	query4.on('end', function (result){
+		theProducts = result.rows;
+		console.log(theProducts);
+	});
+
+	//returns user payment options 
+	var query5 = client.query("SELECT * from has_payment_option natural join payment_options natural join addresses where account_id = $1", [id]);
+	query5.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query5.on("end", function (result){
 		if(result.rowCount == 0){
 			thePaymentOptions = null;
 		}
 		else {
 			thePaymentOptions = result.rows;
 		}
+		var response = {"user" : theUser, "shippingAddresses" : theAddresses, "paymentOptions" : thePaymentOptions, 
+				"ratingsList" : theRatings, "sellingProducts" : theProducts};
+		client.end();
+		res.json(response);	
 	});
-	client.end();
-	var response = {"user" : theUser, "shippingAddresses" : theAddresses, "paymentOptions" : thePaymentOptions//, 
-					//"ratingsList" : ratersList, "sellingProducts" : productsSale
-				};
-	res.json(response);	
 });
 
 // REST Operation - HTTP PUT to updated an account based on its id

@@ -319,8 +319,8 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 			infoList.listview("refresh");
 
 			var paymentTypes = data.paymentOptions;
-			/*var ratings = data.ratingsList;
-			var sellingProducts = data.sellingProducts;*/
+			var ratings = data.ratingsList;
+			var sellingProducts = data.sellingProducts;
 			var shippingAddresses = data.shippingAddresses;
 
 			var shipAddressList = $('#shipaddress-list');
@@ -333,7 +333,7 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 			ratingsList.empty();
 			sellingList.empty();
 
-			var maxLength = Math.max(shippingAddresses.length, paymentTypes.length); //, ratings.length, sellingProducts.length); 
+			var maxLength = Math.max(shippingAddresses.length, paymentTypes.length, ratings.length, sellingProducts.length); 
 
 			var avgRating = 0;
 			var rCount = 0;
@@ -357,32 +357,33 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 				if(i < paymentTypes.length){
 					//Need to add a check later for type if its credit card or paypal
 					if(i!=0){
-						payList.append('<li>Card Ending with '+ //paymentTypes[i].cNumber.substr(15)+
+						payList.append('<li>Card Ending with '+ paymentTypes[i].card_number.substr(15)+
 						'<a onclick=EditPayment('+paymentTypes[i].payment_id+') data-icon="gear">Edit</a>'+
-						'<a onclick=DeletePayment('+paymentTypes[i].payment_id+') data-icon="trash">Delete</a>'//+
-						//'<strong>Billing Address: </strong>'+paymentTypes[i].billAddress+'</li>'
+						'<a onclick=DeletePayment('+paymentTypes[i].payment_id+') data-icon="trash">Delete</a>'+
+						'<strong>Billing Address: </strong>'+paymentTypes[i].street_address+'</li>'
 						);
 					}
 					else{
-						payList.append('<li data-theme="e">Card Ending with '+ //paymentTypes[i].cNumber.substr(15)+
+						payList.append('<li data-theme="e">Card Ending with '+ paymentTypes[i].card_number.substr(15)+
 						'<a onclick=EditPayment('+paymentTypes[i].payment_id+') data-icon="gear">Edit</a>'+
-						'<a onclick=DeletePayment('+paymentTypes[i].payment_id+') data-icon="trash">Delete</a>'//+
-						//'<strong>Billing Address: </strong>'+paymentTypes[i].billAddress+'</li>'
-						);					}
+						'<a onclick=DeletePayment('+paymentTypes[i].payment_id+') data-icon="trash">Delete</a>'+
+						'<strong>Billing Address: </strong>'+paymentTypes[i].street_address+'</li>'
+						);					
+					}
 				}
-/*				//Populate Ratings by User list
+				//Populate Ratings by User list
 				if(i < ratings.length){
-					ratingsList.append('<li>User of id '+ ratings[i].raterId + ' - '+ ConvertToStars(ratings[i].rating) +'</li>');
+					ratingsList.append('<li>'+ ratings[i].username + ' - '+ ConvertToStars(ratings[i].rating) +'</li>');
 					avgRating += ratings[i].rating;
 					rCount++;
 				}
 				//Populate Current Sales list
 				if(i < sellingProducts.length){
-					sellingList.append('<li><a onclick=GetProduct('+sellingProducts[i].id+')><h4>'+sellingProducts[i].name+'</h4></a>'+
-					'<a onclick=EditProduct('+sellingProducts[i].id+') data-icon="gear">Edit</a>'+
-					'<a onclick=DeleteProduct('+sellingProducts[i].id+') data-icon="trash">Delete</a></li>'
+					sellingList.append('<li><a onclick=GetProduct('+sellingProducts[i].product_id+')><h4>'+sellingProducts[i].name+'</h4></a>'+
+					'<a onclick=EditProduct('+sellingProducts[i].product_id+') data-icon="gear">Edit</a>'+
+					'<a onclick=DeleteProduct('+sellingProducts[i].product_id+') data-icon="trash">Delete</a></li>'
 					);
-				}*/
+				}
 			}
 			// These buttons are for adding a new address,payment type or product for sale and are added
 			// to the end of the list
@@ -392,13 +393,13 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 
 			shipAddressList.listview("refresh");
 			payList.listview("refresh");
-			//ratingsList.listview("refresh");
+			ratingsList.listview("refresh");
 			sellingList.listview("refresh");
 
 			//Populate average rating header
-			//avgRating = avgRating / rCount;
-			//$('#ratingsdiv').prepend("<h2>Rating: " + avgRating + "</h2>");
-			//$('#ratings-average').append("Rating: " + ConvertToStars(avgRating));
+/*			avgRating = avgRating / rCount;
+			$('#ratingsdiv').prepend("<h2>Rating: " + Math.floor(avgRating) + "</h2>");
+			$('#ratings-average').append("Rating: " + ConvertToStars(avgRating));*/
 		},
 		error: function(data, textStatus, jqXHR){
 			console.log("textStatus: " + textStatus);
@@ -527,7 +528,7 @@ $(document).on('pagebeforeshow', "#seller-profile", function(event, ui){
 			sellingList.empty();
 
 			//Populate Seller Profile
-			infoList.append('<li>Contact Information: '+seller.email+'</li><li>Description: To be added later in PHASE 2 </li>'); //+seller.description+'</li>');
+			infoList.append('<li>Contact Information: '+seller.email+'</li><li>Description: '+seller.description+'</li>');
 
 			var avgRating = 0;
 			var rCount = 0;
