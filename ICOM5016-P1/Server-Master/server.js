@@ -1161,37 +1161,6 @@ app.post('/Server-Master/home/:username', function(req, res) {
     	res.statusCode = 400;
     	return res.send('Error: Missing fields for user login.');
   	}
-//  PHASE 1 CODE
-/*  	else {
-  		var userName = req.body.username;
-  		var passWord = req.body.password;
-  		var target = -1; 
-  		var found = false;
-  		for (var i=0; i < userList.length;++i){
-  			if(userList[i].username == userName){
-  				found = true;
-  			}
-			if(userList[i].username == userName && userList[i].password == passWord){	
-				target = i;
-				console.log("Succesful login of user id: " + userList[i].id + " of type: " + userList[i].type);
-				break;  	
-			}
-		}
-		if (found && target == -1){
-			res.statusCode = 409;
-			res.send("Username exists but entered password does not match");
-		}
-		else if (found == false && target == -1){
-			res.statusCode = 404;
-			res.send("User not found.");
-		}
-		else {
-			//Future work: create global userCount variable and add userCount++ here to see how many users are currently logged in
-			var response = {"user" : userList[target]};
-			res.json(response);	
-		}	 	
-	}*/
-//	PHASE 2 CODE
 	else {
 		var userName = req.body.username;
   		var passWord = req.body.password;
@@ -1206,6 +1175,8 @@ app.post('/Server-Master/home/:username', function(req, res) {
   		});
   		query.on("end", function (result){
   			if(result.rowCount == 0){
+  				// not found
+  				client.end();
   				res.statusCode = 404;
 				res.send("User not found.");
   			}
@@ -1216,14 +1187,15 @@ app.post('/Server-Master/home/:username', function(req, res) {
   					//Future work: create global userCount variable and add userCount++ here to see how many users are currently logged in
 					console.log("Succesful login of user id: " + theUser.account_id + " of type: " + theUser.permission);
 					var response = {"user" : theUser};
+					client.end();
 					res.json(response);	
   				}
 				else {
+					client.end();
 					res.statusCode = 409;
 					res.send("Username exists but entered password does not match");
 				}
 			}
-			client.end();
   		});
 	}
 });
@@ -1231,18 +1203,14 @@ app.post('/Server-Master/home/:username', function(req, res) {
 // REST Operation - HTTP GET to read a admin account based on its id
 app.get('/Server-Master/admin/:id', function(req, res){
 	var id = req.params.id;
-//  PHASE 1 CODE
-/*	var response = {"categoryList": categoryList, "userList" : userList}
-	res.json(response);*/
 
-//  PHASE 2 CODE 
 	var client = new pg.Client(dbConnInfo);
 	client.connect();
 
 	//variables for data to be returned
-	var query, adminInfo, categories, users; 
+	var theAdmin, theCategories, theUsers; 
 
-	query = client.query("SELECT * from accounts where account_id = $1", [id]);
+	var query = client.query("SELECT * from accounts where account_id = $1", [id]);
 	query.on("row", function (row, result){
 		result.addRow(row);
 	});
@@ -1254,48 +1222,73 @@ app.get('/Server-Master/admin/:id', function(req, res){
 			res.send("Admin not found.");
 		}
 		else {
-			adminInfo = result.rows;
+			theAdmin = result.rows;
 			console.log("GET admin account: " + id);
 			console.log("row count: " + result.rowCount);
 		}
 	});
 
-	query = client.query("SELECT cid as id, cname as name from categories");
-	query.on("row", function (row, result){
+	var query2 = client.query("SELECT cid as id, cname as name from categories");
+	query2.on("row", function (row, result){
 		result.addRow(row);
 	});
-	query.on("end", function (result){
-		categories = result.rows;
+	query2.on("end", function (result){
+		theCategories = result.rows;
 		console.log("Categories row count: " + result.rowCount);
 	});
 
-	query = client.query("SELECT * from accounts");
-	query.on("row", function (row, result){
+	var query3 = client.query("SELECT * from accounts");
+	query3.on("row", function (row, result){
 		result.addRow(row);
 	});
-	query.on("end", function (result){
-		users = result.rows;
+	query3.on("end", function (result){
+		theUsers = result.rows;
 		console.log("Users row count: " + result.rowCount);
+		var response = {"adminInfo" : theAdmin, "categoryList": theCategories, "userList" : theUsers};
+		client.end();
+		res.json(response);
 	});
-
-	var response = {"adminInfo" : adminInfo, "categoryList": categories, "userList" : users};
-	client.end();
-	res.json(response);
 });
+
 // REST Operation - HTTP GET to read report based on reportType
 app.get('/Server-Master/admin/:id/report/:reportType', function(req, res){
 	var reportType = req.params.reportType;
+
+	var client = pg.Client(dbConnInfo);
+	client.connect();
+
 	console.log("GET report " + reportType);
-	var response = {};
+	var query, theReport;
+	//
 	if(reportType == "byProduct"){
-		response = {"report" : productList};
+		query = client.query("");
+		query.on('row', function (row, result){
+			result.addRow(row);
+		});
+		query.on('end', function (result){
+			theReport = result.rows;
+		});
 	}
 	else if (reportType == "all Products") {
-		response = {"report" : productList};
+		query = client.query("");
+		query.on('row', function (row, result){
+			result.addRow(row);
+		});
+		query.on('end', function (result){
+			theReport = result.rows;
+		});
 	}
 	else {
-		response = {"report" : productList};
+		query = client.query("");
+		query.on('row', function (row, result){
+			result.addRow(row);
+		});
+		query.on('end', function (result){
+			theReport = result.rows;
+		});
 	}
+	var response = {"report" : theReport};
+	client.end();
 	res.json(response);
 });
 
@@ -1303,44 +1296,10 @@ app.get('/Server-Master/admin/:id/report/:reportType', function(req, res){
 app.get('/Server-Master/seller/:id', function(req, res) {
 	var id = req.params.id;
 
-//  PHASE 1 CODE
-/*	if ((id < 0) || (id >= userNextId)){
-		// not found
-		res.statusCode = 404;
-		res.send("Seller not found.");
-	}
-	else {
-		var seller = {};
-		var ratersList = new Array();
-		var sellingProducts = new Array();
-		var target = -1;
-		for (var i=0; i < userList.length; ++i){
-			//if user is found,
-			if (userList[i].id == id){
-				target = i;
-				var maxLength = Math.max(ratingsList.length, productList.length); 
-				
-				for(var x=0; x < maxLength; ++x){
-					//return his ratings
-					if(x < ratingsList.length && userList[i].id == ratingsList[x].sellerId){
-						ratersList.push(ratingsList[x]);
-					}
-					//return his products on sale
-					if(x < productList.length && userList[i].id == productList[x].sellerId){
-						sellingProducts.push(productList[x]);
-					}
-				}
-				var seller = {"username" : userList[i].username, "email" : userList[i].email, "description" : "Hi im a good seller"};
-				break;
-			}
-		}
-		var response = {"sellerDetails": seller, "ratings" : ratersList, "sellingProducts" : sellingProducts};
-		res.json(response);
-	}*/
-//	PHASE 2 CODE
 	var client = new pg.Client(dbConnInfo);
+	client.connect();
 
-	var sellerInfo, ratings, ratings_percentage, selling_products;
+	var theSeller, theRatings, ratings_percentage, theProducts;
 	var query = client.query("SELECT username, email, description from accounts where account_id = $1", [id]);
 
 	query.on("row", function (row, result){
@@ -1354,7 +1313,7 @@ app.get('/Server-Master/seller/:id', function(req, res) {
 		}
 		else {
 			console.log("GET seller: " + id);
-			sellerInfo = result.rows[0];
+			theSeller = result.rows[0];
 		}
 	});
 
@@ -1364,34 +1323,29 @@ app.get('/Server-Master/seller/:id', function(req, res) {
 		result.addRow(row);
 	});
 	query2.on("end", function (result){
-		if(result.rowCount == 0){
-			ratings = "Seller has not been rated.";
-		}
-		else {
-			ratings = result.rows;
-			console.log("ratings good");
-		}	
+		theRatings = result.rows;
 	});
 
-	// Query to get % of ratings by rating value
-	var query3 = client.query("SELECT rating, round(100.0*count(*)/num_of_ratings::numeric,2) || '%' from ratings natural join orders natural join products natural join (SELECT count(*) as num_of_ratings from ratings) as r where seller_id = $1 group by rating, num_of_ratings order by rating DESC", [id]);
+	// Query to get products being sold by this seller
+	var query3 = client.query("SELECT product_id, name, quantity from products where seller_id = $1", [id]);
 	query3.on("row", function (row, result){
 		result.addRow(row);
 	});
 	query3.on("end", function (result){
-		if(result.rowCount == 0){
-			ratings_percentage = "Seller has not been rated.";
-		}
-		else {
-			ratings_percentage = result.rows;
-			console.log("ratings % good");
-		}
+		theProducts = result.rows;
 	});
 
-	client.connect();
-	var response = {"seller" : sellerInfo, "ratings" : ratings, "ratings_percentage" : ratings_percentage}; //,"selling" : selling_products};
-	client.end();
-	res.json(response);
+	// Query to get % of ratings by rating value
+	var query4 = client.query("SELECT rating, (round(100.0*count(*)/num_of_ratings::numeric,2) || '%') as percentage from ratings natural join orders natural join products natural join (SELECT count(*) as num_of_ratings from ratings) as r where seller_id = $1 group by rating, num_of_ratings order by rating DESC", [id]);
+	query4.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query4.on("end", function (result){
+		ratings_percentage = result.rows;
+		var response = {"seller" : theSeller, "ratings" : theRatings, "ratings_percentage" : ratings_percentage, "selling" : theProducts};
+		client.end();
+		res.json(response);
+	});
 });
 
 //REST Operation - HTTP POST to set rating on product sale for a seller by id
@@ -1421,56 +1375,7 @@ app.post('/Server-Master/seller/:id', function(req, res) {
 // REST Operation - HTTP GET to read a user account based on its id
 app.get('/Server-Master/account/:id', function(req, res) {
 	var id = req.params.id;
-//  PHASE 1 CODE
-/*	var shippingAddresses = new Array();
-	var paymentTypes = new Array();
-	var ratersList = new Array();
-	var productsSale = new Array();
 
-	if ((id < 0) || (id >= userNextId)){
-		// not found
-		res.statusCode = 404;
-		res.send("User not found.");
-	}
-	else {
-		var maxLength = Math.max(shipAddressList.length, payTypeList.length, ratingsList.length, productList.length); 
-		var target = -1;
-		for (var i=0; i < userList.length; ++i){
-			//if user is found,
-			if (userList[i].id == id){
-				target = i;
-				for(var x=0; x < maxLength; ++x){
-					//return his shipping addresses
-					if(x < shipAddressList.length && userList[i].id == shipAddressList[x].userId){
-						shippingAddresses.push(shipAddressList[x]);
-					}
-					//return his payment types
-					if(x < payTypeList.length && userList[i].id == payTypeList[x].userId){
-						paymentTypes.push(payTypeList[x]);
-					}
-					//return his ratings
-					if(x < ratingsList.length && userList[i].id == ratingsList[x].sellerId){
-						ratersList.push(ratingsList[x]);
-					}
-					//return his products on sale
-					if(x < productList.length && userList[i].id == productList[x].sellerId){
-						productsSale.push(productList[x]);
-					}
-				}
-				break;	
-			}
-		}
-		if (target == -1){
-			res.statusCode = 404;
-			res.send("User not found.");
-		}
-		else {
-			var response = {"user" : userList[target], "shippingAddresses" : shippingAddresses, "paymentTypes" : paymentTypes, 
-							"ratingsList" : ratersList, "sellingProducts" : productsSale};
-  			res.json(response);	
-  		}	
-	}*/
-//  PHASE 2 CODE
 	var client = new pg.Client(dbConnInfo);
 	client.connect();
 
@@ -1511,7 +1416,6 @@ app.get('/Server-Master/account/:id', function(req, res) {
 	});
 	query3.on('end', function (result){
 		theRatings = result.rows;
-		console.log(theRatings);
 	});
 
 	//returns products being sold by user
@@ -1521,7 +1425,6 @@ app.get('/Server-Master/account/:id', function(req, res) {
 	});
 	query4.on('end', function (result){
 		theProducts = result.rows;
-		console.log(theProducts);
 	});
 
 	//returns user payment options 

@@ -541,7 +541,7 @@ $(document).on('pagebeforeshow', "#seller-profile", function(event, ui){
 				}
 				//Populate Current Sales list
 				if(i < sales.length){
-					sellingList.append('<li><a onclick=GetProduct('+sales[i].id+')><h4>'+sales[i].name+'</h4></li>'
+					sellingList.append('<li><a onclick=GetProduct('+sales[i].product_id+')><h4>'+sales[i].name+'</h4></li>'
 					);
 				}
 			}
@@ -550,9 +550,7 @@ $(document).on('pagebeforeshow', "#seller-profile", function(event, ui){
 			ratingsList.listview("refresh");
 			sellingList.listview("refresh");
 			
-			//Populate average rating header
-			avgRating = avgRating / rCount;
-			$('#seller-ratings-average').append("Rating: " + ConvertToStars(avgRating));
+			$('#seller-ratings-average').append("" + ratings_percentage[0].percentage + " of buyers rate this seller " + ConvertToStars(ratings_percentage[0].rating));
 		},
 		error: function(data, textStatus, jqXHR){
 			console.log("textStatus: " + textStatus);
@@ -597,14 +595,14 @@ $(document).on('pagebeforeshow', "#admin", function( event, ui ) {
 			for(var i=0; i < maxLength; ++i){
 				if(i < categories.length){
 					categoryList.append('<li><strong>Category name: '+ categories[i].name +'</strong>'+
-					'<a onclick=EditCategory('+categories[i].id+') data-icon="gear">Edit</a>'+
-					'<a onclick=DeleteCategory('+categories[i].id+') data-icon="trash">Delete</a></li>'
+					'<a onclick=EditCategory('+categories[i].cid+') data-icon="gear">Edit</a>'+
+					'<a onclick=DeleteCategory('+categories[i].cid+') data-icon="trash">Delete</a></li>'
 					);
 				}
 				if(i < users.length){
 					userList.append('<li><strong>User name: '+ users[i].username +'</strong>'+
-					'<a onclick=EditAccount('+users[i].id+') data-icon="gear">Edit</a>'+
-					'<a onclick=DeleteAccount('+users[i].id+') data-icon="trash">Delete</a></li>'
+					'<a onclick=EditAccount('+users[i].account_id+') data-icon="gear">Edit</a>'+
+					'<a onclick=DeleteAccount('+users[i].account_id+') data-icon="trash">Delete</a></li>'
 					);
 				}
 			}
