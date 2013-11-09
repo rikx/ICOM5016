@@ -18,24 +18,18 @@
 	<body>
 		<!-- Home page -->
 		<div id ="home" data-role="page"> 
-			<div data-role="header" data-theme="a" data-position="fixed">
-				<div class="ui-grid-b" align="center">
-					<div class="ui-block-a"><h3>RJN Bay</h3></div>
-					<div class="ui-block-b"></div>
-					<div class="ui-block-c">
-				
-						<div data-role="controlgroup" data-type="horizontal">
-							
-							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
-<!-- 							<a href="" 						data-role="button" data-icon="search"		 data-iconpos="top" title="Browse"	></a> -->
-							<a onclick="GetAccount()"		data-role="button" data-icon="user"			 data-iconpos="top" title="Account"	></a>
-							<a href="#cart" 				data-role="button" data-icon="shopping-cart" data-iconpos="top" title="Cart"	></a><!-- /// onclick="GetCart()">/// -->
-							<!-- <a data-role="button" data-inline="true" onclick="LogOut()">Logout</a> --> <!-- Add this dynamically later -->
-							
-						</div>
-					</div>
-				</div><!-- /grid-b -->
-			</div>
+			
+		<header data-role ="header" data-theme="a" data-position="fixed"> 
+  				<h1 class="ui-title" aling="center">RJN BAY</h1>
+  				<div data-role="navbar">
+					<ul>
+						<li><a href="#home" 				data-role="button" data-icon="home"			 title="Home"	>HOME</a></li>
+						<li><a onclick="GetAccount()"		data-role="button" data-icon="user"			 title="Account">LOGIN</a></li>
+						<li><a href="#cart" 				data-role="button" data-icon="shopping-cart" title="Cart"	>CART</a></li>
+					</ul>
+				</div><!-- /navbar -->
+		</header>
+
 			<div data-role="content">
 				<h3 align="center">Products for Sale</h3>	
 				
