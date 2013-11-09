@@ -322,18 +322,21 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 			var ratings = data.ratingsList;
 			var sellingProducts = data.sellingProducts;
 			var shippingAddresses = data.shippingAddresses;
+			var bids = data.bids;
 
 			var shipAddressList = $('#shipaddress-list');
 			var payList = $('#paymentType-list');
 			var ratingsList = $('#ratings-list');
 			var sellingList = $('#currentSales-list');
+			var bidsList = $('#currentBids-list');
 
 			shipAddressList.empty();
 			payList.empty();
 			ratingsList.empty();
 			sellingList.empty();
+			bidsList.empty();
 
-			var maxLength = Math.max(shippingAddresses.length, paymentTypes.length, ratings.length, sellingProducts.length); 
+			var maxLength = Math.max(shippingAddresses.length, paymentTypes.length, ratings.length, sellingProducts.length, bids.length); 
 
 			var avgRating = 0;
 			var rCount = 0;
@@ -383,6 +386,10 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 					'<a onclick=EditProduct('+sellingProducts[i].product_id+') data-icon="gear">Edit</a>'+
 					'<a onclick=DeleteProduct('+sellingProducts[i].product_id+') data-icon="trash">Delete</a></li>'
 					);
+				}
+				//Populate bids by this user list
+				if(i < bids.length){
+					bidsList.append('<li> <a onclick=GetProduct('+ bids[i].product_id + ')><strong>'+bids[i].name+'</strong></a> - current highest bid: '+ bids[i].current_bid + ' | your bid: '+bids[i].bid_amount+', placed on '+ bids[i].date_placed+'</li>');
 				}
 			}
 			// These buttons are for adding a new address,payment type or product for sale and are added
@@ -709,11 +716,12 @@ function ReportByRevenue(){
 $(document).on('pagebeforeshow', "#product-view", function( event, ui ) {
 	// currentProduct has been set at this point
 	var product = currentProduct;
+
 	$("#productTitle").html(product.name);
 	$('#seller-details').attr("onclick", "GetSellerProfile("+product.seller_id+")");
 	$('#bidButton').attr("onclick", "PlaceBid("+product.product_id+")");
 	$("#showBidPrice").html(accounting.formatMoney(product.current_bid));
-	$("#numOfBids").html('<a href="#bidhistory">'+currentProduct.num_of_bids+'</a>');
+	$("#numOfBids").html('<a href="#bidhistory">'+product.num_of_bids+'</a>');
 	$("#showBuyoutPrice").html(accounting.formatMoney(product.instant_price));
 
 	var list = $("#prod-details");
@@ -926,10 +934,7 @@ function DeleteCategory(){
 
 //initial value is set to null for when noone is logged in
 var currentUser = {"account_id": null}; //-- ??
-/*var currentPaymentTypes = {}; //-- ??
-var currentRatingsList = {};
-var currentProductsSelling = {};
-*/
+
 //--------------- Logs in via POST so it can send the form values of username and password to the server for authentication ---------------//
 function LogIn(){
 	if($('#loginusername').val() == ""){
@@ -1351,6 +1356,7 @@ function GetProduct(id){
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
 			currentProduct = data.product;
+			currentProduct.num_of_bids = data.bids[0].num_of_bids;
 			$.mobile.loading("hide");
 			$.mobile.navigate("#product-view");
 		},

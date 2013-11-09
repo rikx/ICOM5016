@@ -402,10 +402,11 @@ app.get('/Server-Master/product/:id', function(req, res) {
 	client.connect();
 	
 	// Query to get product information. 
-	// Has natural join with auctions table so it can query the current_bid price, 
-	// and a natural join with count result that yeilds the num_of_bids for the product
-	var query = client.query("SELECT * from products natural join auctions natural join (select account_id as seller_id, username from accounts) as seller natural join (SELECT auction_id, count(*) as num_of_bids from placed_bids natural join auctions where product_id = $1 group by auction_id) AS bids where product_id = $2", [id, id]);
-	
+	// First query has natural join with auctions table so it can query the current_bid price, 
+	// Second query has Count result that yields the num_of_bids for the product
+	var theProduct, theBids;
+
+	var query = client.query("SELECT * from products natural join auctions natural join (select account_id as seller_id, username from accounts) as seller where product_id = $1", [id]);
 	query.on("row", function (row, result) {
     	result.addRow(row);
 	});
@@ -417,11 +418,19 @@ app.get('/Server-Master/product/:id', function(req, res) {
 		}
 		else {
 			console.log("GET product: " + id);;
-			var response = {"product" : result.rows[0]};
-			console.log(response); // for debugging purposes
-			client.end();
-			res.json(response);
+			theProduct = result.rows[0];
 	  	}
+ 	});
+ 	var query2 = client.query("SELECT count(*) as num_of_bids from placed_bids natural join auctions where product_id = $1", [id]);
+ 	query2.on('row', function (row, result){
+ 		result.addRow(row);
+ 	});
+ 	query2.on('end', function (result){
+ 		theBids = result.rows;
+
+ 		var response = {"product" : theProduct, "bids" : theBids};
+		client.end();
+		res.json(response);
  	});
 });
 
@@ -1233,7 +1242,7 @@ app.get('/Server-Master/account/:id', function(req, res) {
 	var client = new pg.Client(dbConnInfo);
 	client.connect();
 
-	var theUser, theAddresses, thePaymentOptions, theRatings, theProducts;
+	var theUser, theAddresses, thePaymentOptions, theRatings, theBids, theProducts;
 	//returns user profile information
 	var query = client.query("SELECT * from accounts where account_id = $1", [id]);
 	query.on("row", function (row, result){
@@ -1256,12 +1265,7 @@ app.get('/Server-Master/account/:id', function(req, res) {
 		result.addRow(row);
 	});
 	query2.on("end", function (result){
-		if(result.rowCount == 0){
-			theAddresses = null;
-		}
-		else {
-			theAddresses = result.rows;
-		}
+		theAddresses = result.rows;
 	});
 	//returns the ratings list for user
 	var query3 = client.query("SELECT username, rating from sales natural join orders natural join products, accounts where buyer_id = account_id and seller_id = $1",[id]);
@@ -1281,20 +1285,24 @@ app.get('/Server-Master/account/:id', function(req, res) {
 		theProducts = result.rows;
 	});
 
-	//returns user payment options 
-	var query5 = client.query("SELECT * from has_payment_option natural join payment_options natural join addresses where account_id = $1", [id]);
-	query5.on("row", function (row, result){
+	//returns current bids user has on a product
+	var query5 = client.query("SELECT product_id, products.name, bid_amount, current_bid, date_placed from placed_bids natural join auctions natural join products where bidder_id = $1", [id])
+	query5.on('row', function (row, result){
 		result.addRow(row);
 	});
-	query5.on("end", function (result){
-		if(result.rowCount == 0){
-			thePaymentOptions = null;
-		}
-		else {
-			thePaymentOptions = result.rows;
-		}
+	query5.on('end', function (result){
+		theBids = result.rows;
+	});
+
+	//returns user payment options 
+	var query6 = client.query("SELECT * from has_payment_option natural join payment_options natural join addresses where account_id = $1", [id]);
+	query6.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query6.on("end", function (result){
+		thePaymentOptions = result.rows;
 		var response = {"user" : theUser, "shippingAddresses" : theAddresses, "paymentOptions" : thePaymentOptions, 
-				"ratingsList" : theRatings, "sellingProducts" : theProducts};
+				"ratingsList" : theRatings, "bids" : theBids, "sellingProducts" : theProducts};
 		client.end();
 		res.json(response);	
 	});
