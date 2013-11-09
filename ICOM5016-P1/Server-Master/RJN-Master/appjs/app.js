@@ -218,76 +218,87 @@ $(document).ready(function(){
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 $(document).ready(function() {
-
-	$('.search-field').focus(function() {
+	var search_field = $('.search-field');
+	
+	search_field.focus(function() {
 		if($(this).val() == "Enter Product Name Here...") {
 			this.value = "";
 		}
 	});
 	
-	$('.search-field').keypress(function(e){
+	search_field.keypress(function(e){
     	if(e.keyCode==13){
       		var input = $(this).val();
       		$(this).val("");
-      		var found = false;
-        $.ajax({
-          	url : "http://localhost:3412/Server-Master/search",
-          	method: 'get',
-			contentType: "application/json",
-              success : function(data, textStatus, jqXHR){
-                  var productList = data.ListOfProducts;
-                  var len = productList.length;
-                  for (var i=0; i < len; ++i){
-                      name = productList[i].name;
-                      if(name===input) {
-                          GetProduct(productList[i].id);
-                          found=true;
-                          break;
-                      }
-                  }    
-                  if(!found){
-                  	alert("Product not found!");
-                  }
-              },
-              error: function(data, textStatus, jqXHR){
-                  console.log("textStatus: " + textStatus);
-                  alert("Product not found!");
-              }
-        });
-      }
+	        $.ajax({
+	          	url : "http://localhost:3412/Server-Master/search/" +  input,
+	          	method: 'get',
+				contentType: "application/json",
+	            success : function(data, textStatus, jqXHR){
+	                var productList = data.ListOfProducts;
+	                var len = productList.length;
+
+	                if (len == 1) {
+	                	GetProduct(productList[0].product_id);
+	                }
+	                else {
+				        var list = $("#category-list, #browse-list");
+						list.empty();
+
+						for (var i=0; i < len; ++i){
+							product = productsList[i];
+							list.append('<li><a onclick=GetProduct('+product.product_id+')><h2>'+product.name+'</h2>'+
+							'<p><img src="'+product.image_filename+'"" /></p>'+ 
+							'<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(product.current_bid) + '</h4></p>'+
+							'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(product.instant_price) + '</h4></p></a>'+
+							'<a onclick=EditProduct('+product.product_id+') data-icon="gear">Edit</a></li>');	
+						} 
+						list.listview("refresh");	  
+		            }
+	            },
+	        	error: function(data, textStatus, jqXHR){
+	                console.log("textStatus: " + textStatus);
+	                alert("Product not found!");
+	            }
+	        });
+	    }
     });
     
     $('.submit').click(function(e){
       	var input = $('.search-field').val();
       	$('.search-field').val("");
-      	var found = false;
         $.ajax({
-          	url : "http://localhost:3412/Server-Master/search",
+          	url : "http://localhost:3412/Server-Master/search/" +  input,
           	method: 'get',
-            contentType: "application/json",
-              success : function(data, textStatus, jqXHR){
-                  var productList = data.ListOfProducts;
-                  var len = productList.length;
-                  for (var i=0; i < len; ++i){
-                      name = productList[i].name;
-                      if(name===input) {
-                          GetProduct(productList[i].id);
-                          found=true;
-                          break;
-                      }
-                  }    
-                  if(!found){
-                  	alert("Product not found!");
-                  }
-              },
-              error: function(data, textStatus, jqXHR){
-                  console.log("textStatus: " + textStatus);
-                  alert("Product not found!");
-              }
-        });
-      
-    });
+			contentType: "application/json",
+            success : function(data, textStatus, jqXHR){
+                var productList = data.ListOfProducts;
+                var len = productList.length;
 
+                if (len == 1) {
+                	GetProduct(productList[0].product_id);
+                }
+                else {
+			        var list = $("#category-list, #browse-list");
+					list.empty();
+
+					for (var i=0; i < len; ++i){
+						product = productsList[i];
+						list.append('<li><a onclick=GetProduct('+product.product_id+')><h2>'+product.name+'</h2>'+
+						'<p><img src="'+product.image_filename+'"" /></p>'+ 
+						'<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(product.current_bid) + '</h4></p>'+
+						'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(product.instant_price) + '</h4></p></a>'+
+						'<a onclick=EditProduct('+product.product_id+') data-icon="gear">Edit</a></li>');	
+					} 
+					list.listview("refresh");   
+	            }
+            },
+        	error: function(data, textStatus, jqXHR){
+                console.log("textStatus: " + textStatus);
+                alert("Product not found!");
+            }
+        });
+    });
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////

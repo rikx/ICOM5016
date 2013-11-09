@@ -564,31 +564,7 @@ app.put('/Server-Master/home/product/:id/bid', function(req, res) {
 //REST Operation - HTTP GET to read bid history of a product by its id
 app.get('/Server-Master/product/:id/bid-history', function(req, res) {
 	var id = req.params.id;
-//	PHASE 1 CODE - was not working properly, anyways
-/*	var bidHistory = new Array();
 
-	if ((id < 0) || (id >= productNextId)){
-		// not found
-		res.statusCode = 404;
-		res.send("Product not found.");
-	}
-	else {
-		var target = -1;
-		for (var i=0; i < productBidsList.length; ++i){
-			if (productBidsList[i].productId == id){
-				target = i;
-				bidHistory.push(productBidsList[i]);
-			}
-		}
-		if (target == -1){
-			res.statusCode = 404;
-			res.send("Product not found.");
-		}
-		else {
-			var response = {"bidHistory" : bidHistory};
-  			res.json(response);	
-  		}	
-	}*/
 	var client = new pg.Client(dbConnInfo);
 	client.connect();
 
@@ -599,38 +575,21 @@ app.get('/Server-Master/product/:id/bid-history', function(req, res) {
 	query.on("end", function (result) {
 		console.log("GET bid history for product id " + id);
 		var response = {"bidHistory" : result.rows};
-/*		if(result.rowCount == 0){
-			response = {"bidHistory": "No bids"};
-		}*/
-/*		if(result.rowCount > 1){
-			response = {"bidHistory" : result.rows};
-		}
-  		else {
-  			response = {"bidHistory" : result.rows[0]};
-  		}*/
-		console.log("row count: " + result.rowCount);
-		console.log(response);
 		client.end();
 		res.json(response);		
 	});
 });
 
 //JUAN SEARCH TESTING
-// REST Operation - HTTP GET to read a product based on its id
-app.get('/Server-Master/search', function(req, res) {
-	console.log("GET products");
+// REST Operation - HTTP GET to read a product based on user search input
+app.get('/Server-Master/search/:input', function(req, res) {
+	var search_input = req.params.input;
 
-//  PHASE 1 CODE
-/*	var response = {"ListOfProducts" : productList};
-  	res.json(response);*/
-
-//  PHASE 2 CODE
+	console.log("GET search of " + search_input);
   	var client = new pg.Client(dbConnInfo);
 	client.connect();
 
-	// Missing natural join with Auction table so it can query the current Bid price
-	// Also missing a where ILIKE %search_input% so it can do smart search
-	var query = client.query("SELECT product_id, name, instant_price, image_filename from products");
+	var query = client.query("SELECT product_id, name, instant_price, image_filename, current_bid from products natural join auctions where name ILIKE '%"+search_input+"%'");
 	
 	query.on("row", function (row, result) {
     	result.addRow(row);
