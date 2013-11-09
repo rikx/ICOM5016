@@ -24,7 +24,7 @@
   				<div data-role="navbar">
 					<ul>
 						<li><a href="#home" 				data-role="button" data-icon="home"			 title="Home"	>HOME</a></li>
-						<li><a onclick="GetAccount()"		data-role="button" data-icon="user"			 title="Account">LOGIN</a></li>
+						<li><a onclick="GetAccount()"		data-role="button" data-icon="user"			 title="Account">ACCOUNT</a></li>
 						<li><a href="#cart" 				data-role="button" data-icon="shopping-cart" title="Cart"	>CART</a></li>
 					</ul>
 				</div><!-- /navbar -->
@@ -46,21 +46,18 @@
 		</div><!-- /page -->
 
 		<div id ="browse" data-role="page">
-			<div data-role="header" data-theme="a" data-position="fixed">
-				<div class="ui-grid-b" align="center">
-					<div class="ui-block-a"><h3 id="browseTitle"></h3></div>
-					<div class="ui-block-b"></div>
-					<div class="ui-block-c">
-						<div data-role="controlgroup" data-type="horizontal">
-							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
-<!-- 							<a href="" 						data-role="button" data-icon="search"		 data-iconpos="top" title="Browse"	></a> -->
-							<a onclick="GetAccount()"	data-role="button" data-icon="user"			 data-iconpos="top" title="Account"	></a>
-							<a href="#cart" 				data-role="button" data-icon="shopping-cart" data-iconpos="top" title="Cart"	></a><!-- /// onclick="GetCart()">/// -->
-							<!-- <a data-role="button" data-inline="true" onclick="LogOut()">Logout</a> --> <!-- Add this dynamically later -->
-						</div>
-					</div>
-				</div><!-- /grid-b -->
-			</div>
+			
+			<header data-role ="header" data-theme="a" data-position="fixed"> 
+  				<h1 class="ui-title" aling="center">RJN BAY</h1>
+  				<div data-role="navbar">
+					<ul>
+						<li><a href="#home" 				data-role="button" data-icon="home"			 title="Home"	>HOME</a></li>
+						<li><a onclick="GetAccount()"		data-role="button" data-icon="user"			 title="Account">ACCOUNT</a></li>
+						<li><a href="#cart" 				data-role="button" data-icon="shopping-cart" title="Cart"	>CART</a></li>
+					</ul>
+				</div><!-- /navbar -->
+			</header>
+			
 			<div data-role="content">
 				<h3 align="center">Products for Sale</h3>	<!-- Add title dynamically later -->
 				<p id="breadcrumb-history"></p>
@@ -81,20 +78,17 @@
 		</div><!-- /page -->
 
 		<div id="add-category" data-role="page">
-			<div data-role="header" data-theme="e" data-position="fixed">
-				<div class="ui-grid-b" align="center">
-					<div class="ui-block-a"><h3>New Category</h3></div>
-					<div class="ui-block-b"></div>
-					<div class="ui-block-c">
-						<div data-role="controlgroup" data-type="horizontal">
-							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
-							<a onclick="GetAccount()"	data-role="button" data-icon="user"			 data-iconpos="top" title="Account"	></a>
-							<a onclick="SaveCategory()"   data-role="button" data-icon="save"          data-iconpos="top" title="Save"  id="SaveNewCategory"></a>
-							<!-- <a data-role="button" data-inline="true" onclick="LogOut()">Logout</a> --> <!-- Add this dynamically later -->
-						</div>
-					</div>
-				</div><!-- /grid-b -->
-			</div>
+			<header data-role ="header" data-theme="a" data-position="fixed"> 
+  				<h1 class="ui-title" aling="center">RJN BAY</h1>
+  				<div data-role="navbar">
+					<ul>
+						<li><a href="#home" 				data-role="button" data-icon="home"			 title="Home"	>HOME</a></li>
+						<li><a onclick="GetAccount()"		data-role="button" data-icon="user"			 title="Account">ACCOUNT</a></li>
+						<li><a onclick="SaveCategory()"  	data-role="button" data-icon="save"           title="Save"  id="SaveNewCategory">ADD</a></li>
+					</ul>
+				</div><!-- /navbar -->
+			</header>	
+			
 			<div data-role="content">
 				<h2 align="center">Enter the new category info</h2>
 				<form id="category-form">
@@ -113,20 +107,16 @@
 		</div><!-- /page -->
 
 		<div id="category-view" data-role="page">
-			<div data-role="header" data-theme="e" data-position="fixed">
-				<div class="ui-grid-b" align="center">
-					<div class="ui-block-a"><h3>Category Info</h3></div>
-					<div class="ui-block-b"></div>
-					<div class="ui-block-c">
-						<div data-role="controlgroup" data-type="horizontal">
-							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
-							<a onclick="GetAccount()"	data-role="button" data-icon="user"			 data-iconpos="top" title="Account"	></a>
-							<a onclick="UpdateCategory()"   data-role="button" data-icon="save"          data-iconpos="top" title="Save"  id="SaveNewInfo"></a>
-							<!-- <a data-role="button" data-inline="true" onclick="LogOut()">Logout</a> --> <!-- Add this dynamically later -->
-						</div>
-					</div>
-				</div><!-- /grid-b -->
-			</div>
+			<header data-role ="header" data-theme="a" data-position="fixed"> 
+  				<h1 class="ui-title" aling="center">RJN BAY</h1>
+  				<div data-role="navbar">
+					<ul>
+						<li><a href="#home" 				data-role="button" data-icon="home"			 title="Home"	>HOME</a></li>
+						<li><a onclick="GetAccount()"		data-role="button" data-icon="user"			 title="Account">ACCOUNT</a></li>
+						<li><a onclick="UpdateCategory()"   data-role="button" data-icon="save"           title="Save"  id="SaveNewInfo">SAVE</a></li>
+					</ul>
+				</div><!-- /navbar -->
+		</header>
 			<div data-role="content">
 				<h2 align="center">Enter new info</h2>
 				<form id="category-view-form">
@@ -142,7 +132,7 @@
 				 </fieldset>
 				</form>
 				<center>
-					<a class="Del-Button" data-icon="delete" data-role="button" data-inline="true" onclick="DeleteCategory()">Delete</a>
+					<a class="Del-Button" data-icon="delete" data-role="button" data-inline="true" onclick="DeleteCategory()">DELETE</a>
 				</center>
 			</div>
 		</div><!-- /page -->
@@ -152,19 +142,15 @@
 		<!--                        -->
 
 		<div id="login" data-role="page">
-			<div data-role="header">
-				<div class="ui-grid-b" align="center">
-					<div class="ui-block-a"><h3>Login</h3></div>
-					<div class="ui-block-b"></div>
-					<div class="ui-block-c">
-						<div data-role="controlgroup" data-type="horizontal">
-							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
-							<a href="#cart" 				data-role="button" data-icon="shopping-cart" data-iconpos="top" title="Cart"	></a>
-	<!-- 						<a href="" 						data-role="button" data-icon="search"		 data-iconpos="top" title="Browse"	></a> -->
-						</div>
-					</div>
-				</div><!-- /grid-b -->
-			</div>
+			<header data-role ="header" data-theme="a" data-position="fixed"> 
+	  				<h1 class="ui-title" aling="center">RJN BAY</h1>
+	  				<div data-role="navbar">
+						<ul>
+							<li><a href="#home" 				data-role="button" data-icon="home"			 title="Home"	>HOME</a></li>
+							<li><a href="#cart" 				data-role="button" data-icon="shopping-cart" title="Cart"	>CART</a></li>
+						</ul>
+					</div><!-- /navbar -->
+			</header>
 			<div data-role="content" data-theme="c">	
 				<form id="login-form">
 					<fieldset data-role="controlgroup">
@@ -181,23 +167,17 @@
 		</div><!-- /page -->
 
 		<div id="account" data-role="page">
-			<div data-role="header" data-theme="a" data-position="fixed">
-				<div class="ui-grid-b" align="center">
-					<div class="ui-block-a"><h3 id="userTitle"></h3></div>
-					<div class="ui-block-b"></div>
-					<div class="ui-block-c">
-						<div data-role="controlgroup" data-type="horizontal">
-							
-							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
-	<!-- 						<a href="" 						data-role="button" data-icon="search"		 data-iconpos="top" title="Browse"	></a> -->
-							<a href="#update-account"		data-role="button" data-icon="gear"			 data-iconpos="top" title="Edit"	></a>
-							<a href="#cart" 				data-role="button" data-icon="shopping-cart" data-iconpos="top" title="Cart"	></a>
-							<a onclick="LogOut()"			data-role="button" data-icon="off" 			 data-iconpos="top" title="Logout"></a>
-							
-						</div>
-					</div>
-				</div><!-- /grid-b -->
-			</div>
+			<header data-role ="header" data-theme="a" data-position="fixed"> 
+  				<h1 class="ui-title" aling="center">RJN BAY</h1>
+  				<div data-role="navbar">
+					<ul>
+						<li><a href="#home" 				data-role="button" data-icon="home"			 title="Home"	>HOME</a></li>
+						<li><a href="#cart" 				data-role="button" data-icon="shopping-cart" title="Cart"	>CART</a></li>
+						<li><a onclick="LogOut()"			data-role="button" data-icon="off" 			  title="Logout"	>LOGOUT</a></li>
+						<li><a href="#update-account"		data-role="button" data-icon="gear"			  title="Edit">EDIT</a></li>
+					</ul>
+				</div><!-- /navbar -->
+		</header>
 			<div data-role="content">
 				<h4 id="ratings-average"></h2>
 				<p>Primary options (e.g. primary payment option) are highlighted in yellow</p>
@@ -265,23 +245,18 @@
 		</div><!-- /page -->
 
 		<div id="seller-profile" data-role="page">
-			<div data-role="header" data-theme="a" data-position="fixed">
-				<div class="ui-grid-b" align="center">
-					<div class="ui-block-a"><h3 id="sellerTitle"></h3></div>
-					<div class="ui-block-b"></div>
-					<div class="ui-block-c">
-						<div data-role="controlgroup" data-type="horizontal">
-							
-							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
-<!-- 							<a href="" 						data-role="button" data-icon="search"		 data-iconpos="top" title="Browse"	></a> -->
-							<a onclick="GetAccount()"		data-role="button" data-icon="user"			 data-iconpos="top" title="Account"	></a>
-							<a href="#cart" 				data-role="button" data-icon="shopping-cart" data-iconpos="top" title="Cart"	></a>
-<!-- 							<a onclick="LogOut()"			data-role="button" data-icon="off" 			 data-iconpos="top" title="Logout"	></a> add this dynamically later if user is logged in--> 
-							
-						</div>
-					</div>
-				</div><!-- /grid-b -->
-			</div>
+			
+			<header data-role ="header" data-theme="a" data-position="fixed"> 
+  				<h1 class="ui-title" aling="center">RJN BAY</h1>
+  				<div data-role="navbar">
+					<ul>
+						<li><a href="#home" 				data-role="button" data-icon="home"			 title="Home"	>HOME</a></li>
+						<li><a onclick="GetAccount()"		data-role="button" data-icon="user"			 title="Account">ACCOUNT</a></li>
+						<li><a href="#cart" 				data-role="button" data-icon="shopping-cart" title="Cart"	>CART</a></li>
+					</ul>
+				</div><!-- /navbar -->
+			</header>
+			
 			<div data-role="content">
 				<h4 id="seller-ratings-average"></h2>
 				<div data-role="collapsible" data-collapsed="false" data-theme="a" data-content-theme="c">
@@ -304,20 +279,16 @@
 		</div><!-- /page -->
 
 		<div id="admin" data-role="page">
-			<div data-role="header" data-theme="e" data-position="fixed">
-				<div class="ui-grid-b" align="center">
-					<div class="ui-block-a"><h3 id="adminTitle"></h3></div>
-					<div class="ui-block-b"></div>
-					<div class="ui-block-c">
-						<div data-role="controlgroup" data-type="horizontal">
-							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
-<!-- 							<a href="" 						data-role="button" data-icon="search"		 data-iconpos="top" title="Browse"	></a> -->
-							<a href="#update-account"		data-role="button" data-icon="gear"			 data-iconpos="top" title="Edit"	></a>
-							<a onclick="LogOut()"			data-role="button" data-icon="off" 			 data-iconpos="top" title="Logout"	></a>
-						</div>
-					</div>
-				</div><!-- /grid-b -->
-			</div>
+			<header data-role ="header" data-theme="a" data-position="fixed"> 
+  				<h1 class="ui-title" aling="center">RJN BAY</h1>
+  				<div data-role="navbar">
+					<ul>
+						<li><a href="#home" 				data-role="button" data-icon="home"			 title="Home"	>HOME</a></li>
+						<li><a href="#update-account"		data-role="button" data-icon="gear"			  title="Edit"	>EDIT</a></li>
+						<li><a onclick="LogOut()"			data-role="button" data-icon="off" 			  title="Logout"	>LOGOUT</a></li>
+					</ul>
+				</div><!-- /navbar -->
+			</header>
 			<div data-role="content">
 				<h3 align="center">Admin Tools</h3>
 				<ul>
@@ -354,20 +325,16 @@
 		</div><!-- /page -->
 
 		<div id="report" data-role="page">
-			<div data-role="header" data-theme="e" data-position="fixed">
-				<div class="ui-grid-b" align="center">
-					<div class="ui-block-a"><h3>Reports <span id="#reportType-title"></span></h3></div>
-					<div class="ui-block-b"></div>
-					<div class="ui-block-c">
-						<div data-role="controlgroup" data-type="horizontal">
-							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
-<!-- 							<a href="" 						data-role="button" data-icon="search"		 data-iconpos="top" title="Browse"	></a> -->
-							<a href="#update-account"		data-role="button" data-icon="gear"			 data-iconpos="top" title="Edit"	></a>
-							<a onclick="LogOut()"			data-role="button" data-icon="off" 			 data-iconpos="top" title="Logout"	></a>
-						</div>
-					</div>
-				</div><!-- /grid-b -->
-			</div>
+			<header data-role ="header" data-theme="a" data-position="fixed"> 
+  				<h1 class="ui-title" aling="center">RJN BAY</h1>
+  				<div data-role="navbar">
+					<ul>
+						<li><a href="#home" 				data-role="button" data-icon="home"			 title="Home"	>HOME</a></li>
+						<li><a href="#update-account"		data-role="button" data-icon="gear"			  title="Edit"	>EDIT</a></li>
+						<li><a onclick="LogOut()"			data-role="button" data-icon="off" 			  title="Logout"	>LOGOUT</a></li>
+					</ul>
+				</div><!-- /navbar -->
+			</header>
 			<div data-role="content">
 				<h3 align="center">Report Results<span id="report-day"></span><span id="report-month"></span><span id="report-year"></span></h3>
 				<ul id="manage-reports-list" style="display: none" data-role="listview"></ul>
@@ -375,19 +342,17 @@
 		</div><!--/page -->
 
 		<div id="register-account" data-role="page">
-			<div data-role="header" data-theme="e" data-position="fixed">
-				<div class="ui-grid-b" align="center">
-					<div class="ui-block-a"><h3>Register</h3></div>
-					<div class="ui-block-b"></div>
-					<div class="ui-block-c">
-						<div data-role="controlgroup" data-type="horizontal">
-							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
-							<a onclick="RegisterAccount()"	data-role="button" data-icon="save"			 data-iconpos="top" title="Submit"	></a>
-							<a href="#cart" 				data-role="button" data-icon="shopping-cart" data-iconpos="top" title="Cart"	></a>
-						</div>
-					</div>
-				</div><!-- /grid-b -->
-			</div>
+			<header data-role ="header" data-theme="a" data-position="fixed"> 
+  				<h1 class="ui-title" aling="center">RJN BAY</h1>
+  				<div data-role="navbar">
+					<ul>
+						<li><a href="#home" 				data-role="button" data-icon="home"			 title="Home"	>HOME</a></li>
+						<li><a onclick="RegisterAccount()"	data-role="button" data-icon="save"			 title="Submit"	>SUBMIT</a></li>
+						<li><a href="#cart" 				data-role="button" data-icon="shopping-cart"  title="Cart"	>CART</a></li>
+					</ul>
+				</div><!-- /navbar -->
+			</header>
+							
 			<div data-role="content">
 				<h3 align="center">Create your personal account</h3>
 				<form id="register-form">
@@ -406,20 +371,18 @@
 		</div><!--/page-->
 
 		<div id="update-account" data-role="page">
-			<div data-role="header" data-theme="e" data-position="fixed">
-				<div class="ui-grid-b" align="center">
-					<div class="ui-block-a"><h3>Account Settings</h3></div>
-					<div class="ui-block-b"></div>
-					<div class="ui-block-c">
-						<div data-role="controlgroup" data-type="horizontal">
-							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
-<!-- 							<a href="" 						data-role="button" data-icon="search"		 data-iconpos="top" title="Browse"	></a> -->
-							<a onclick="UpdateAccount()"	data-role="button" data-icon="save"			 data-iconpos="top" title="Save"	></a>
-							<a onclick="LogOut()"			data-role="button" data-icon="off"			 data-iconpos="top" title="Logout"	></a>
-						</div>
-					</div>
-				</div><!-- /grid-b -->
-			</div>
+			
+			<header data-role ="header" data-theme="a" data-position="fixed"> 
+  				<h1 class="ui-title" aling="center">RJN BAY</h1>
+  				<div data-role="navbar">
+					<ul>
+						<li><a href="#home" 				data-role="button" data-icon="home"			 title="Home"	>HOME</a></li>
+						<li><a onclick="UpdateAccount()"	data-role="button" data-icon="save"			  title="Save"	>SAVE</a></li>
+						<li><a onclick="LogOut()"			data-role="button" data-icon="off" 			  title="Logout">LOGOUT</a></li>
+					</ul>
+				</div><!-- /navbar -->
+			</header>
+			
 			<div data-role="content">
 				<h3 align="center">Edit Profile Information</h3>
 				<form id="update-account-form">
@@ -466,12 +429,16 @@
 				 	</fieldset>
 				</form>
 			</div><!-- /content -->
-			<div data-role="footer">
-				<div data-role="controlgroup" data-type="horizontal" align="center">
-							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
-							<a onclick="GetAccount()"	data-role="button" data-icon="user"			 data-iconpos="top" title="Account"	></a>
-				</div>
-			</div><!-- /footer -->
+			
+			<footer data-role ="footer" data-theme="a" data-position="fixed"> 
+  				<div data-role="navbar">
+					<ul>
+						<li><a href="#home" 				data-role="button" data-icon="home"			 title="Home"	>HOME</a></li>
+						<li><a onclick="GetAccount()"	data-role="button" data-icon="user"			  title="Account"	>ACCOUNT</a></li>
+					</ul>
+				</div><!-- /navbar -->
+			</footer>
+			
 		</div><!-- /page -->
 
 		<div id="edit-product-view" data-role="page">
@@ -500,12 +467,14 @@
 					<a class="Del-Button" data-icon="delete" data-role="button" data-inline="true" onclick="DeleteProduct()">Delete</a>
 				</center>
 			</div>
-			<div data-role="footer">
-				<div data-role="controlgroup" data-type="horizontal" align="center">
-					<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
-					<a onclick="GetAccount()"	data-role="button" data-icon="user"			 data-iconpos="top" title="Account"	></a>
-				</div>
-			</div><!-- /footer -->
+			<footer data-role ="footer" data-theme="a" data-position="fixed"> 
+  				<div data-role="navbar">
+					<ul>
+						<li><a href="#home" 				data-role="button" data-icon="home"			 title="Home"	>HOME</a></li>
+						<li><a onclick="GetAccount()"	data-role="button" data-icon="user"			  title="Account"	>ACCOUNT</a></li>
+					</ul>
+				</div><!-- /navbar -->
+			</footer>
 		</div><!-- /page -->
 
 
@@ -529,12 +498,14 @@
 				 	</fieldset>
 				</form>
 			</div><!-- /content -->
-			<div data-role="footer">
-				<div data-role="controlgroup" data-type="horizontal" align="center">
-							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
-							<a onclick="GetAccount()"	data-role="button" data-icon="user"			 data-iconpos="top" title="Account"	></a>
-				</div>
-			</div><!-- /footer -->
+			<footer data-role ="footer" data-theme="a" data-position="fixed"> 
+  				<div data-role="navbar">
+					<ul>
+						<li><a href="#home" 				data-role="button" data-icon="home"			 title="Home"	>HOME</a></li>
+						<li><a onclick="GetAccount()"	data-role="button" data-icon="user"			  title="Account"	>ACCOUNT</a></li>
+					</ul>
+				</div><!-- /navbar -->
+			</footer>
 		</div><!-- /page -->
 
 		<div id="edit-address-view" data-role="page">
@@ -556,12 +527,14 @@
 					<a class="Del-Button" data-icon="delete" data-role="button" data-inline="true" onclick="DeleteAddress()">Delete</a>
 				</center>
 			</div>
-			<div data-role="footer">
-				<div data-role="controlgroup" data-type="horizontal" align="center">
-					<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
-					<a onclick="GetAccount()"	data-role="button" data-icon="user"			 data-iconpos="top" title="Account"	></a>
-				</div>
-			</div><!-- /footer -->
+			<footer data-role ="footer" data-theme="a" data-position="fixed"> 
+  				<div data-role="navbar">
+					<ul>
+						<li><a href="#home" 				data-role="button" data-icon="home"			 title="Home"	>HOME</a></li>
+						<li><a onclick="GetAccount()"	data-role="button" data-icon="user"			  title="Account"	>ACCOUNT</a></li>
+					</ul>
+				</div><!-- /navbar -->
+			</footer>
 		</div><!-- /page -->
 		
 		<!--///////////////////////////////////		NEW ADDRESS FORM END	//////////////////////////////////////-->
@@ -586,12 +559,14 @@
 				 	</fieldset>
 				</form>
 			</div><!-- /content -->
-			<div data-role="footer">
-				<div data-role="controlgroup" data-type="horizontal" align="center">
-							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
-							<a onclick="GetAccount()"	data-role="button" data-icon="user"			 data-iconpos="top" title="Account"	></a>
-				</div>
-			</div><!-- /footer -->
+			<footer data-role ="footer" data-theme="a" data-position="fixed"> 
+  				<div data-role="navbar">
+					<ul>
+						<li><a href="#home" 				data-role="button" data-icon="home"			 title="Home"	>HOME</a></li>
+						<li><a onclick="GetAccount()"	data-role="button" data-icon="user"			  title="Account"	>ACCOUNT</a></li>
+					</ul>
+				</div><!-- /navbar -->
+			</footer>
 		</div><!-- /page -->
 
 		<div id="edit-payment-view" data-role="page">
@@ -615,31 +590,29 @@
 					<a class="Del-Button" data-icon="delete" data-role="button" data-inline="true" onclick="DeletePayment()">Delete</a>
 				</center>
 			</div>
-			<div data-role="footer">
-				<div data-role="controlgroup" data-type="horizontal" align="center">
-					<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
-					<a onclick="GetAccount()"	data-role="button" data-icon="user"			 data-iconpos="top" title="Account"	></a>
-				</div>
-			</div><!-- /footer -->
+			<footer data-role ="footer" data-theme="a" data-position="fixed"> 
+  				<div data-role="navbar">
+					<ul>
+						<li><a href="#home" 				data-role="button" data-icon="home"			 title="Home"	>HOME</a></li>
+						<li><a onclick="GetAccount()"	data-role="button" data-icon="user"			  title="Account"	>ACCOUNT</a></li>
+					</ul>
+				</div><!-- /navbar -->
+			</footer>
 		</div><!-- /page -->
 		
 		<!--///////////////////////////////////		NEW PAYMENT FORM END	//////////////////////////////////////-->
 		
 		<!--///////////////////////////////////		CART	//////////////////////////////////////-->
 		<div id ="cart" data-role="page">
-			<div data-role="header" data-theme="a" data-position="fixed">
-				<div class="ui-grid-b" align="center">
-					<div class="ui-block-a"><h3>RJN Bay</h3></div>
-					<div class="ui-block-b"></div>
-					<div class="ui-block-c">
-						<div data-role="controlgroup" data-type="horizontal">
-							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
-<!-- 							<a href="" 						data-role="button" data-icon="search"		 data-iconpos="top" title="Browse"	></a> -->
-							<a onclick="GetAccount()"	data-role="button" data-icon="user"			 data-iconpos="top" title="Account"	></a>
-						</div>
-					</div>
-				</div><!-- /grid-b -->
-			</div>
+			<header data-role ="header" data-theme="a" data-position="fixed"> 
+  				<h1 class="ui-title" aling="center">RJN BAY</h1>
+  				<div data-role="navbar">
+					<ul>
+						<li><a href="#home" 				data-role="button" data-icon="home"			 title="Home"	>HOME</a></li>
+						<li><a onclick="GetAccount()"		data-role="button" data-icon="user"			 title="Account">ACCOUNT</a></li>
+					</ul>
+				</div><!-- /navbar -->
+			</header>
 			<div data-role="content">
 				<h3 align="center">Your Cart</h3>	
 				<ul id="shopping-list" data-role="listview" data-inset="true">
@@ -668,8 +641,8 @@
 					</div><!-- /block-b -->
 					<div class="ui-block-c">
 						<div data-role="controlgroup" data-type="horizontal">
-							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
-							<a onclick="GetAccount()"	data-role="button" data-icon="user"			 data-iconpos="top" title="Account"	id="ForceLogin"></a>
+							<a href="#home" 				data-role="button" data-icon="home"			  title="Home"	></a>
+							<a onclick="GetAccount()"	data-role="button" data-icon="user"			  title="Account"	id="ForceLogin"></a>
 						</div><!-- /control-group -->
 					</div><!-- /block-c -->
 				</div><!-- /grid-b -->
@@ -698,20 +671,18 @@
 				
 		<!--///////////////////////////////////		PRODUCT-VIEW	//////////////////////////////////////-->
 		<div id="product-view" data-role="page">
-			<div data-role="header" data-theme="a" data-position="fixed">
-				<div class="ui-grid-b" align="center">
-					<div class="ui-block-a"><h3 id="productTitle"></h3></div>
-					<div class="ui-block-b"></div>
-					<div class="ui-block-c">
-						<div data-role="controlgroup" data-type="horizontal">
-							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
-<!-- 							<a href="" 						data-role="button" data-icon="search"		 data-iconpos="top" title="Browse"	></a> -->
-							<a onclick="GetAccount()"	data-role="button" data-icon="user"			 data-iconpos="top" title="Account"	></a>
-							<a href="#cart" 				data-role="button" data-icon="shopping-cart" data-iconpos="top" title="Cart"	></a>
-						</div>
-					</div>
-				</div><!-- /grid-b -->
-			</div><!-- /header -->
+			
+			<header data-role ="header" data-theme="a" data-position="fixed"> 
+  				<h1 class="ui-title" aling="center">RJN BAY</h1>
+  				<div data-role="navbar">
+					<ul>
+						<li><a href="#home" 				data-role="button" data-icon="home"			 title="Home"	>HOME</a></li>
+						<li><a onclick="GetAccount()"	data-role="button" data-icon="user"			  title="Account"	>ACCOUNT</a></li>
+						<li><a href="#cart" 				data-role="button" data-icon="shopping-cart"  title="Cart"	>CART</a></li>
+					</ul>
+				</div><!-- /navbar -->
+			</header>
+			
 			<div data-role="content">
 				<h3 align="center">Product Details</h3>
 				<ul id="prod-details" data-role="listview" data-inset="true">	  			  	
@@ -734,20 +705,17 @@
 		</div><!-- /page -->
 
 		<div id="bidhistory" data-role="page">
-			<div data-role="header" data-theme="a" data-position="fixed">
-				<div class="ui-grid-b" align="center">
-					<div class="ui-block-a"><h3>Bid History</h3></div>
-					<div class="ui-block-b"></div>
-					<div class="ui-block-c">
-						<div data-role="controlgroup" data-type="horizontal">
-							<a href="#home" 				data-role="button" data-icon="home"			 data-iconpos="top" title="Home"	></a>
-<!-- 							<a href="" 						data-role="button" data-icon="search"		 data-iconpos="top" title="Browse"	></a> -->
-							<a onclick="GetAccount()"	data-role="button" data-icon="user"			 data-iconpos="top" title="Account"	></a>
-							<a href="#cart" 				data-role="button" data-icon="shopping-cart" data-iconpos="top" title="Cart"	></a>
-						</div>
-					</div>
-				</div><!-- /grid-b -->
-			</div><!-- /header -->
+			
+			<header data-role ="header" data-theme="a" data-position="fixed"> 
+  				<h1 class="ui-title" aling="center">RJN BAY</h1>
+  				<div data-role="navbar">
+					<ul>
+						<li><a href="#home" 				data-role="button" data-icon="home"			 title="Home"	>HOME</a></li>
+						<li><a onclick="GetAccount()"	data-role="button" data-icon="user"			  title="Account"	>ACCOUNT</a></li>
+						<li><a href="#cart" 				data-role="button" data-icon="shopping-cart"  title="Cart"	>CART</a></li>
+					</ul>
+				</div><!-- /navbar -->
+			</header>
 
 			<div data-role="content">
 				<h3 align="center">Bid History for <a id="history-product-name"></a></h3>
