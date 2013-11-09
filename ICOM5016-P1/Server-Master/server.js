@@ -112,11 +112,6 @@ var categoryNextId = 42;
 app.get('/Server-Master/home', function(req, res) {
 	console.log("GET categories");
 
-//  PHASE 1 CODE
-/*	var response = {"categories" : categoryList};
-  	res.json(response);*/
-
-//  PHASE 2 CODE
     var client = new pg.Client(dbConnInfo);
 	client.connect();
 
@@ -133,14 +128,7 @@ app.get('/Server-Master/home', function(req, res) {
     		res.send("No categories not found.");
 		}
 		else{
-			var response;
-			if(result.rowCount > 1){
-				response = {"categories" : result.rows};
-			}
-	  		else {
-	  			response = {"categories" : result.rows[0]};
-	  		}
-  			console.log("row count: " + result.rowCount);
+			var response = {"categories" : result.rows};
   			client.end();
 	  		res.json(response);
 	  	}
@@ -153,31 +141,6 @@ app.get('/Server-Master/home/:id', function(req, res) {
 	var id = req.params.id;
 	console.log("GET category (for edit): " + id);
 
-//  PHASE 1 CODE
-/*	if ((id < 0) || (id >= categoryNextId)){
-		// not found
-		res.statusCode = 404;
-		res.send("Category not found.");
-	}
-	else {
-		var target = -1;
-		for (var i=0; i < categoryList.length; ++i){
-			if (categoryList[i].id == id){
-				target = i;
-				break;	
-			}
-
-		}
-		if (target == -1){
-			res.statusCode = 404;
-			res.send("Category not found.");
-		}
-		else {
-			var response = {"category" : categoryList[target]};
-  			res.json(response);	
-  		}	
-	}*/
-//  PHASE 2 CODE
     var client = new pg.Client(dbConnInfo);
 	client.connect();
 
@@ -188,12 +151,12 @@ app.get('/Server-Master/home/:id', function(req, res) {
 	});
 	query.on("end", function (result) {
     	if(result.rowCount == 0){
+  			client.end();
     		res.statusCode = 404;
     		res.send("Category not found.");
     	}
     	else {
-			var response = {"category" : result.rows[0]};
-			console.log("row count: " + result.rowCount);
+			var response = {"category" : result.rows};
 			client.end();
     		res.json(response);
     	}
@@ -285,66 +248,6 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 	var id = req.params.id;
 	var SortType = req.params.SortType;
 
-//		PHASE 1 CODE
-/*	if ((id < 0) || (id >= categoryNextId)){
-		// not found
-		res.statusCode = 404;
-		res.send("Category not found.");
-	}
-	else {
-		var theType = true; // if remains true at end content of response is subcategories
-		var theChildren = new Array();
-		var target = -1;
-		for (var i=0; i < categoryList.length; ++i){
-			if (categoryList[i].id == id){
-				console.log("GET subcategories of category " + id);
-				target = i;
-			}
-			if (categoryList[i].parent == id){
-				theChildren.push(categoryList[i]);	
-			}		
-		}
-		if (target == -1){
-			res.statusCode = 404;
-			res.send("Parent category not found.");			
-		}
-		else {
-			if (theChildren.length <1){
-				theType = false; //content of theChildren are products
-				
-				if(SortType=="none"){
-					for (var i=0; i < productList.length; ++i){
-						if (productList[i].parent == id){
-							theChildren.push(productList[i]);
-						}
-					}
-				}
-				
-				else if(SortType=="name"||SortType=="price"||SortType=="brand"){
-					console.log("Trololol Sort Will Be Implemented in Phase 2 Have a Nice Day! :D");
-					for (var i=0; i < productList.length; ++i){
-						if (productList[i].parent == id){
-							theChildren.push(productList[i]);
-						}
-					}
-				}
-				
-				else{
-					console.log("This is not supposed to happen... EVER!");
-					for (var i=0; i < productList.length; ++i){
-						if (productList[i].parent == id){
-							theChildren.push(productList[i]);
-						}
-					}
-				}
-						
-			}		
-			var response = {"children" : theChildren, "parent" : categoryList[target], "childType" : theType};
-			res.json(response);
-		}
-	}
-*/
-//  PHASE 2 CODE
 	var theType = true; // if remains true at end content of response is subcategories
 	var client = new pg.Client(dbConnInfo);
 	client.connect();
@@ -358,7 +261,6 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 		// Responds with sub categories of id if they exist
 		if(result.rowCount > 0){
 			console.log("GET subcategories of " + id + " Sorted By: " + SortType);
-			console.log("row count: " + result.rowCount);
 			var response = {"categories" : result.rows, "type" : theType, "parent" : result.rows[0].parent_name};
 			client.end();
 			res.json(response);
@@ -393,7 +295,6 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 					res.send("Parent category not found.");	
 				}
 				else {
-					console.log("row count: " + result.rowCount);
 					var response = {"products" : result.rows, "type" : theType, "parent" : result.rows[0].parent_name};
 					client.end();
 					res.json(response);
@@ -406,33 +307,7 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 // REST Operation - HTTP GET to get category's parent id
 app.get('/Server-Master/subCategory/:id', function(req, res) {
 	var id = req.params.id;
-	console.log("GET subCategory: " + id);
 
-//  PHASE 1 CODE	
-/*	if ((id < 0) || (id >= categoryNextId)){
-		// not found
-		res.statusCode = 404;
-		res.send("Category not found.");
-	}
-	else {
-		var target = -1;
-		for (var i=0; i < categoryList.length; ++i){
-			if (categoryList[i].id == id){
-				target = i;
-			}	
-		}
-		if (target == -1){
-			res.statusCode = 404;
-			res.send("Parent category not found.");			
-		}	
-		else {
-			var response = {"parent" : categoryList[target]};
-			console.log("Parent category: " + categoryList[target].parent); //For testing purposes only
-  			res.json(response);
-		}
-	}*/
-
-//  PHASE 2 CODE
 	var client = new pg.Client(dbConnInfo);
 	client.connect();
 
@@ -443,12 +318,13 @@ app.get('/Server-Master/subCategory/:id', function(req, res) {
 	});
 	query.on("end", function (result) {
 		if (result.rowCount == 0){
+			client.end();
 			res.statusCode = 404;
 			res.send("Category not found.");			
 		}
 		else {
+			console.log("GET subCategory: " + id);
 			var response = {"parent" : result.rows[0]};
-			console.log("row count: " + result.rowCount);
 			client.end();
 	  		res.json(response);
   		}
@@ -521,34 +397,12 @@ for (var i=0; i < productBidsList.length;++i){
 // REST Operation - HTTP GET to read a product based on its id
 app.get('/Server-Master/product/:id', function(req, res) {
 	var id = req.params.id;
-//	PHASE 1 CODE
-/*	if ((id < 0) || (id >= productNextId)){
-		// not found
-		res.statusCode = 404;
-		res.send("Product not found.");
-	}
-	else {
-		var target = -1;
-		for (var i=0; i < productList.length; ++i){
-			if (productList[i].id == id){
-				target = i;
-				break;	
-			}
-		}
-		if (target == -1){
-			res.statusCode = 404;
-			res.send("Product not found.");
-		}
-		else {
-			var response = {"product" : productList[target]};
-  			res.json(response);	
-  		}	
-	}*/
-//	PHASE 2 CODE
+
 	var client = new pg.Client(dbConnInfo);
 	client.connect();
 	
-	// Query to get product information. Has natural join with auctions table so it can query the current_bid price, 
+	// Query to get product information. 
+	// Has natural join with auctions table so it can query the current_bid price, 
 	// and a natural join with count result that yeilds the num_of_bids for the product
 	var query = client.query("SELECT * from products natural join auctions natural join (select account_id as seller_id, username from accounts) as seller natural join (SELECT auction_id, count(*) as num_of_bids from placed_bids natural join auctions where product_id = $1 group by auction_id) AS bids where product_id = $2", [id, id]);
 	
@@ -564,7 +418,7 @@ app.get('/Server-Master/product/:id', function(req, res) {
 		else {
 			console.log("GET product: " + id);;
 			var response = {"product" : result.rows[0]};
-			console.log("row count: " + result.rowCount); // for debuging purposes
+			console.log(response); // for debugging purposes
 			client.end();
 			res.json(response);
 	  	}
@@ -1006,14 +860,14 @@ app.get('/Server-Master/account/payment/:id', function(req, res) {
 	});
 	query.on("end", function (result) {
     	if(result.rowCount == 0){
+    		client.end();
     		res.statusCode = 404;
     		res.send("Payment information not found.");
     	}
     	else {
 			var response = {"payment" : result.rows[0]};
-			console.log("row count: " + result.rowCount);
+			client.end();
     		res.json(response);
-    		client.end();
     	}
  	});
 });
@@ -1210,7 +1064,7 @@ app.get('/Server-Master/admin/:id', function(req, res){
 	//variables for data to be returned
 	var theAdmin, theCategories, theUsers; 
 
-	var query = client.query("SELECT * from accounts where account_id = $1", [id]);
+/*	var query = client.query("SELECT * from accounts where account_id = $1", [id]);
 	query.on("row", function (row, result){
 		result.addRow(row);
 	});
@@ -1224,11 +1078,10 @@ app.get('/Server-Master/admin/:id', function(req, res){
 		else {
 			theAdmin = result.rows;
 			console.log("GET admin account: " + id);
-			console.log("row count: " + result.rowCount);
 		}
-	});
+	});*/
 
-	var query2 = client.query("SELECT cid as id, cname as name from categories");
+	var query2 = client.query("SELECT cid, cname from categories");
 	query2.on("row", function (row, result){
 		result.addRow(row);
 	});
@@ -1237,14 +1090,14 @@ app.get('/Server-Master/admin/:id', function(req, res){
 		console.log("Categories row count: " + result.rowCount);
 	});
 
-	var query3 = client.query("SELECT * from accounts");
+	var query3 = client.query("SELECT account_id, username from accounts");
 	query3.on("row", function (row, result){
 		result.addRow(row);
 	});
 	query3.on("end", function (result){
 		theUsers = result.rows;
 		console.log("Users row count: " + result.rowCount);
-		var response = {"adminInfo" : theAdmin, "categoryList": theCategories, "userList" : theUsers};
+		var response = {"adminInfo" : theAdmin, "categoriesList": theCategories, "userList" : theUsers};
 		client.end();
 		res.json(response);
 	});
@@ -1300,8 +1153,8 @@ app.get('/Server-Master/seller/:id', function(req, res) {
 	client.connect();
 
 	var theSeller, theRatings, ratings_percentage, theProducts;
+	// get seller's basic information
 	var query = client.query("SELECT username, email, description from accounts where account_id = $1", [id]);
-
 	query.on("row", function (row, result){
 		result.addRow(row);
 	});
@@ -1318,12 +1171,13 @@ app.get('/Server-Master/seller/:id', function(req, res) {
 	});
 
     // Query to get ratings for this seller
-	var query2 = client.query("SELECT username, ratings.rating from ratings natural join orders natural join products, accounts where buyer_id = account_id and seller_id = $1", [id]);
+	var query2 = client.query("SELECT username, rating from sales natural join orders natural join products, accounts where buyer_id = account_id and seller_id = $1", [id]);
 	query2.on("row", function (row, result){
 		result.addRow(row);
 	});
 	query2.on("end", function (result){
 		theRatings = result.rows;
+		console.log(theRatings);
 	});
 
 	// Query to get products being sold by this seller
@@ -1336,7 +1190,7 @@ app.get('/Server-Master/seller/:id', function(req, res) {
 	});
 
 	// Query to get % of ratings by rating value
-	var query4 = client.query("SELECT rating, (round(100.0*count(*)/num_of_ratings::numeric,2) || '%') as percentage from ratings natural join orders natural join products natural join (SELECT count(*) as num_of_ratings from ratings) as r where seller_id = $1 group by rating, num_of_ratings order by rating DESC", [id]);
+	var query4 = client.query("SELECT rating, (round(100.0*count(*)/num_of_ratings::numeric,2) || '%') as percentage from (SELECT count(*) as num_of_ratings from sales natural join products where seller_id = $1) as r, sales natural join orders natural join products, accounts where buyer_id = account_id and seller_id = $2 group by rating, num_of_ratings order by rating DESC", [id, id]);
 	query4.on("row", function (row, result){
 		result.addRow(row);
 	});
@@ -1410,7 +1264,7 @@ app.get('/Server-Master/account/:id', function(req, res) {
 		}
 	});
 	//returns the ratings list for user
-	var query3 = client.query("SELECT username, rating from ratings natural join orders natural join products, accounts where buyer_id = account_id and seller_id = $1",[id]);
+	var query3 = client.query("SELECT username, rating from sales natural join orders natural join products, accounts where buyer_id = account_id and seller_id = $1",[id]);
 	query3.on('row', function (row, result){
 		result.addRow(row);
 	});

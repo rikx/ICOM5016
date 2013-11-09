@@ -577,7 +577,7 @@ $(document).on('pagebeforeshow', "#admin", function( event, ui ) {
 		success : function(data, textStatus, jqXHR){
 			var user = currentUser;
 			$('#adminTitle').html(user.username);
-			var categories = data.categoryList;
+			var categories = data.categoriesList;
 			var users = data.userList;
 			
 			var maxLength = Math.max(categories.length, users.length); 
@@ -594,7 +594,7 @@ $(document).on('pagebeforeshow', "#admin", function( event, ui ) {
 
 			for(var i=0; i < maxLength; ++i){
 				if(i < categories.length){
-					categoryList.append('<li><strong>Category name: '+ categories[i].name +'</strong>'+
+					categoryList.append('<li><strong>Category name: '+ categories[i].cname +'</strong>'+
 					'<a onclick=EditCategory('+categories[i].cid+') data-icon="gear">Edit</a>'+
 					'<a onclick=DeleteCategory('+categories[i].cid+') data-icon="trash">Delete</a></li>'
 					);
