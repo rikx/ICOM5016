@@ -1253,12 +1253,30 @@ app.get('/Server-Master/account/:id', function(req, res) {
 		theBids = result.rows;
 	});
 
-	//returns user payment options 
-	var query6 = client.query("SELECT * from has_payment_option natural join payment_options natural join addresses where account_id = $1", [id]);
-	query6.on("row", function (row, result){
+	//returns products bought in the past
+	var query6 = client.query("SELECT * from orders where buyer_id = $1", [id]);
+	query6.on('row', function (row, result){
 		result.addRow(row);
 	});
-	query6.on("end", function (result){
+	query6.on('end', function (result){
+		theOrders = result.rows;
+	});
+
+	//returns products sold in the past
+	var query7 = client.query("SELECT * from orders where buyer_id = $1", [id]);
+	query7.on('row', function (row, result){
+		result.addRow(row);
+	});
+	query7.on('end', function (result){
+		theOrders = result.rows;
+	});
+
+	//returns user payment options 
+	var query8 = client.query("SELECT * from has_payment_option natural join payment_options natural join addresses where account_id = $1", [id]);
+	query8.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query8.on("end", function (result){
 		thePaymentOptions = result.rows;
 		var response = {"user" : theUser, "shippingAddresses" : theAddresses, "paymentOptions" : thePaymentOptions, 
 				"ratingsList" : theRatings, "bids" : theBids, "sellingProducts" : theProducts};
