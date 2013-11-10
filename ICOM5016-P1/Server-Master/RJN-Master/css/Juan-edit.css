@@ -15,3 +15,13 @@ border: 1px solid 		#111111 /*{a-bup-border}*/;
 
 
 }
+
+.ui-page {
+    background: url('../css/images/RJNWORLD.jpg') repeat scroll 50% 50% #112233 !important;
+    color: #aabbcc !important;
+} 
+
+.ui-listview li {
+    background-color: transparent !important;
+    background-image: url('') !important;
+}
