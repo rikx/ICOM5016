@@ -58,86 +58,82 @@ $(document).on('pagebeforeshow', "#cart", function( event, ui ) {
 			var len = Cart.length;
 			var list = $("#shopping-list");
 			var cList = $("#total");
+			var shipAddressList = $('#cart-shipaddress-list');
+			var payList = $('#cart-paymentType-list');
 			var total = 0.00;
 			list.empty();
 			cList.empty();
-
+			payList.empty();
+			shipAddressList.empty();
+			
 				for (var i=0; i < len; ++i){
 					product = Cart[i];
 					total=total+product.instant_price;
 					list.append('<li><a onclick=GetProduct('+product.id+')><h2>'+product.name+'</h2></a>'+
 					'<a onclick=removeFromCart('+i+') data-icon="delete">Delete</a></li>');
 				}
+				
 			list.listview("refresh");	
 			cList.append('<li><h2><strong> Total: ' + accounting.formatMoney(total) + '</strong></h2></li>');
 			cList.listview("refresh");
 
-if(currentUser.account_id != null){
-//======================================================================================================//
-$.ajax({
-		url : "http://localhost:3412/Server-Master/account/" + currentUser.account_id,
-		method: 'get',
-		contentType: "application/json",
-		dataType:"json",
-		success : function(data, textStatus, jqXHR){
-			
-			var paymentTypes = data.paymentOptions;
-			var shippingAddresses = data.shippingAddresses;
-			
-			var shipAddressList = $('#cart-shipaddress-list');
-			var payList = $('#cart-paymentType-list');
-
-			shipAddressList.empty();
-			payList.empty();
-			
-			var maxLength = Math.max(shippingAddresses.length, paymentTypes.length); 
-
-			for(var i=0; i < maxLength; ++i){
-				//Populate Address Options List
-				if(i < shippingAddresses.length){
-						
-						var ShipAddress = " " + shippingAddresses[i].street_address + " " + shippingAddresses[i].city + " " +
-						shippingAddresses[i].country + " " + shippingAddresses[i].state + " " + shippingAddresses[i].zipcode + " ";
-						
-						ShipAddressess[i] = ShipAddress;
-						
-						shipAddressList.append("<li><div><center><strong> Address:" + ShipAddress +"</strong></center></div></li>"+
-						"<li><a onclick=InvoiceAddress("+ i +") data-icon='check'>SELECT</a></li>"
-						);
+	if(currentUser.account_id != null){
+		$.ajax({
+				url : "http://localhost:3412/Server-Master/account/" + currentUser.account_id,
+				method: 'get',
+				contentType: "application/json",
+				dataType:"json",
+				success : function(data, textStatus, jqXHR){
+					
+					var paymentTypes = data.paymentOptions;
+					var shippingAddresses = data.shippingAddresses;
+					
+					var maxLength = Math.max(shippingAddresses.length, paymentTypes.length); 
+		
+					for(var i=0; i < maxLength; ++i){
+						//Populate Address Options List
+						if(i < shippingAddresses.length){
+								
+								var ShipAddress = " " + shippingAddresses[i].street_address + " " + shippingAddresses[i].city + " " +
+								shippingAddresses[i].country + " " + shippingAddresses[i].state + " " + shippingAddresses[i].zipcode + " ";
+								
+								ShipAddressess[i] = ShipAddress;
+								
+								shipAddressList.append('<li><div><center><strong> Address:' + ShipAddress +'</strong></center></div></li>'+
+								'<li><a onclick=InvoiceAddress('+ i +') data-theme="a" data-icon="check" href="#choose" data-rel="popup" data-position-to="window" data-transition="pop">SELECT</a></li>'
+								);
+						}
+						//Populate Payment Options list
+						if(i < paymentTypes.length){
+							
+								var PayAddress = " " + paymentTypes[i].street_address + " " + paymentTypes[i].city + " " +
+								paymentTypes[i].country + " " + paymentTypes[i].state + " " + paymentTypes[i].zipcode + " ";
+							
+								PayAddressess[i] = PayAddress;
+							
+								payList.append('<li><div><center>Card Ending with '+ paymentTypes[i].card_number.substr(15)+'</center>'+
+								'<center><strong>Billing Address: </strong>'+ PayAddress +'</center></div></li>'+
+								'<li><a onclick=InvoicePayment('+ i +','+ paymentTypes[i].card_number.substr(15) +') data-theme="a" data-icon="check" href="#choose2" data-rel="popup" data-position-to="window" data-transition="pop">SELECT</a></li>'
+								);
+						}
+					}
+					
+					shipAddressList.listview("refresh");
+					payList.listview("refresh");
+		
+				},
+				error: function(data, textStatus, jqXHR){
+					console.log("textStatus: " + textStatus);
+					$.mobile.loading("hide");
+					if (data.status == 404){
+						alert("User not found.");
+					}
+					else {
+						alert("Internal Server Error.");
+					}
 				}
-				//Populate Payment Options list
-				if(i < paymentTypes.length){
-					
-						var PayAddress = " " + paymentTypes[i].street_address + " " + paymentTypes[i].city + " " +
-						paymentTypes[i].country + " " + paymentTypes[i].state + " " + paymentTypes[i].zipcode + " ";
-					
-					
-						PayAddressess[i] = PayAddress;
-					
-						payList.append('<li><div><center>Card Ending with '+ paymentTypes[i].card_number.substr(15)+'</center>'+
-						'<center><strong>Billing Address: </strong>'+ PayAddress +'</center></div></li>'+
-						'<li><a onclick=InvoicePayment('+ i +') data-theme="a" data-icon="check" href="#choose2" data-rel="popup" data-position-to="window" data-transition="pop">SELECT</a></li>'
-						);
-				}
-			}
-			
-			shipAddressList.listview("refresh");
-			payList.listview("refresh");
-
-		},
-		error: function(data, textStatus, jqXHR){
-			console.log("textStatus: " + textStatus);
-			$.mobile.loading("hide");
-			if (data.status == 404){
-				alert("User not found.");
-			}
-			else {
-				alert("Internal Server Error.");
-			}
-		}
-	});
-//======================================================================================================//	
-}//End IF
+			});
+	}//End IF
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1648,6 +1644,12 @@ function checkout(){
 		if(Cart.length==0){//Buying nothing?
 			alert('Cart Is Empty');
 		}
+		if(invoiceShipAddress == null){
+			alert('Please select a Shipping Address!');
+		}
+		if(invoiceBillAddress == null){
+			alert('Please select a Payment Option!');
+		}
 		else{
 			document.location.href="#invoice";//Invoice
 		}
@@ -1660,9 +1662,11 @@ function checkout(){
 
 function InvoiceAddress(index){
 		invoiceShipAddress = ShipAddressess[index];
+		$("#ShipAddressSelected").html(ShipAddressess[index]);
 }
 
-function InvoicePayment(index){
-		invoiceBillAddress = PayAddressess[index];
+function InvoicePayment(index,number){
+		invoiceBillAddress = "Card ending in: "+number+" "+PayAddressess[index];
+		$("#PayAddressSelected").html("<p>Card ending in: "+number+"</p><p> Billed to: "+PayAddressess[index]+"</p>");
 }
 
