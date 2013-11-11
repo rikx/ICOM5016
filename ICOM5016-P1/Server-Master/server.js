@@ -1027,6 +1027,7 @@ app.get('/Server-Master/admin/:id', function(req, res){
 
 // REST Operation - HTTP GET to read report based on reportType
 app.get('/Server-Master/admin/:id/report/:reportType', function(req, res){
+	var id = req.params.id;
 	var reportType = req.params.reportType;
 
 	var client = pg.Client(dbConnInfo);
@@ -1036,35 +1037,23 @@ app.get('/Server-Master/admin/:id/report/:reportType', function(req, res){
 	var query, theReport;
 	//
 	if(reportType == "byProduct"){
-		query = client.query("");
-		query.on('row', function (row, result){
-			result.addRow(row);
-		});
-		query.on('end', function (result){
-			theReport = result.rows;
-		});
+		query = client.query("SELECT * from products");
 	}
 	else if (reportType == "all Products") {
-		query = client.query("SELECT name, current_bid, instant_price, quantity, purchase_date from sales natural join orders natural join products");
-		query.on('row', function (row, result){
-			result.addRow(row);
-		});
-		query.on('end', function (result){
-			theReport = result.rows;
-		});
+		query = client.query("SELECT product_id, name, current_bid, instant_price, quantity, purchase_date from sales natural join orders natural join products");
 	}
 	else {
-		query = client.query("");
-		query.on('row', function (row, result){
-			result.addRow(row);
-		});
-		query.on('end', function (result){
-			theReport = result.rows;
-		});
+		query = client.query("SELECT * from products");
 	}
-	var response = {"report" : theReport};
-	client.end();
-	res.json(response);
+	query.on('row', function (row, result){
+		result.addRow(row);
+	});
+	query.on('end', function (result){
+		theReport = result.rows;
+		var response = {"report" : theReport};
+		client.end();
+		res.json(response);
+	});
 });
 
 // REST Operation - HTTP GET to read a seller profile based on its id

@@ -687,8 +687,8 @@ $(document).on('pagebeforeshow', "#admin", function( event, ui ) {
 			userList.empty();
 
 			//Adds the Add buttons at the top of the lists
-			categoryList.append('<li><a href="#add-category" data-role="button">Add new category</a></li><br />');
-			userList.append('<li><a href="#register-account" data-role="button">Add new user</a></li><br />');
+			categoryList.append('<li><a href="#add-category" data-role="button">Add new category</a></li>');
+			userList.append('<li><a href="#register-account" data-role="button">Add new user</a></li>');
 
 			for(var i=0; i < maxLength; ++i){
 				if(i < categories.length){
@@ -762,11 +762,8 @@ $(document).on('pagebeforeshow', "#report", function( event, ui ) {
 			reportList.empty();
 
 			for(var i = 0; i < reportInfo.length; ++i){
-				reportList.append('<li><a onclick=GetProduct('+reportInfo[i].id+')><h2>'+reportInfo[i].name+'</h2>'+
-					'<p><img src="http://3.bp.blogspot.com/-nU8O8xLuSvs/TdjWsU3X2DI/AAAAAAAAAIs/Lsa3Y92DGy0/s320/112.jpg" /></p>'+
-					'<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(reportInfo[i].bidPrice) + '</h4></p>'+
-					'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(reportInfo[i].instant_price) + '</h4></p></a>'+
-					'<a onclick=EditProduct('+reportInfo[i].id+') data-icon="gear">Edit</a></li>');	
+				reportList.append('<li><a onclick=GetProduct('+reportInfo[i].product_id+')><h2>'+reportInfo[i].name+'</h2>'+
+					'<p><img src="'+reportInfo[i].image_filename+'" /></p> Sold at: '+reportInfo[i].instant_price+'on '+reportInfo[i].purchase_date+' </li>');	
 			}
 			reportList.listview("refresh");
 		},
