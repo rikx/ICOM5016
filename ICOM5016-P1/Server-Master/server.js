@@ -1045,7 +1045,7 @@ app.get('/Server-Master/admin/:id/report/:reportType', function(req, res){
 		});
 	}
 	else if (reportType == "all Products") {
-		query = client.query("");
+		query = client.query("SELECT name, current_bid, instant_price, quantity, purchase_date from sales natural join orders natural join products");
 		query.on('row', function (row, result){
 			result.addRow(row);
 		});

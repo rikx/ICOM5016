@@ -691,8 +691,8 @@ $(document).on('pagebeforeshow', "#admin", function( event, ui ) {
 			userList.empty();
 
 			//Adds the Add buttons at the top of the lists
-			categoryList.append('<li><a href="#add-category" data-role="button">Add new category</a></li>');
-			userList.append('<li><a href="#register-account" data-role="button">Add new user</a></li>');
+			categoryList.append('<li><a href="#add-category" data-role="button">Add new category</a></li><br />');
+			userList.append('<li><a href="#register-account" data-role="button">Add new user</a></li><br />');
 
 			for(var i=0; i < maxLength; ++i){
 				if(i < categories.length){
