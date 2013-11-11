@@ -238,6 +238,8 @@ $(document).ready(function() {
 	                var productList = data.ListOfProducts;
 	                var len = productList.length;
 					var list = $("#category-list");
+					var list2 = $("#browse-list");
+					
 	                if (len == 1) {
 	                	GetProduct(productList[0].product_id);
 	                }
@@ -246,9 +248,13 @@ $(document).ready(function() {
 	        	
 	        			list.html("<li><h2>Product(s) Not Found!</h2></li>");
 	        			list.listview("refresh");	
+	        			
+	        			list2.html("<li><h2>Product(s) Not Found!</h2></li>");
+	        			list2.listview("refresh");	
 	        		}
 	                else {
 	                	list.empty();
+	                	list2.empty();
 						for (var i=0; i < len; ++i){
 							product = productList[i];
 							list.append('<li><a onclick=GetProduct('+product.product_id+')><h2>'+product.name+'</h2>'+
@@ -257,12 +263,26 @@ $(document).ready(function() {
 							'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(product.instant_price) + '</h4></p></a>'+
 							'<a onclick=EditProduct('+product.product_id+') data-icon="gear">Edit</a></li>');	
 						} 
-						list.listview("refresh");	  
+						list.listview("refresh");	
+						
+						for (var i=0; i < len; ++i){
+							product = productList[i];
+							list2.append('<li><a onclick=GetProduct('+product.product_id+')><h2>'+product.name+'</h2>'+
+							'<p><img src="'+product.image_filename+'"" /></p>'+ 
+							'<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(product.current_bid) + '</h4></p>'+
+							'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(product.instant_price) + '</h4></p></a>'+
+							'<a onclick=EditProduct('+product.product_id+') data-icon="gear">Edit</a></li>');	
+						} 
+						list2.listview("refresh");	    
 		            }
 	            },
 	        	error: function(data, textStatus, jqXHR){
 	                console.log("textStatus: " + textStatus);
-	                alert("Product not found!");
+	                list.html("<li><h2>Server ERROR!</h2></li>");
+	        		list.listview("refresh");	
+	        			
+	        		list2.html("<li><h2>Server ERROR!</h2></li>");
+	        		list2.listview("refresh");	
 	            }
 	        });
 	    }

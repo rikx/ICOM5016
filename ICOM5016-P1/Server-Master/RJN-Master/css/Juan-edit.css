@@ -17,11 +17,18 @@ border: 1px solid 		#111111 /*{a-bup-border}*/;
 }
 
 .ui-page {
-    background: url('../css/images/RJNWORLD.jpg') repeat scroll 50% 50% #112233 !important;
+    background: url('../css/images/RJNUNIVERSE.jpg') repeat scroll 50% 50% #112233 !important;
     color: #aabbcc !important;
+    background-repeat:no-repeat !important;
+    background-position:center center !important;
+    background-size:cover !important;
 } 
 
-.ui-listview li {
+.ui-listview li, .ui-listview-inset, .ui-content, .ui-btn-inner, .ui-li, .ui-btn, .ui-collapsible-content {/*Makes Things Transparent(Mostly for panels and backgrounds)*/
     background-color: transparent !important;
     background-image: url('') !important;
+}
+
+h3, h2, strong, li, label, p, .ui-header, .ui-li-heading, .ui-li, .ui-li-static, .ui-btn-up-c, .ui-btn-hover-c,.ui-link-inherit{/*Colors Text White for these elements*/
+	color:white !important;
 }
