@@ -50,6 +50,8 @@ $(document).on('pagebeforeshow', "#home", function( event, ui ) {
 //										SHOPPING CART PAGE											  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+var ShipAddressess = [];
+var PayAddressess = [];
 
 $(document).on('pagebeforeshow', "#cart", function( event, ui ) {
 	
@@ -93,16 +95,28 @@ $.ajax({
 			for(var i=0; i < maxLength; ++i){
 				//Populate Address Options List
 				if(i < shippingAddresses.length){
-				
-						shipAddressList.append("<li><div><center><strong> Address:" + shippingAddresses[i].street_address +"</strong></center></div></li>"+
-						"<li><a onclick=InvoiceAddress("+ shippingAddresses[i].street_address +") data-icon='check'>SELECT</a></li>"
+						
+						var ShipAddress = " " + shippingAddresses[i].street_address + " " + shippingAddresses[i].city + " " +
+						shippingAddresses[i].country + " " + shippingAddresses[i].state + " " + shippingAddresses[i].zipcode + " ";
+						
+						ShipAddressess[i] = ShipAddress;
+						
+						shipAddressList.append("<li><div><center><strong> Address:" + ShipAddress +"</strong></center></div></li>"+
+						"<li><a onclick=InvoiceAddress("+ i +") data-icon='check'>SELECT</a></li>"
 						);
 				}
 				//Populate Payment Options list
 				if(i < paymentTypes.length){
+					
+						var PayAddress = " " + paymentTypes[i].street_address + " " + paymentTypes[i].city + " " +
+						paymentTypes[i].country + " " + paymentTypes[i].state + " " + paymentTypes[i].zipcode + " ";
+					
+					
+						PayAddressess[i] = PayAddress;
+					
 						payList.append('<li><div><center>Card Ending with '+ paymentTypes[i].card_number.substr(15)+'</center>'+
-						'<center><strong>Billing Address: </strong>'+ paymentTypes[i].street_address +'</center></div></li>'+
-						'<li><a onclick=InvoicePayment('+ paymentTypes[i].street_address +') data-theme="a" data-icon="check" href="#choose2" data-rel="popup" data-position-to="window" data-transition="pop">SELECT</a></li>'
+						'<center><strong>Billing Address: </strong>'+ PayAddress +'</center></div></li>'+
+						'<li><a onclick=InvoicePayment('+ i +') data-theme="a" data-icon="check" href="#choose2" data-rel="popup" data-position-to="window" data-transition="pop">SELECT</a></li>'
 						);
 				}
 			}
@@ -145,18 +159,18 @@ $(document).on('pagebeforeshow', "#invoice", function( event, ui ) {
 			shipping.empty();
 			$("#invoiceID").html('Invoice ID: '+invoiceID++);
 			
-			billing.append('<li><h3><strong>'+currentUser.first_name+'  '+currentUser.last_name+'</strong></h3>'+
-						   '<p><h3>'+invoiceBillAddress+'</h3></p></li>');
+			billing.append('<li><div><center><h3><strong>'+currentUser.first_name+'  '+currentUser.last_name+'</strong></h3></center></div></li>'+
+						   '<li><div><center><h3>'+invoiceBillAddress+'</h3></center></div></li>');
 			
-			shipping.append('<li><h3><strong>'+currentUser.first_name+'  '+currentUser.last_name+'</strong></h3>'+
-						   '<p><h3>'+invoiceShipAddress+'</h3></p></li>');
+			shipping.append('<li><div><center><h3><strong>'+currentUser.first_name+'  '+currentUser.last_name+'</strong></h3></center></div></li>'+
+						   '<li><div><center><h3>'+invoiceShipAddress+'</h3></center></div></li>');
 
 				for (var i=0; i < len; ++i){
 					product = Cart[i];
 					total=total+product.instant_price;
-					list.append('<li><h2><strong>'+product.name+' Item #:'+product.id+'</strong></h2>'+
+					list.append('<li><div><h2><strong>'+product.name+' Item #:'+product.product_id+'</strong></h2>'+
 								'<p><h3>'+product.description+'</h3></p>'+
-								'<h3 align="right">'+accounting.formatMoney(product.instant_price)+'</h3></li>');
+								'<h3 align="right">'+accounting.formatMoney(product.instant_price)+'</h3></div></li>');
 				}
 			list.append('<li><h2><strong> Total: ' + accounting.formatMoney(total) + '</strong></h2></li>');
 			
@@ -1191,7 +1205,12 @@ function LogOut(){
 		$.mobile.loading("show");
 		//global variables are reset to initial values.
 		currentUser = {"id": null};
-		Cart = []; //added this for Juan so his cart array gets emptied after logout
+		
+		//Empty User Specific Arrays
+		Cart = [];
+		ShipAddressess = [];
+		PayAddressess = [];
+		
 		$.mobile.loading("hide");
 		$.mobile.navigate("#home");
 	}
@@ -1639,13 +1658,11 @@ function checkout(){
 //											THE INVOICE												  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function InvoiceAddress(InvAddress){
-		alert(InvAddress);
+function InvoiceAddress(index){
+		invoiceShipAddress = ShipAddressess[index];
 }
 
-function InvoicePayment(InvPayment){
-		invoiceBillAddress=InvPayment;
-		alert(InvPayment);
-		document.location.href="#cart";
+function InvoicePayment(index){
+		invoiceBillAddress = PayAddressess[index];
 }
 
