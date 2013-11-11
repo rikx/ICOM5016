@@ -642,30 +642,7 @@ for (var i=0; i < shipAddressList.length;++i){
 // REST Operation - HTTP GET to read an address information based on its id
 app.get('/Server-Master/account/address/:id', function(req, res) {
 	var id = req.params.id;
-//	PHASE 1 CODE
-/*	if ((id < 0) || (id >= shipAddressNextId)){
-		// not found
-		res.statusCode = 404;
-		res.send("Address not found.");
-	}
-	else {
-		var target = -1;
-		for (var i=0; i < shipAddressList.length; ++i){
-			if (shipAddressList[i].id == id){
-				target = i;
-				break;	
-			}
-		}
-		if (target == -1){
-			res.statusCode = 404;
-			res.send("Address not found.");
-		}
-		else {
-			var response = {"address" : shipAddressList[target]};
-  			res.json(response);	
-  		}	
-	}*/
-//  PHASE 2 CODE
+
     var client = new pg.Client(dbConnInfo);
 	client.connect();
 
@@ -794,30 +771,7 @@ for (var i=0; i < payTypeList.length;++i){
 app.get('/Server-Master/account/payment/:id', function(req, res) {
 	var id = req.params.id;
 		console.log("GET payment information: " + id);
-//  PHASE 1 CODE
-/*	if ((id < 0) || (id >= paymentNextId)){
-		// not found
-		res.statusCode = 404;
-		res.send("Payment not found.");
-	}
-	else {
-		var target = -1;
-		for (var i=0; i < payTypeList.length; ++i){
-			if (payTypeList[i].id == id){
-				target = i;
-				break;	
-			}
-		}
-		if (target == -1){
-			res.statusCode = 404;
-			res.send("Payment not found.");
-		}
-		else {
-			var response = {"payment" : payTypeList[target]};
-  			res.json(response);	
-  		}	
-	}*/
-//  PHASE 2 CODE
+
     var client = new pg.Client(dbConnInfo);
 	client.connect();
 
@@ -1201,7 +1155,7 @@ app.get('/Server-Master/account/:id', function(req, res) {
 	var client = new pg.Client(dbConnInfo);
 	client.connect();
 
-	var theUser, theAddresses, thePaymentOptions, theRatings, theBids, theProducts;
+	var theUser, theAddresses, thePaymentOptions, theRatings, theBids, theProducts, theProductsBought, theProductsSold, theOrders;
 	//returns user profile information
 	var query = client.query("SELECT * from accounts where account_id = $1", [id]);
 	query.on("row", function (row, result){
@@ -1219,7 +1173,7 @@ app.get('/Server-Master/account/:id', function(req, res) {
 		}
 	});
 	//returns user addresses
-	var query2 = client.query("SELECT * from has_address natural join addresses where account_id = $1", [id]);
+	var query2 = client.query("SELECT * from addresses where account_id = $1", [id]);
 	query2.on("row", function (row, result){
 		result.addRow(row);
 	});
@@ -1253,15 +1207,44 @@ app.get('/Server-Master/account/:id', function(req, res) {
 		theBids = result.rows;
 	});
 
-	//returns user payment options 
-	var query6 = client.query("SELECT * from has_payment_option natural join payment_options natural join addresses where account_id = $1", [id]);
-	query6.on("row", function (row, result){
+	//returns products bought in the past
+	//have it return necesary info link to invoice and an order summary panel or page
+	var query6 = client.query("SELECT * from orders natural join products where buyer_id = $1", [id]);
+	query6.on('row', function (row, result){
 		result.addRow(row);
 	});
-	query6.on("end", function (result){
+	query6.on('end', function (result){
+		theProductsBought = result.rows;
+	});
+
+	//returns products sold in the past
+	//have it retgurn necesary info linking to user and sale details.
+	var query7 = client.query("SELECT * from orders natural join sales natural join products where seller_id = $1", [id]);
+	query7.on('row', function (row, result){
+		result.addRow(row);
+	});
+	query7.on('end', function (result){
+		theProductsSold = result.rows;
+	});
+
+	//returns the user's current orders
+/*	var query8 = client.query("SELECT * from orders where buyer_id = $1", [id]);
+	query8.on('row', function (row, result){
+		result.addRow(row);
+	});
+	query8.on('end', function (result){
+		theProductsSold = result.rows;
+	});*/
+
+	//returns user payment options 
+	var query9 = client.query("SELECT * from payment_options natural join credit_cards natural join addresses where account_id = $1", [id]);
+	query9.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query9.on("end", function (result){
 		thePaymentOptions = result.rows;
 		var response = {"user" : theUser, "shippingAddresses" : theAddresses, "paymentOptions" : thePaymentOptions, 
-				"ratingsList" : theRatings, "bids" : theBids, "sellingProducts" : theProducts};
+				"ratingsList" : theRatings, "bids" : theBids, "sellingProducts" : theProducts, "boughtHistory" : theProductsSold, "soldHistory" : theProductsSold};
 		client.end();
 		res.json(response);	
 	});
