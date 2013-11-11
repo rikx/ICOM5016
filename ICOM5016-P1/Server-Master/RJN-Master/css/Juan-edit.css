@@ -25,3 +25,7 @@ border: 1px solid 		#111111 /*{a-bup-border}*/;
     background-color: transparent !important;
     background-image: url('') !important;
 }
+
+/* Need this for switches (if they are used)
+.containing-element .ui-slider-switch {width: 9em }
+*/

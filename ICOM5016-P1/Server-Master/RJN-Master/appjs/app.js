@@ -343,20 +343,26 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 			var sellingProducts = data.sellingProducts;
 			var shippingAddresses = data.shippingAddresses;
 			var bids = data.bids;
+			var boughtProducts = data.boughtHistory;
+			var soldProducts = data.soldHistory;
 
 			var shipAddressList = $('#shipaddress-list');
 			var payList = $('#paymentType-list');
 			var ratingsList = $('#ratings-list');
 			var sellingList = $('#currentSales-list');
 			var bidsList = $('#currentBids-list');
+			var boughtList = $('#bought-history-list')
+			var soldList = $('#sold-history-list');
 
 			shipAddressList.empty();
 			payList.empty();
 			ratingsList.empty();
 			sellingList.empty();
 			bidsList.empty();
+			boughtList.empty();
+			soldList.empty();
 
-			var maxLength = Math.max(shippingAddresses.length, paymentTypes.length, ratings.length, sellingProducts.length, bids.length); 
+			var maxLength = Math.max(shippingAddresses.length, paymentTypes.length, ratings.length, sellingProducts.length, bids.length, boughtProducts.length, soldProducts.length); 
 
 			var avgRating = 0;
 			var rCount = 0;
@@ -410,6 +416,14 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 				//Populate bids by this user list
 				if(i < bids.length){
 					bidsList.append('<li> <a onclick=GetProduct('+ bids[i].product_id + ')><strong>'+bids[i].name+'</strong></a> - current highest bid: '+ bids[i].current_bid + ' | your bid: '+bids[i].bid_amount+', placed on '+ bids[i].date_placed+'</li>');
+				}
+				//past orders | products bought
+				if(i < productsSold.length){
+					boughtList.append('<li>Order #'+boughtProducts.order_id+ '<a href="#invoice">View Invoice</a>'+
+								'<div data-role="fieldcontain">'+
+									'<label for="slider-mini">Rate this seller:</label>'+
+									'<input id="rating-slider" type="text" data-type="range" name="slider-mini" id="slider-mini" value="2" min="0" max="4" step="1" data-highlight="true" data-mini="true" />'+
+								'</div><a onclick="SubmitRating(1)" data-icon="ok">Submit</a></li>');
 				}
 			}
 			// These buttons are for adding a new address,payment type or product for sale and are added

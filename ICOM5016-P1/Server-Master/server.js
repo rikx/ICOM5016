@@ -1201,7 +1201,7 @@ app.get('/Server-Master/account/:id', function(req, res) {
 	var client = new pg.Client(dbConnInfo);
 	client.connect();
 
-	var theUser, theAddresses, thePaymentOptions, theRatings, theBids, theProducts;
+	var theUser, theAddresses, thePaymentOptions, theRatings, theBids, theProducts, theProductsBought, theProductsSold, theOrders;
 	//returns user profile information
 	var query = client.query("SELECT * from accounts where account_id = $1", [id]);
 	query.on("row", function (row, result){
@@ -1254,32 +1254,43 @@ app.get('/Server-Master/account/:id', function(req, res) {
 	});
 
 	//returns products bought in the past
+	//have it return necesary info link to invoice and an order summary panel or page
 	var query6 = client.query("SELECT * from orders where buyer_id = $1", [id]);
 	query6.on('row', function (row, result){
 		result.addRow(row);
 	});
 	query6.on('end', function (result){
-		theOrders = result.rows;
+		theProductsBought = result.rows;
 	});
 
 	//returns products sold in the past
-	var query7 = client.query("SELECT * from orders where buyer_id = $1", [id]);
+	//have it retgurn necesary info linking to user and sale details.
+	var query7 = client.query("SELECT * from orders natural join sales natural join products where seller_id = $1", [id]);
 	query7.on('row', function (row, result){
 		result.addRow(row);
 	});
 	query7.on('end', function (result){
-		theOrders = result.rows;
+		theProductsSold = result.rows;
 	});
 
-	//returns user payment options 
-	var query8 = client.query("SELECT * from has_payment_option natural join payment_options natural join addresses where account_id = $1", [id]);
-	query8.on("row", function (row, result){
+	//returns the user's current orders
+/*	var query8 = client.query("SELECT * from orders where buyer_id = $1", [id]);
+	query8.on('row', function (row, result){
 		result.addRow(row);
 	});
-	query8.on("end", function (result){
+	query8.on('end', function (result){
+		theProductsSold = result.rows;
+	});*/
+
+	//returns user payment options 
+	var query9 = client.query("SELECT * from has_payment_option natural join payment_options natural join addresses where account_id = $1", [id]);
+	query9.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query9.on("end", function (result){
 		thePaymentOptions = result.rows;
 		var response = {"user" : theUser, "shippingAddresses" : theAddresses, "paymentOptions" : thePaymentOptions, 
-				"ratingsList" : theRatings, "bids" : theBids, "sellingProducts" : theProducts};
+				"ratingsList" : theRatings, "bids" : theBids, "sellingProducts" : theProducts, "boughtHistory" : theProductsSold, "soldHistory" : theProductsSold};
 		client.end();
 		res.json(response);	
 	});

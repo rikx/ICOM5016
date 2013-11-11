@@ -197,11 +197,6 @@
 					<ul id="paymentType-list" data-role="listview" data-inline="true">
 					</ul>
 				</div><!--/collapsible-->
-				<div data-role="collapsible" data-theme="a" data-content-theme="c">
-					<h2>Ratings by User</h2>
-					<ul id="ratings-list" data-role="listview" data-inline="true">
-					</ul>
-				</div><!--/collapsible-->
 <!-- 				<div data-role="collapsible" data-theme="a" data-content-theme="c">
 					<h2>Current Orders</h2>
 					<ul id="currentOrders-list" data-role="listview" data-inline="true"> 
@@ -224,7 +219,7 @@
 							<a data-role="button" onclick="sellHistory()">Items sold</a>
 						
 					<form id="ratings-form">
-						<ul id="bought-history" data-role="listview" data-inset="true" data-inline="true">
+						<ul id="bought-history-list" data-role="listview" data-inset="true" data-inline="true">
 							<li>Product bought #9000 from <a onclick="GetSellerProfile(1)">user2</a><a href="#invoice">View Invoice</a>
 								<div data-role="fieldcontain">
 									<label for="slider-mini">Rate this seller:</label>
@@ -234,12 +229,21 @@
 							</li>
 						</ul>
 					</form>
-					<ul id="sell-history" data-role="listview" data-inset="true" data-inline="true">
+					<ul id="sold-history-list" data-role="listview" data-inset="true" data-inline="true">
 					</ul>
-<!-- 							<select name="flip-1" id="flip-1" data-role="slider">
-						<option value="itemsBought">Items Bought</option>
-						<option value="itemsSold">Items Sold</option>
-					</select>  -->
+
+<!-- 					<div class="containing-element">
+						<select name="flip-1" id="flip-1" data-role="slider">
+							<option value="itemsBought">Items Bought</option>
+							<option value="itemsSold">Items Sold</option>
+						</select>
+					</div> -->
+					
+				</div><!--/collapsible-->
+				<div data-role="collapsible" data-theme="a" data-content-theme="c">
+					<h2>Ratings by User</h2>
+					<ul id="ratings-list" data-role="listview" data-inline="true">
+					</ul>
 				</div><!--/collapsible-->
 			</div><!-- /content -->
 		</div><!-- /page -->
