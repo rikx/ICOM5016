@@ -70,13 +70,68 @@ $(document).on('pagebeforeshow', "#cart", function( event, ui ) {
 			list.listview("refresh");	
 			cList.append('<li><h2><strong> Total: ' + accounting.formatMoney(total) + '</strong></h2></li>');
 			cList.listview("refresh");
+
+if(currentUser.account_id != null){
+//======================================================================================================//
+$.ajax({
+		url : "http://localhost:3412/Server-Master/account/" + currentUser.account_id,
+		method: 'get',
+		contentType: "application/json",
+		dataType:"json",
+		success : function(data, textStatus, jqXHR){
 			
+			var paymentTypes = data.paymentOptions;
+			var shippingAddresses = data.shippingAddresses;
+			
+			var shipAddressList = $('#cart-shipaddress-list');
+			var payList = $('#cart-paymentType-list');
+
+			shipAddressList.empty();
+			payList.empty();
+			
+			var maxLength = Math.max(shippingAddresses.length, paymentTypes.length); 
+
+			for(var i=0; i < maxLength; ++i){
+				//Populate Address Options List
+				if(i < shippingAddresses.length){
+				
+						shipAddressList.append("<li><div><center><strong> Address:" + shippingAddresses[i].street_address +"</strong></center></div></li>"+
+						"<li><a onclick=InvoiceAddress("+ shippingAddresses[i].street_address +") data-icon='check'>SELECT</a></li>"
+						);
+				}
+				//Populate Payment Options list
+				if(i < paymentTypes.length){
+						payList.append('<li><div><center>Card Ending with '+ paymentTypes[i].card_number.substr(15)+'</center>'+
+						'<center><strong>Billing Address: </strong>'+ paymentTypes[i].street_address +'</center></div></li>'+
+						'<li><a onclick=InvoicePayment('+ paymentTypes[i].street_address +') data-theme="a" data-icon="check" href="#choose2" data-rel="popup" data-position-to="window" data-transition="pop">SELECT</a></li>'
+						);
+				}
+			}
+			
+			shipAddressList.listview("refresh");
+			payList.listview("refresh");
+
+		},
+		error: function(data, textStatus, jqXHR){
+			console.log("textStatus: " + textStatus);
+			$.mobile.loading("hide");
+			if (data.status == 404){
+				alert("User not found.");
+			}
+			else {
+				alert("Internal Server Error.");
+			}
+		}
+	});
+//======================================================================================================//	
+}//End IF
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //										INVOICE PAGE											 	 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+var invoiceBillAddress=null;
+var invoiceShipAddress=null;
 var invoiceID=0;
 $(document).on('pagebeforeshow', "#invoice", function( event, ui ) {
 	
@@ -89,13 +144,13 @@ $(document).on('pagebeforeshow', "#invoice", function( event, ui ) {
 			list.empty();
 			billing.empty();
 			shipping.empty();
-			
 			$("#invoiceID").html('Invoice ID: '+invoiceID++);
-			billing.append('<li><h3><strong>'+currentUser.firstname+'  '+currentUser.lastname+'</strong></h3>'+
-						   '<p><h3>'+currentUser.billAddress+'</h3></p></li>');
 			
-			shipping.append('<li><h3><strong>'+currentUser.firstname+'  '+currentUser.lastname+'</strong></h3>'+
-						   '<p><h3>'+currentUser.shipAddress+'</h3></p></li>');
+			billing.append('<li><h3><strong>'+currentUser.first_name+'  '+currentUser.last_name+'</strong></h3>'+
+						   '<p><h3>'+invoiceBillAddress+'</h3></p></li>');
+			
+			shipping.append('<li><h3><strong>'+currentUser.first_name+'  '+currentUser.last_name+'</strong></h3>'+
+						   '<p><h3>'+invoiceShipAddress+'</h3></p></li>');
 
 				for (var i=0; i < len; ++i){
 					product = Cart[i];
@@ -110,7 +165,10 @@ $(document).on('pagebeforeshow', "#invoice", function( event, ui ) {
 			billing.listview("refresh");
 			shipping.listview("refresh");
 			Cart = [];
-	
+			
+			invoiceBillAddress=null;
+			invoiceShipAddress=null;
+
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -383,36 +441,19 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 			for(var i=0; i < maxLength; ++i){
 				//Populate Address List
 				if(i < shippingAddresses.length){
-					if(i!=0){
-						shipAddressList.append('<li><strong> Address: '+ shippingAddresses[i].street_address +'</strong>'+
-						'<a onclick=EditAddress('+shippingAddresses[i].address_id+') data-icon="gear">Edit</a>'+
-						'<a onclick=DeleteAddress('+shippingAddresses[i].address_id+') data-icon="trash">Delete</a></li>'
+						shipAddressList.append('<li><div><center><strong> Address: '+ shippingAddresses[i].street_address +'</strong><center></div></li>'+
+						'<li><a onclick=EditAddress('+shippingAddresses[i].address_id+') data-icon="gear">Edit</a></li>'+
+						'<li><a onclick=DeleteAddress('+shippingAddresses[i].address_id+') data-icon="trash">Delete</a></li>'
 						);
-					}
-					else{
-						shipAddressList.append('<li data-theme="e"><strong> Address name: '+ shippingAddresses[i].street_address +'</strong>'+
-						'<a onclick=EditAddress('+shippingAddresses[i].address_id+') data-icon="gear">Edit</a>'+
-						'<a onclick=DeleteAddress('+shippingAddresses[i].address_id+') data-icon="trash">Delete</a></li>'
-						);
-					}
 				}
 				//Populate Payment Options list
 				if(i < paymentTypes.length){
 					//Need to add a check later for type if its credit card or paypal
-					if(i!=0){
-						payList.append('<li>Card Ending with '+ paymentTypes[i].card_number.substr(15)+
-						'<a onclick=EditPayment('+paymentTypes[i].payment_id+') data-icon="gear">Edit</a>'+
-						'<a onclick=DeletePayment('+paymentTypes[i].payment_id+') data-icon="trash">Delete</a>'+
-						'<strong>Billing Address: </strong>'+paymentTypes[i].street_address+'</li>'
+						payList.append('<li><div><center>Card Ending with '+ paymentTypes[i].card_number.substr(15)+'</center>'+
+						'<center><strong>Billing Address: </strong>'+paymentTypes[i].street_address+'</center></div></li>'+
+						'<li><a onclick=EditPayment('+paymentTypes[i].payment_id+') data-icon="gear">Edit</a></li>'+
+						'<li><a onclick=DeletePayment('+paymentTypes[i].payment_id+') data-icon="trash">Delete</a></li>'
 						);
-					}
-					else{
-						payList.append('<li data-theme="e">Card Ending with '+ paymentTypes[i].card_number.substr(15)+
-						'<a onclick=EditPayment('+paymentTypes[i].payment_id+') data-icon="gear">Edit</a>'+
-						'<a onclick=DeletePayment('+paymentTypes[i].payment_id+') data-icon="trash">Delete</a>'+
-						'<strong>Billing Address: </strong>'+paymentTypes[i].street_address+'</li>'
-						);					
-					}
 				}
 				//Populate Ratings by User list
 				if(i < ratings.length){
@@ -422,14 +463,15 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 				}
 				//Populate Current Sales list
 				if(i < sellingProducts.length){
-					sellingList.append('<li><a onclick=GetProduct('+sellingProducts[i].product_id+')><h4>'+sellingProducts[i].name+'</h4></a>'+
-					'<a onclick=EditProduct('+sellingProducts[i].product_id+') data-icon="gear">Edit</a>'+
-					'<a onclick=DeleteProduct('+sellingProducts[i].product_id+') data-icon="trash">Delete</a></li>'
+					sellingList.append('<li><a onclick=GetProduct('+sellingProducts[i].product_id+')><h4>'+sellingProducts[i].name+'</h4></a></li>'+
+					'<li><a onclick=EditProduct('+sellingProducts[i].product_id+') data-icon="gear">Edit</a></li>'+
+					'<li><a onclick=DeleteProduct('+sellingProducts[i].product_id+') data-icon="trash">Delete</a></li>'
 					);
 				}
 				//Populate bids by this user list
 				if(i < bids.length){
-					bidsList.append('<li> <a onclick=GetProduct('+ bids[i].product_id + ')><strong>'+bids[i].name+'</strong></a> - current highest bid: '+ bids[i].current_bid + ' | your bid: '+bids[i].bid_amount+', placed on '+ bids[i].date_placed+'</li>');
+					bidsList.append('<li><div><center><a onclick=GetProduct('+ bids[i].product_id + ')><strong>'+bids[i].name+'</strong></a> - current highest bid: '+ bids[i].current_bid +'</center>'+
+					'<center><p> Your bid: '+bids[i].bid_amount+', placed on '+ bids[i].date_placed+'</p></center></div></li>');
 				}
 			}
 			// These buttons are for adding a new address,payment type or product for sale and are added
@@ -999,7 +1041,12 @@ function LogIn(){
 				$.mobile.loading("hide");
 				currentUser = data.user;
 				$('#loginusername, #loginpassword').val("");
-				$.mobile.navigate("#home");
+				if (currentUser.permission){
+					$.mobile.navigate("#admin");
+				}
+				else {
+					$.mobile.navigate("#account");
+				}
 			},
 			error: function(data, textStatus, jqXHR){
 				console.log("textStatus: " + textStatus);
@@ -1533,9 +1580,18 @@ function PlaceBid(id){
 		});
 	}
 }
+
 function Buyout(){
 	addToCart();
 	checkout();
+}
+
+function sortByType(type){
+	
+	SortType=type;
+	 	
+	document.location.href="#browse";			
+	
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //											THE CART												  //
@@ -1561,29 +1617,36 @@ function removeFromCart(Index){
 	Cart.splice(Index,1);
 	alert("Deleted");
 	document.location.href="#cart";
-	//location.reload();// THI WILL WORK ONCE WE HAVE COOKIES
 }
 
 function checkout(){
-	if(currentUser.type == "user" && Cart.length!=0){
-	document.location.href="#invoice";
-	}//End IF
-	else if(currentUser.type == "user" && Cart.length==0){
-		alert('Cart Is Empty');
-	}//End ELSE IF
-	else if(currentUser.type == "admin"){
-		alert("Admins can't have nice things... :P");
-	}//End ELSE IF 2
-	else{
-		 $("#ForceLogin").click();//IF its a Guest Force Him to Log In
-    }//End ELSE
+	if(currentUser.account_id == null){
+		$("#ForceLogin").click();//IF it's a Guest Force Him to Log In
+	}
+	else if (currentUser.permission){
+		alert("Admins can't have nice things... :P");//Admins Should not be buying things... (-.-)
+	}
+	else {
+		if(Cart.length==0){//Buying nothing?
+			alert('Cart Is Empty');
+		}
+		else{
+			document.location.href="#invoice";//Invoice
+		}
+	}
 }
 
-function sortByType(type){
-	
-	SortType=type;
-	 	
-	document.location.href="#browse";			
-	
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//											THE INVOICE												  //
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function InvoiceAddress(InvAddress){
+		alert(InvAddress);
+}
+
+function InvoicePayment(InvPayment){
+		invoiceBillAddress=InvPayment;
+		alert(InvPayment);
+		document.location.href="#cart";
 }
 

@@ -31,13 +31,13 @@
 				</div><!-- /navbar -->
 		</header>
 
-			<div data-role="content">
+			<div data-role="content" data-theme="a">
 				<h3 align="center">Products for Sale</h3>	
 				
 					<!--Search Bar-->
 							
 					<input type="text" class="search-field" name="search" value="Enter Product Name Here..." />
-					<a class="submit" data-role="button" data-iconpos="left" data-icon="search" title="Search">Search</a>
+					<a class="submit" data-role="button" data-theme="a" data-iconpos="left" data-icon="search" title="Search">Search</a>
 									
 					<!--Search Bar End-->
 				
@@ -59,13 +59,13 @@
 				</div><!-- /navbar -->
 			</header>
 			
-			<div data-role="content">
+			<div data-role="content" data-theme="a">
 				<h3 align="center">Products for Sale</h3>	<!-- Add title dynamically later -->
 				<p id="breadcrumb-history"></p>
 				<!--Search Bar-->
 							
 					<input type="text" class="search-field" name="search" value="Enter Product Name Here..." />
-					<a class="submit" data-role="button" data-iconpos="left" data-icon="search" title="Search">Search</a>
+					<a class="submit" data-role="button" data-theme="a" data-iconpos="left" data-icon="search" title="Search">Search</a>
 									
 				<!--Search Bar End-->
 				
@@ -152,15 +152,15 @@
 						</ul>
 					</div><!-- /navbar -->
 			</header>
-			<div data-role="content" data-theme="c">	
+			<div data-role="content" data-theme="a">	
 				<form id="login-form">
 					<fieldset data-role="controlgroup">
 					<ul data-role="list">
 					<li><label for="loginusername"> Name: <input id="loginusername" name="username" type="text"/></label></li>
 					<li><label for="loginpassword"> Password: <input id="loginpassword" name="password" type="password"/></label></li>
-					<li><a id="clickLogIn" data-role="button" onclick="LogIn()" href="#">Log In</a></li>
+					<li><a id="clickLogIn" data-role="button" data-theme="a" onclick="LogIn()" href="#">Log In</a></li>
 				    <!-- <input type="submit" value="Submit Button" onclick="LogIn(); return false;"/> -->
-				    <li><a data-role="button" href="#register-account" rel="external">New User? Register here</a></li>
+				    <li><a data-role="button" data-theme="a" href="#register-account" rel="external">New User? Register here</a></li>
 					</ul>
 					</fieldset>
 				</form>	
@@ -181,7 +181,6 @@
 		</header>
 			<div data-role="content">
 				<h4 id="ratings-average"></h2>
-				<p>Primary options (e.g. primary payment option) are highlighted in yellow</p>
 				<div data-role="collapsible" data-collapsed="false" data-theme="a" data-content-theme="c">
 					<h2>Profile Information</h2>
 					<ul id="user-info" data-role="listview" data-inset="true" data-inline="true">
@@ -220,17 +219,24 @@
 				<div data-role="collapsible" data-theme="a">
 					<h2>Show History</h2>
 					
-							<a data-role="button" onclick="boughtHistory()">Items bought</a>
-							<a data-role="button" onclick="sellHistory()">Items sold</a>
+							<a data-role="button" data-theme="a" onclick="boughtHistory()">Items bought</a>
+							<a data-role="button" data-theme="a" onclick="sellHistory()">Items sold</a>
 						
 					<form id="ratings-form">
 						<ul id="bought-history" data-role="listview" data-inset="true" data-inline="true">
-							<li>Product bought #9000 from <a onclick="GetSellerProfile(1)">user2</a><a href="#invoice">View Invoice</a>
+							<li>
+							<center>
+								<p>Product bought #9000</p>
+								<p>From <a onclick="GetSellerProfile(1)">user2</a></p>
+								<p><a href="#invoice">View Invoice</a></p>
+							</center>
 								<div data-role="fieldcontain">
-									<label for="slider-mini">Rate this seller:</label>
-									<input id="rating-slider" type="text" data-type="range" name="slider-mini" id="slider-mini" value="2" min="0" max="4" step="1" data-highlight="true" data-mini="true" />
+									<center><label for="slider-mini"> Rate this seller:</label></center>
+									<p>
+										<input id="rating-slider" type="text" data-type="range" name="slider-mini" id="slider-mini" value="2" min="0" max="4" step="1" data-highlight="true" data-mini="true" />
+									</p>
 								</div>
-								<a onclick="SubmitRating(1)" data-icon="ok">Submit</a>
+								<center><a onclick="SubmitRating(1)" data-icon="ok"> Submit</a></center>
 							</li>
 						</ul>
 					</form>
@@ -443,7 +449,7 @@
 		</div><!-- /page -->
 
 		<div id="edit-product-view" data-role="page">
-			<div data-role="header" data-theme="e" data-position="fixed">
+			<div data-role="header" data-theme="a" data-position="fixed">
 				<a data-role="button" data-rel="back" href="#product-view">Cancel</a>
 				<h1>Product Info</h1>
 				<a data-role="button" id="SaveNewProductInfo" data-rel="back" onclick="EditProduct()">Save</a>
@@ -510,7 +516,7 @@
 		</div><!-- /page -->
 
 		<div id="edit-address-view" data-role="page">
-			<div data-role="header" data-theme="e" data-position="fixed">
+			<div data-role="header" data-theme="a" data-position="fixed">
 				<a data-role="button" data-rel="back" href="#account">Cancel</a>
 				<h1>Address Info</h1>
 				<a data-role="button" id="SaveNewAddressInfo" data-rel="back" onclick="EditAddress()">Save</a>
@@ -571,7 +577,7 @@
 		</div><!-- /page -->
 
 		<div id="edit-payment-view" data-role="page">
-			<div data-role="header" data-theme="e" data-position="fixed">
+			<div data-role="header" data-theme="a" data-position="fixed">
 				<a data-role="button" data-rel="back" href="#account">Cancel</a>
 				<h1>Payment Info</h1>
 				<a data-role="button" id="SaveNewPaymentInfo" data-rel="back" onclick="EditPayment()">Save</a>
@@ -610,7 +616,7 @@
   				<div data-role="navbar">
 					<ul>
 						<li><a href="#home" 				data-role="button" data-icon="home"			 title="Home"	>HOME</a></li>
-						<li><a onclick="GetAccount()"		data-role="button" data-icon="user"			 title="Account">ACCOUNT</a></li>
+						<li><a onclick="GetAccount()"		data-role="button" data-icon="user"			 title="Account" id="ForceLogin">ACCOUNT</a></li>
 					</ul>
 				</div><!-- /navbar -->
 			</header>
@@ -618,17 +624,44 @@
 				<h3 align="center">Your Cart</h3>	
 				<ul id="shopping-list" data-role="listview" data-inset="true">
 				</ul>
-				<div data-role="footer">
-				<ul id="total" data-role="listview" data-inset="true" data-inline="true">
-				</ul>
-				<a onclick="checkout()" data-role="button">Checkout</a>
-				</div><!-- /footer -->
+				<div data-role="collapsible" data-theme="a" data-content-theme="c">
+					<h2>Choose a Shipping Addresses</h2>
+
+						<ul id="cart-shipaddress-list" data-role="listview" data-inline="true">
+						</ul>
+				
+				</div><!--/collapsible-->
+		
+				<div data-role="collapsible" data-theme="a" data-content-theme="c">
+					<h2>Choose a Payment Options</h2>
+					<ul id="cart-paymentType-list" data-role="listview" data-inline="true">
+					</ul>
+				</div><!--/collapsible-->
+								
+				<div>
+					<ul id="total" data-role="listview" data-inset="true" data-inline="true">
+					</ul>
+					<a onclick="checkout()" data-theme="a" data-role="button">Checkout</a>
+				</div>
+				
+				
+				<div data-role="popup" id="choose" class="ui-content" style="max-width:340px; padding-bottom:2em;">
+				    <h2>Shipping Address Selected</h2>
+				    <center><a href="#cart" class="Del-Button" data-role="button" data-rel="back" data-icon="check" data-inline="true" data-mini="true">Ok</a></center>
+				</div>
+				
+				<div data-role="popup" id="choose2" class="ui-content" style="max-width:340px; padding-bottom:2em;">
+				    <h2>Payment Option Selected</h2>
+				    <center><a href="#cart" class="Del-Button" data-role="button" data-rel="back" data-icon="check" data-inline="true" data-mini="true">Ok</a></center>
+				</div>
+				
 			</div><!-- /content -->
 		</div><!-- /page -->
 		<!--///////////////////////////////////		CART END	//////////////////////////////////////////-->
 		
 		<!--///////////////////////////////////		INVOICE		//////////////////////////////////////////-->
 		<div id ="invoice" data-role="page">
+			
 			<div data-role="header" data-theme="a" data-position="fixed">
 				<div class="ui-grid-b" align="center">
 					<div class="ui-block-a">
@@ -640,13 +673,14 @@
 							document.write(date);
 						</script>
 					</div><!-- /block-b -->
-					<div class="ui-block-c">
-						<div data-role="controlgroup" data-type="horizontal">
-							<a href="#home" 				data-role="button" data-icon="home"			  title="Home"	></a>
-							<a onclick="GetAccount()"	data-role="button" data-icon="user"			  title="Account"	id="ForceLogin"></a>
-						</div><!-- /control-group -->
-					</div><!-- /block-c -->
+					<div class="ui-block-c"></div><!-- /block-c -->
 				</div><!-- /grid-b -->
+				<div data-role="navbar">
+					<ul>
+						<li><a href="#home" 				data-role="button" data-icon="home"			 title="Home"	>HOME</a></li>
+						<li><a onclick="GetAccount()"	data-role="button" data-icon="user"			  title="Account"	>ACCOUNT</a></li>
+					</ul>
+				</div><!-- /navbar -->
 			</div>
 			<div data-role="content">
 				<div class="ui-grid-a">
@@ -689,12 +723,12 @@
 				<ul id="prod-details" data-role="listview" data-inset="true">	  			  	
 				</ul>
 				<h3 align="center">Options</h3>
-				<a id="seller-details" data-role="button">Seller Details</a>
-				<a data-role="button" onclick="addToCart()">Add to Cart</a>
+				<a id="seller-details" data-role="button" data-theme="a">Seller Details</a>
+				<a data-role="button" data-theme="a" onclick="addToCart()">Add to Cart</a>
 				<p>Time left on auction: <strong id="auction-timer"></strong></p><!-- <a onclick='AuctionTimer()' data-role="button">Show Time</a> -->
 				<p>Current bid: <strong id="showBidPrice"></strong> &nbsp;|&nbsp; Number of bids: <strong id="numOfBids"></strong></p>
-				<div data-role="fieldcontain">
-					<input name="bidInput" type="text" data-mini="true" /><a id="bidButton" onclick="PlaceBid()" data-role="button" data-inline="true" data-theme="e" data-mini="true">Bid</a>
+				<div data-role="fieldcontain" data-theme="a">
+					<input name="bidInput" type="text" data-theme="a" data-mini="true" /><a id="bidButton" onclick="PlaceBid()" data-role="button" data-inline="true" data-theme="e" data-mini="true">Bid</a>
 				</div>
 				<p>Buyout Price: <strong id="showBuyoutPrice"></strong>
 				<a id="buyoutButton" onclick="Buyout()" data-role="button" data-inline="true" data-theme="b" data-mini="true">Buyout</a></p>
