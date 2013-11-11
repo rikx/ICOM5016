@@ -1255,7 +1255,7 @@ app.get('/Server-Master/account/:id', function(req, res) {
 
 	//returns products bought in the past
 	//have it return necesary info link to invoice and an order summary panel or page
-	var query6 = client.query("SELECT * from orders where buyer_id = $1", [id]);
+	var query6 = client.query("SELECT * from orders natural join products where buyer_id = $1", [id]);
 	query6.on('row', function (row, result){
 		result.addRow(row);
 	});
