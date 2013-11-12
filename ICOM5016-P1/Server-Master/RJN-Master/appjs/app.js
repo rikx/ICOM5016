@@ -751,7 +751,7 @@ function ManageReports(){
 var reportType = "";
 $(document).on('pagebeforeshow', "#report", function( event, ui ) {
 	$.ajax({
-		url : "http://localhost:3412/Server-Master/admin/"+currentUser.id+"/report/" + reportType,
+		url : "http://localhost:3412/Server-Master/admin/"+currentUser.account_id+"/report/" + reportType,
 		method: 'get',
 		contentType: "application/json",
 		dataType:"json",
@@ -761,9 +761,23 @@ $(document).on('pagebeforeshow', "#report", function( event, ui ) {
 			var reportList = $('#manage-reports-list');
 			reportList.empty();
 
-			for(var i = 0; i < reportInfo.length; ++i){
-				reportList.append('<li><a onclick=GetProduct('+reportInfo[i].product_id+')><h2>'+reportInfo[i].name+'</h2>'+
-					'<p><img src="'+reportInfo[i].image_filename+'" /></p> Sold at: '+reportInfo[i].instant_price+'on '+reportInfo[i].purchase_date+' </li>');	
+			if(reportType == "by Total Sales"){
+				for(var i = 0; i < reportInfo.length; ++i){
+					reportList.append('<li><h2>Date: '+reportInfo[i].purchase_date+'</h2>'+
+					'<p>Sales: '+reportInfo[i].sales+'</p> </li>');	
+				}
+			}
+			else if(reportType == "by Products"){
+				for(var i = 0; i < reportInfo.length; ++i){
+					reportList.append('<li><h2>Product: '+reportInfo[i].name+':</h2>'+
+					'<p>Sales: '+reportInfo[i].sales+'</p> </li>');	
+				}
+			}
+			else {
+				for(var i = 0; i < reportInfo.length; ++i){
+					reportList.append('<li><h2>Date: '+reportInfo[i].purchase_date+':</h2>'+
+					'<p>Revenue: '+reportInfo[i].revenue+'</p> </li>');	
+				}
 			}
 			reportList.listview("refresh");
 		},
@@ -779,15 +793,15 @@ $(document).on('pagebeforeshow', "#report", function( event, ui ) {
 		}
 	});
 });
-function ReportByProduct(){
+function ReportBySales(){
 	$.mobile.loading("hide");
-	reportType = "by Product";
+	reportType = "by Total Sales";
 	$.mobile.navigate('#report');
 }
 
-function ReportAllProducts(){
+function ReportByProducts(){
 	$.mobile.loading("hide");
-	reportType = "all Products";
+	reportType = "by Products";
 	$.mobile.navigate('#report');
 }
 

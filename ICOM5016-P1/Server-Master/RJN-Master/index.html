@@ -386,9 +386,9 @@
 					</div>
 					<ul>
 						<li>
-							<a onclick="ReportByProduct()" data-role="button">Report by Product</a>
-							<a onclick="ReportAllProducts()" data-role="button">Report by all Products</a>
-							<a onclick="ReportByRevenue()" data-role="button">Report by Revenue</a>
+							<a onclick="ReportBySales()" data-role="button">Total Sales</a>
+							<a onclick="ReportByProducts()" data-role="button">Sales Grouped by Product</a>
+							<a onclick="ReportByRevenue()" data-role="button">Total Revenue</a>
 						</li>
 					</ul>
 				</from>
@@ -407,7 +407,7 @@
 				</div><!-- /navbar -->
 			</header>
 			<div data-role="content">
-				<h3 align="center">Report Results<span id="report-day"></span><span id="report-month"></span><span id="report-year"></span></h3>
+				<h3 align="center">Report <span id="reportType-title"></span><span id="report-day"></span><span id="report-month"></span><span id="report-year"></span></h3>
 				<ul id="manage-reports-list" style="display: none" data-role="listview"></ul>
 			</div>
 		</div><!--/page -->
