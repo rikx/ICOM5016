@@ -1027,44 +1027,33 @@ app.get('/Server-Master/admin/:id', function(req, res){
 
 // REST Operation - HTTP GET to read report based on reportType
 app.get('/Server-Master/admin/:id/report/:reportType', function(req, res){
+	var id = req.params.id;
 	var reportType = req.params.reportType;
 
-	var client = pg.Client(dbConnInfo);
+	var client = new pg.Client(dbConnInfo);
 	client.connect();
 
 	console.log("GET report " + reportType);
 	var query, theReport;
 	//
-	if(reportType == "byProduct"){
-		query = client.query("");
-		query.on('row', function (row, result){
-			result.addRow(row);
-		});
-		query.on('end', function (result){
-			theReport = result.rows;
-		});
+	if(reportType == "by Total Sales"){
+		query = client.query("SELECT purchase_date, count(*) as sales from sales natural join orders group by purchase_date order by purchase_date DESC");
 	}
-	else if (reportType == "all Products") {
-		query = client.query("");
-		query.on('row', function (row, result){
-			result.addRow(row);
-		});
-		query.on('end', function (result){
-			theReport = result.rows;
-		});
+	else if (reportType == "by Products") {
+		query = client.query("SELECT name, count(product_id) as sales from sales natural join orders natural join products group by name order by sales DESC");
 	}
 	else {
-		query = client.query("");
-		query.on('row', function (row, result){
-			result.addRow(row);
-		});
-		query.on('end', function (result){
-			theReport = result.rows;
-		});
+		query = client.query("SELECT purchase_date, sum(purchase_price) as revenue from sales natural join orders group by purchase_date order by purchase_date DESC");
 	}
-	var response = {"report" : theReport};
-	client.end();
-	res.json(response);
+	query.on('row', function (row, result){
+		result.addRow(row);
+	});
+	query.on('end', function (result){
+		theReport = result.rows;
+		var response = {"report" : theReport};
+		client.end();
+		res.json(response);
+	});
 });
 
 // REST Operation - HTTP GET to read a seller profile based on its id
