@@ -807,7 +807,7 @@ $(document).on('pagebeforeshow', "#report", function( event, ui ) {
 			else {
 				for(var i = 0; i < reportInfo.length; ++i){
 					reportList.append('<li><h2>Date: '+reportInfo[i].purchase_date+':</h2>'+
-					'<p>Revenue: '+reportInfo[i].revenue+'</p> </li>');	
+					'<p>Revenue: '+reportInfo[i].revenue+' | Sales: '+reportInfo[i].sales+'</p> </li>');	
 				}
 			}
 			reportList.listview("refresh");
@@ -859,9 +859,10 @@ $(document).on('pagebeforeshow', "#product-view", function( event, ui ) {
 
 	var list = $("#prod-details");
 	list.empty();
-	list.append('<li><img src="'+product.image_filename+'"" /></li>'+
-	'<li><strong>Product ID: </strong>' + product.product_id + '</li></li><li><strong>Brand: </strong>' + product.brand + '</li></li>'+
-	'<li><strong>Model: </strong>' + product.model + '</li></li><li><strong>Description: </strong>' + product.description + '</li>'+
+
+	list.append('<li><img src="'+product.image_filename+'" /></li>'+
+	'<li><strong>Product ID: </strong>' + product.product_id + '</li><li><strong>Brand: </strong>' + product.brand + '</li>'+
+	'<li><strong>Model: </strong>' + product.model + '</li><li><strong>Description: </strong>' + product.description + '</li>'+
 	'<li><strong>Dimensions: </strong>'+product.dimensions[0]+' cm x '+product.dimensions[1] +' cm x '+product.dimensions[2]+'cm </li>'
 	);
 	list.listview("refresh");
@@ -1500,6 +1501,7 @@ function GetProduct(id){
 		success : function(data, textStatus, jqXHR){
 			currentProduct = data.product;
 			currentProduct.num_of_bids = data.bids[0].num_of_bids;
+			currentProduct.current_bid = data.bids[0].current_bid;
 			$.mobile.loading("hide");
 			$.mobile.navigate("#product-view");
 		},

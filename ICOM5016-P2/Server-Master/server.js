@@ -406,7 +406,7 @@ app.get('/Server-Master/product/:id', function(req, res) {
 	// Second query has Count result that yields the num_of_bids for the product
 	var theProduct, theBids;
 
-	var query = client.query("SELECT * from products natural join auctions natural join (select account_id as seller_id, username from accounts) as seller where product_id = $1", [id]);
+	var query = client.query("SELECT * from products natural join (select account_id as seller_id, username from accounts) as seller where product_id = $1", [id]);
 	query.on("row", function (row, result) {
     	result.addRow(row);
 	});
@@ -421,7 +421,7 @@ app.get('/Server-Master/product/:id', function(req, res) {
 			theProduct = result.rows[0];
 	  	}
  	});
- 	var query2 = client.query("SELECT count(*) as num_of_bids from placed_bids natural join auctions where product_id = $1", [id]);
+ 	var query2 = client.query("SELECT current_bid, auction_id, count(*) as num_of_bids from placed_bids natural join auctions where product_id = $1 group by current_bid, auction_id", [id]);
  	query2.on('row', function (row, result){
  		result.addRow(row);
  	});
@@ -1043,7 +1043,7 @@ app.get('/Server-Master/admin/:id/report/:reportType', function(req, res){
 		query = client.query("SELECT name, count(product_id) as sales from sales natural join orders natural join products group by name order by sales DESC");
 	}
 	else {
-		query = client.query("SELECT purchase_date, sum(purchase_price) as revenue from sales natural join orders group by purchase_date order by purchase_date DESC");
+		query = client.query("SELECT purchase_date, sum(purchase_price) as revenue, count(order_id) as sales from sales natural join orders group by purchase_date order by purchase_date DESC");
 	}
 	query.on('row', function (row, result){
 		result.addRow(row);
