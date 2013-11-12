@@ -17,13 +17,12 @@ border: 1px solid 		#111111 /*{a-bup-border}*/;
 }
 
 .ui-page {
-    background: url('../css/images/RJNWORLD.jpg') repeat scroll 50% 50% #112233 !important;
-    color: #aabbcc !important;
-} 
+    background: url('../css/images/RJNUNIVERSE.jpg') repeat scroll 50% 50% #112233 !important;
+    background-repeat:no-repeat !important;
+	background-position:center center !important;
+	background-size:cover !important;
 
-.ui-listview li {
-    background-color: transparent !important;
-    background-image: url('') !important;
+} 
 
 .ui-listview, .ui-listview-inset, .ui-content, .ui-li, .ui-collapsible-content{/*Makes Things Transparent(Mostly for panels and backgrounds)*/
     background-color: transparent !important;
