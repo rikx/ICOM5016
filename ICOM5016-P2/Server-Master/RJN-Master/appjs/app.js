@@ -430,20 +430,26 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 			var sellingProducts = data.sellingProducts;
 			var shippingAddresses = data.shippingAddresses;
 			var bids = data.bids;
+			var boughtProducts = data.boughtHistory;
+			var soldProducts = data.soldHistory;
 
 			var shipAddressList = $('#shipaddress-list');
 			var payList = $('#paymentType-list');
 			var ratingsList = $('#ratings-list');
 			var sellingList = $('#currentSales-list');
 			var bidsList = $('#currentBids-list');
+			var boughtList = $('#bought-history-list')
+			var soldList = $('#sold-history-list');
 
 			shipAddressList.empty();
 			payList.empty();
 			ratingsList.empty();
 			sellingList.empty();
 			bidsList.empty();
+			boughtList.empty();
+			soldList.empty();
 
-			var maxLength = Math.max(shippingAddresses.length, paymentTypes.length, ratings.length, sellingProducts.length, bids.length); 
+			var maxLength = Math.max(shippingAddresses.length, paymentTypes.length, ratings.length, sellingProducts.length, bids.length, boughtProducts.length, soldProducts.length);
 
 			var avgRating = 0;
 			var rCount = 0;
@@ -482,6 +488,28 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 					bidsList.append('<li><div><center><a onclick=GetProduct('+ bids[i].product_id + ')><strong>'+bids[i].name+'</strong></a> - current highest bid: '+ bids[i].current_bid +'</center>'+
 					'<center><p> Your bid: '+bids[i].bid_amount+', placed on '+ bids[i].date_placed+'</p></center></div></li>');
 				}
+				//History: orders | products bought
+				if(i < boughtProducts.length){
+					boughtList.append('<li>'+
+							'<center>'+
+								'<p>Order #'+boughtProducts[i].order_id+'</p>'+
+								'<p>From <a onclick="GetSellerProfile('+boughtProducts[i].seller_id+')">'+boughtProducts[i].username+'</a></p>'+
+								'<p><a href="#invoice">View Invoice</a></p>'+
+							'</center>'+
+
+								'<div data-role="fieldcontain">'+
+									'<center><label for="slider-mini"> Rate this seller:</label></center>'+
+									'<p>'+
+										'<input id="rating-slider" type="text" data-type="range" name="slider-mini" id="slider-mini" value="2" min="0" max="4" step="1" data-highlight="true" data-mini="true" />'+
+									'</p>'+
+								'</div>'+
+								'<center><a onclick="SubmitRating('+boughtProducts[i].seller_id+')" data-icon="ok"> Submit</a></center>'+
+							'</li>');
+				}
+				//History: products sold
+				if(i < soldProducts.length){
+					soldList.append('<li>Hi i am a test list element</li>');
+				}
 			}
 			// These buttons are for adding a new address,payment type or product for sale and are added
 			// to the end of the list
@@ -493,6 +521,9 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 			payList.listview("refresh");
 			ratingsList.listview("refresh");
 			sellingList.listview("refresh");
+			bidsList.listview("refresh");
+			boughtList.listview("refresh");
+			soldList.listview("refresh");
 
 			//Populate average rating header
 /*			avgRating = avgRating / rCount;

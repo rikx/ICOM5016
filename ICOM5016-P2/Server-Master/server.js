@@ -1198,7 +1198,7 @@ app.get('/Server-Master/account/:id', function(req, res) {
 
 	//returns products bought in the past
 	//have it return necesary info link to invoice and an order summary panel or page
-	var query6 = client.query("SELECT * from orders natural join products where buyer_id = $1", [id]);
+	var query6 = client.query("SELECT order_id, seller_id, username from orders natural join sales natural join products, accounts where seller_id = account_id and buyer_id = $1", [id]);
 	query6.on('row', function (row, result){
 		result.addRow(row);
 	});
@@ -1233,7 +1233,7 @@ app.get('/Server-Master/account/:id', function(req, res) {
 	query9.on("end", function (result){
 		thePaymentOptions = result.rows;
 		var response = {"user" : theUser, "shippingAddresses" : theAddresses, "paymentOptions" : thePaymentOptions, 
-				"ratingsList" : theRatings, "bids" : theBids, "sellingProducts" : theProducts, "boughtHistory" : theProductsSold, "soldHistory" : theProductsSold};
+				"ratingsList" : theRatings, "bids" : theBids, "sellingProducts" : theProducts, "boughtHistory" : theProductsBought, "soldHistory" : theProductsSold};
 		client.end();
 		res.json(response);	
 	});
