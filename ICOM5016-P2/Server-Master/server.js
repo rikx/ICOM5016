@@ -271,6 +271,9 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 			console.log("GET products of category " +id+ ", sorted by " + SortType);
 
 			//query2 returns sorted list based on SortType
+
+			//Need to change this into two queries (like in the GetProduct() GET function). Add the results of 
+			// num_of_bids and current bid to each row product in the product response
 			var query2;
 			switch(SortType) {
 				case "name":
