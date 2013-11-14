@@ -286,7 +286,7 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 			  		query2 = client.query("SELECT product_id, name, instant_price, cid as parent, image_filename, cname as parent_name, current_bid from products natural join categories natural join auctions where cid = $1 order by brand", [id]);
 			  		break;
 			  	default:
-			  		query2 = client.query("SELECT product_id, name, instant_price, cid as parent, image_filename, cname as parent_name, current_bid from products natural join categories natural join auctions where cid = $1", [id]);
+			  		query2 = client.query("SELECT product_id, name, instant_price, cid as parent, image_filename, cname as parent_name from products natural join categories where cid = $1", [id]);
 			};
 			query2.on("row", function (row, result) {
 		    	result.addRow(row);
@@ -405,8 +405,8 @@ app.get('/Server-Master/product/:id', function(req, res) {
 	client.connect();
 	
 	// Query to get product information. 
-	// First query has natural join with auctions table so it can query the current_bid price, 
-	// Second query has Count result that yields the num_of_bids for the product
+	// second query checks if the product is up for auction, then adds info to the response
+	// if product is up for auction, third query checks number of bids and adds info to the response
 	var theProduct, theBids;
 
 	var query = client.query("SELECT * from products natural join (select account_id as seller_id, username from accounts) as seller where product_id = $1", [id]);
@@ -424,7 +424,8 @@ app.get('/Server-Master/product/:id', function(req, res) {
 			theProduct = result.rows[0];
 	  	}
  	});
- 	//
+
+ 	//get auction id and current bid if product is up for auction
 	var query2 = client.query("SELECT current_bid, auction_id from auctions where product_id = $1", [id]);
 	query2.on("row", function (row, result) {
     	result.addRow(row);
@@ -432,9 +433,6 @@ app.get('/Server-Master/product/:id', function(req, res) {
 	query2.on("end", function (result) {
 		if(result.rowCount == 0){
 			theProduct.has_auction = false;
-			var response = {"product" : theProduct};
-			client.end();
-			res.json(response);
 		}
 		else {
 			theProduct.has_auction = true;
@@ -442,26 +440,22 @@ app.get('/Server-Master/product/:id', function(req, res) {
 			theProduct.auction_id = result.rows[0].auction_id;
 		}
 	});
-
 	//get number of bids for this product
  	var query3 = client.query("SELECT count(*) as num_of_bids from placed_bids natural join auctions where product_id = $1", [id]);
  	query3.on('row', function (row, result){
  		result.addRow(row);
  	});
  	query3.on('end', function (result){
- 		if (theProduct.has_auction == true){
-	 		if(result.rowCount == 0){
-	 			theProduct.num_of_bids = 0;
-	 		}
-	 		else {
-	 			theProduct.num_of_bids = result.rows[0].num_of_bids;
-			}
+ 		if(result.rowCount == 0){
+ 			theProduct.num_of_bids = 0;
+ 		}
+ 		if(result.rowCount > 0){
+ 			theProduct.num_of_bids = result.rows[0].num_of_bids;
 		}
 		var response = {"product" : theProduct};
 		client.end();
 		console.log(response);
 		res.json(response);
-
  	});
 });
 

@@ -16,25 +16,7 @@ $(document).on('pagebeforeshow', "#home", function( event, ui ) {
 			var category;
 			for (var i=0; i < len; ++i){
 				category = categoryList[i];
-
-//          PHASE 1 CODE
-                //when home, print parent==null
-				/*if(!category.parent) {	
-					list.append("<li><a onclick=GetSubCategory("+category.id+")><h2>"+category.name+"</h2></a></li>");
-				}*/
-			
-	
-					/*
-					 * DON'T DELETE
-					 ("<li><a onclick=GetCategory(" + category.id + ")>" + 
-					"<h2>" + category.name + " " + category.model +  "</h2>" + 
-					"<p><strong> Year: " + category.year + "</strong></p>" + 
-					"<p>" + category.description + "</p>" +
-					"<p class=\"ui-li-aside\">" + accounting.formatMoney(category.price) + "</p>" +
-					"</a></li>");*/
-
-//			PHASE 2 CODE
-			list.append("<li><a onclick=GetSubCategory("+category.id+")><h2>"+category.name+"</h2></a></li>");	
+				list.append("<li><a onclick=GetSubCategory("+category.id+")><h2>"+category.name+"</h2></a></li>");	
 			}
 			list.listview("refresh");	
 		},
@@ -858,7 +840,7 @@ $(document).on('pagebeforeshow', "#product-view", function( event, ui ) {
 	$("#productTitle").html(product.name);
 	$('#seller-details').attr("onclick", "GetSellerProfile("+product.seller_id+")");
 	
-	if(product.has_auction = true){
+	if(product.has_auction == true){
 		$('#auction-display').show();
 		$('#bidButton').attr("onclick", "PlaceBid("+product.product_id+")");
 
@@ -875,6 +857,7 @@ $(document).on('pagebeforeshow', "#product-view", function( event, ui ) {
 	else {
 		$('#auction-display').hide();
 	}
+
 	// if product has instant price show it. else, hide buyout elements.
 	if(product.instant_price != null){
 		$('#buyout-display').show();
@@ -890,7 +873,8 @@ $(document).on('pagebeforeshow', "#product-view", function( event, ui ) {
 	list.append('<li><img src="'+product.image_filename+'" /></li>'+
 	'<li><strong>Product ID: </strong>' + product.product_id + '</li><li><strong>Brand: </strong>' + product.brand + '</li>'+
 	'<li><strong>Model: </strong>' + product.model + '</li><li><strong>Description: </strong>' + product.description + '</li>'+
-	'<li><strong>Dimensions: </strong>'+product.dimensions+'</li>'
+	'<li><strong>Dimensions: </strong>'+product.dimensions+'</li>'+
+	'<li><strong>Quantity: </strong>'+product.quantity+'</li>'
 	);
 	list.listview("refresh");
 });
