@@ -424,16 +424,44 @@ app.get('/Server-Master/product/:id', function(req, res) {
 			theProduct = result.rows[0];
 	  	}
  	});
- 	var query2 = client.query("SELECT current_bid, auction_id, count(*) as num_of_bids from placed_bids natural join auctions where product_id = $1 group by current_bid, auction_id", [id]);
- 	query2.on('row', function (row, result){
+ 	//
+	var query2 = client.query("SELECT current_bid, auction_id from auctions where product_id = $1", [id]);
+	query2.on("row", function (row, result) {
+    	result.addRow(row);
+	});
+	query2.on("end", function (result) {
+		if(result.rowCount == 0){
+			theProduct.has_auction = false;
+			var response = {"product" : theProduct};
+			client.end();
+			res.json(response);
+		}
+		else {
+			theProduct.has_auction = true;
+			theProduct.current_bid = result.rows[0].current_bid;
+			theProduct.auction_id = result.rows[0].auction_id;
+		}
+	});
+
+	//get number of bids for this product
+ 	var query3 = client.query("SELECT count(*) as num_of_bids from placed_bids natural join auctions where product_id = $1", [id]);
+ 	query3.on('row', function (row, result){
  		result.addRow(row);
  	});
- 	query2.on('end', function (result){
- 		theBids = result.rows;
-
- 		var response = {"product" : theProduct, "bids" : theBids};
+ 	query3.on('end', function (result){
+ 		if (theProduct.has_auction == true){
+	 		if(result.rowCount == 0){
+	 			theProduct.num_of_bids = 0;
+	 		}
+	 		else {
+	 			theProduct.num_of_bids = result.rows[0].num_of_bids;
+			}
+		}
+		var response = {"product" : theProduct};
 		client.end();
+		console.log(response);
 		res.json(response);
+
  	});
 });
 
@@ -571,7 +599,7 @@ app.get('/Server-Master/product/:id/bid-history', function(req, res) {
 	var client = new pg.Client(dbConnInfo);
 	client.connect();
 
-	var query = client.query("SELECT * from placed_bids natural join auctions where product_id = $1", [id]);
+	var query = client.query("SELECT * from placed_bids natural join auctions where product_id = $1 order by bid_amount DESC", [id]);
 	query.on("row", function (row, result) {
 		result.addRow(row);
 	});
@@ -1091,7 +1119,6 @@ app.get('/Server-Master/seller/:id', function(req, res) {
 	});
 	query2.on("end", function (result){
 		theRatings = result.rows;
-		console.log(theRatings);
 	});
 
 	// Query to get products being sold by this seller

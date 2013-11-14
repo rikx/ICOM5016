@@ -456,7 +456,8 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 			for(var i=0; i < maxLength; ++i){
 				//Populate Address List
 				if(i < shippingAddresses.length){
-						shipAddressList.append('<li><div><center><strong> Address: '+ shippingAddresses[i].street_address +'</strong><center></div></li>'+
+						shipAddressList.append('<li><div><center><strong> Address: '+ shippingAddresses[i].street_address +'</strong></center>'+
+						'<center>'+ shippingAddresses[i].city +', '+ shippingAddresses[i].state +' | '+shippingAddresses[i].country+' '+shippingAddresses[i].zipcode+'</center></div></li>'+
 						'<li><a onclick=EditAddress('+shippingAddresses[i].address_id+') data-icon="gear">Edit</a></li>'+
 						'<li><a onclick=DeleteAddress('+shippingAddresses[i].address_id+') data-icon="trash">Delete</a></li>'
 						);
@@ -511,6 +512,10 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 					soldList.append('<li>Hi i am a test list element</li>');
 				}
 			}
+			// initializes JQuery mobile formating to the appended list elements
+			boughtList.trigger('create');
+			soldList.trigger('create');
+
 			// These buttons are for adding a new address,payment type or product for sale and are added
 			// to the end of the list
 			shipAddressList.append('<li><a href="#add-address" data-role="button">Add new shipping address</a></li>');
@@ -644,7 +649,7 @@ $(document).on('pagebeforeshow', "#seller-profile", function(event, ui){
 			var sales = data.selling;
 
 			$.mobile.loading("hide");
-			$("#sellerTitle").html(seller.username);
+			$("#seller-title").html("Seller Name: " + seller.username);
 			
 			var maxLength = Math.max(ratings.length, sales.length); 
 
@@ -852,10 +857,32 @@ $(document).on('pagebeforeshow', "#product-view", function( event, ui ) {
 
 	$("#productTitle").html(product.name);
 	$('#seller-details').attr("onclick", "GetSellerProfile("+product.seller_id+")");
-	$('#bidButton').attr("onclick", "PlaceBid("+product.product_id+")");
-	$("#showBidPrice").html(accounting.formatMoney(product.current_bid));
-	$("#numOfBids").html('<a href="#bidhistory">'+product.num_of_bids+'</a>');
-	$("#showBuyoutPrice").html(accounting.formatMoney(product.instant_price));
+	
+	if(product.has_auction = true){
+		$('#auction-display').show();
+		$('#bidButton').attr("onclick", "PlaceBid("+product.product_id+")");
+
+		//if there are no bids disable the reference to the bid history page and current_bid is starting price
+		if(product.num_of_bids < 1){
+			$('#showBidPrice').html('Place starting bid of ' + accounting.formatMoney(product.current_bid));
+			$("#numOfBids").html(product.num_of_bids);
+		}
+		else {
+			$('#showBidPrice').html(accounting.formatMoney(product.current_bid));
+			$("#numOfBids").html('<a href="#bidhistory">'+product.num_of_bids+'</a>');
+		}
+	}
+	else {
+		$('#auction-display').hide();
+	}
+	// if product has instant price show it. else, hide buyout elements.
+	if(product.instant_price != null){
+		$('#buyout-display').show();
+		$("#showBuyoutPrice").html(accounting.formatMoney(product.instant_price));
+	}
+	else{
+		$('#buyout-display').hide();
+	}
 
 	var list = $("#prod-details");
 	list.empty();
@@ -863,7 +890,7 @@ $(document).on('pagebeforeshow', "#product-view", function( event, ui ) {
 	list.append('<li><img src="'+product.image_filename+'" /></li>'+
 	'<li><strong>Product ID: </strong>' + product.product_id + '</li><li><strong>Brand: </strong>' + product.brand + '</li>'+
 	'<li><strong>Model: </strong>' + product.model + '</li><li><strong>Description: </strong>' + product.description + '</li>'+
-	'<li><strong>Dimensions: </strong>'+product.dimensions[0]+' cm x '+product.dimensions[1] +' cm x '+product.dimensions[2]+'cm </li>'
+	'<li><strong>Dimensions: </strong>'+product.dimensions+'</li>'
 	);
 	list.listview("refresh");
 });
@@ -1500,8 +1527,6 @@ function GetProduct(id){
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
 			currentProduct = data.product;
-			currentProduct.num_of_bids = data.bids[0].num_of_bids;
-			currentProduct.current_bid = data.bids[0].current_bid;
 			$.mobile.loading("hide");
 			$.mobile.navigate("#product-view");
 		},
