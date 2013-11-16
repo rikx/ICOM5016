@@ -386,8 +386,8 @@ $(document).ready(function() {
 $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 	// currentUser has been set at this point
 	$.mobile.loading("hide");
-	$('#bought-history').hide();
-	$('#sell-history').hide();
+	$('#bought-history-list').hide();
+	$('#sold-history-list').hide();
 	$.ajax({
 		url : "http://localhost:3412/Server-Master/account/" + currentUser.account_id,
 		method: 'get',
@@ -483,7 +483,7 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 								'<div data-role="fieldcontain">'+
 									'<center><label for="slider-mini"> Rate this seller:</label></center>'+
 									'<p>'+
-										'<input id="rating-slider" type="text" data-type="range" name="slider-mini" id="slider-mini" value="2" min="0" max="4" step="1" data-highlight="true" data-mini="true" />'+
+										'<input id="rating-slider-'+boughtProducts[i].seller_id+'" type="text" data-type="range" name="slider-mini" id="slider-mini" value="2" min="0" max="4" step="1" data-highlight="true" data-mini="true" />'+
 									'</p>'+
 								'</div>'+
 								'<center><a onclick="SubmitRating('+boughtProducts[i].seller_id+')" data-icon="ok"> Submit</a></center>'+
@@ -491,7 +491,8 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 				}
 				//History: products sold
 				if(i < soldProducts.length){
-					soldList.append('<li>Hi i am a test list element</li>');
+					soldList.append('<li><center><p>Sale Order #'+soldProducts[i].order_id+'</p><p>'+soldProducts[i].bought_quantity+' sale of <a onclick="GetProduct('+soldProducts[i].product_id+')">'+soldProducts[i].name+'</a> for '+soldProducts[i].purchase_price+' on '+soldProducts[i].purchase_date+'</p></center>'+
+						'</li>');
 				}
 			}
 			// initializes JQuery mobile formating to the appended list elements
@@ -577,22 +578,22 @@ $(document).on('pagebeforeshow', "#update-account", function(event, ui){
 
 //User helper functions
 function boughtHistory(){
-    $('#bought-history').show();
-    $('#sell-history').hide();
+    $('#bought-history-list').show();
+    $('#sold-history-list').hide();
 }
 
 function sellHistory(){
-    $('#bought-history').hide();
-    $('#sell-history').show();
+    $('#bought-history-list').hide();
+    $('#sold-history-list').show();
 }
 
 function SubmitRating(id){
 	$.mobile.loading("show");
-	var form = $("#rating-slider");
+	var rating_form = $('#rating-slider-'+id);
 	$.ajax({
 		url : "http://localhost:3412/Server-Master/seller/" + id,
 		method: 'post',
-		data : JSON.stringify({"rater": currentUser.id,"rating" : form.val()}),
+		data : JSON.stringify({"rater": currentUser.account_id,"rating" : rating_form.val()}),
 		contentType: "application/json",
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
