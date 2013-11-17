@@ -1231,7 +1231,7 @@ app.get('/Server-Master/account/:id', function(req, res) {
 	});
 
 	//returns products sold in the past
-	//have it retgurn necesary info linking to user and sale details.
+	//have it return necesary info linking to user and sale details.
 	var query7 = client.query("SELECT * from orders natural join sales natural join products where seller_id = $1", [id]);
 	query7.on('row', function (row, result){
 		result.addRow(row);
@@ -1246,7 +1246,7 @@ app.get('/Server-Master/account/:id', function(req, res) {
 		result.addRow(row);
 	});
 	query8.on('end', function (result){
-		theProductsSold = result.rows;
+		theCurrentOrders = result.rows;
 	});*/
 
 	//returns user payment options 
