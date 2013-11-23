@@ -454,7 +454,6 @@ app.get('/Server-Master/product/:id', function(req, res) {
 		}
 		var response = {"product" : theProduct};
 		client.end();
-		console.log(response);
 		res.json(response);
  	});
 });
@@ -682,11 +681,9 @@ app.get('/Server-Master/account/address/:id', function(req, res) {
     		res.send("Address information not found.");
     	}
     	else {
-    		console.log("GET shipping address: " + id);
 			var response = {"address" : result.rows[0]};
-			console.log("row count: " + result.rowCount);
+			client.end();
     		res.json(response);
-    		client.end();
     	}
  	});
 });
