@@ -3,7 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 $(document).on('pagebeforeshow', "#home", function( event, ui ) {
-	currentHistory = "";
+	currentHistory = [];
 	$.ajax({
 		url : "http://localhost:3412/Server-Master/home",
 		contentType: "application/json",
@@ -36,13 +36,20 @@ var ShipAddressess = [];
 var PayAddressess = [];
 
 $(document).on('pagebeforeshow', "#cart", function( event, ui ) {
-	
+			//hides payment and address options
+			if(currentUser.account_id == null || currentUser.permission == true){
+				$('#cart-choose-options').hide();
+			}
+			else{
+				$('#cart-choose-options').show();
+			}
 			var len = Cart.length;
 			var list = $("#shopping-list");
 			var cList = $("#total");
 			var shipAddressList = $('#cart-shipaddress-list');
 			var payList = $('#cart-paymentType-list');
 			var total = 0.00;
+
 			list.empty();
 			cList.empty();
 			payList.empty();
@@ -167,34 +174,35 @@ $(document).on('pagebeforeshow', "#invoice", function( event, ui ) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 var SortType="none";
-//var currentHistory = "";
+var currentHistory = [];
 $.mobile.changePage.defaults.allowSamePageTransition = true;
 $.mobile.defaultPageTransition = 'none';
 $.mobile.defaultDialogTransition = 'none';
 
-$(document).on('pagebeforeshow', "#browse", function( event, ui ) {
-	//currentHistory will be used later to display breadcrumb trail on page as you go deeper into the category hierarchy
-	//var currentHistory = currentHistory + "/" + currentCategory.id;
-	
+$(document).on('pagebeforeshow', "#browse", function( event, ui ) {	
 	$.ajax({
 		url : "http://localhost:3412/Server-Master/home/categories/" + currentCategory.id + "/"+SortType,
 		method: 'get',
-		//method: 'post',
-		//data : JSON.stringify({"urlhistory": currentHistory}),
 		contentType: "application/json",
-		//dataType:"json",
 		success : function(data, textStatus, jqXHR){
-			$("#browseTitle").html(data.parent);
+			//$("#browse-title").html(data.parent);
 			var list = $("#browse-list");
 			list.empty();
 			$("#sortTypes").html('');
-
+			
 			//shows history breadcrumb
-/*			for (var i = 0; i < data.historyIDs.length; i++){
-				var names = data.historyNames;
-				var ids = data.historyIDs;
-				$('#breadcrumb-history').append('<a onclick="GetSubCategory('+ids[i].id+""+[i]'">'+names[i].name+""+[i]+'</a>');
-			}*/
+			$('#breadcrumb-history').html('');
+
+			for (var i = 0; i < currentHistory.length; i++){
+				//add reference to Home
+				if(i==0){
+					$('#breadcrumb-history').append('<a href="#home">Home</a> | ');
+				}
+				$('#breadcrumb-history').append('<a onclick=GetSubCategory('+currentHistory[i].id+')>'+currentHistory[i].name+'</a>');
+				if(i!=currentHistory.length-1){
+					$('#breadcrumb-history').append(' | ');
+				}
+			}
 			//when data contains sub-categories
 			if (data.type == true){
 				var categoriesList = data.categories;
@@ -208,7 +216,7 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 			else {
 				var productsList = data.products;
 				var product;
-				$("#sortTypes").html('<button onclick=sortByType("name")>SortByName</button><button onclick=sortByType("brand")>SortByBrand</button><button onclick=sortByType("price")>SortByPrice</button>');
+				$("#sortTypes").html('<button onclick=sortByType("name")>SortByName</button><button onclick=sortByType("brand")>SortByBrand</button><button onclick=sortByType("price")>SortByPrice</button>').trigger('create');
 				for (var i=0; i < productsList.length; ++i){
 					product = productsList[i];
 					list.append('<li><a onclick=GetProduct('+product.product_id+')><h2>'+product.name+'</h2>'+
@@ -999,6 +1007,16 @@ function GetSubCategory(id){
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
 			currentCategory = data.parent;
+			var catCheck = false;
+			for (var i = 0; i < currentHistory.length; i++){
+				if(currentHistory[i].id == currentCategory.id){
+					catCheck = true;
+					currentHistory.splice(i+1, currentHistory.length-1-i);
+				}
+			}
+			if (catCheck == false){
+				currentHistory.push({"id" : currentCategory.id, "name" : currentCategory.name});
+			}
 			$.mobile.loading("hide");
 			$.mobile.navigate("#browse");
 		},
@@ -1255,7 +1273,7 @@ function LogOut(){
 	if(uExit == true){
 		$.mobile.loading("show");
 		//global variables are reset to initial values.
-		currentUser = {"id": null};
+		currentUser = {"account_id": null};
 		
 		//Empty User Specific Arrays
 		Cart = [];
