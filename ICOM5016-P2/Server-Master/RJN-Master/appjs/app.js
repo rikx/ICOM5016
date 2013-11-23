@@ -36,13 +36,20 @@ var ShipAddressess = [];
 var PayAddressess = [];
 
 $(document).on('pagebeforeshow', "#cart", function( event, ui ) {
-	
+			//hides payment and address options
+			if(currentUser.account_id == null || currentUser.permission == true){
+				$('#cart-choose-options').hide();
+			}
+			else{
+				$('#cart-choose-options').show();
+			}
 			var len = Cart.length;
 			var list = $("#shopping-list");
 			var cList = $("#total");
 			var shipAddressList = $('#cart-shipaddress-list');
 			var payList = $('#cart-paymentType-list');
 			var total = 0.00;
+
 			list.empty();
 			cList.empty();
 			payList.empty();
@@ -178,7 +185,7 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 		method: 'get',
 		contentType: "application/json",
 		success : function(data, textStatus, jqXHR){
-			$("#browse-title").html(data.parent);
+			//$("#browse-title").html(data.parent);
 			var list = $("#browse-list");
 			list.empty();
 			$("#sortTypes").html('');
@@ -209,7 +216,7 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 			else {
 				var productsList = data.products;
 				var product;
-				$("#sortTypes").html('<button onclick=sortByType("name")>SortByName</button><button onclick=sortByType("brand")>SortByBrand</button><button onclick=sortByType("price")>SortByPrice</button>');
+				$("#sortTypes").html('<button onclick=sortByType("name")>SortByName</button><button onclick=sortByType("brand")>SortByBrand</button><button onclick=sortByType("price")>SortByPrice</button>').trigger('create');
 				for (var i=0; i < productsList.length; ++i){
 					product = productsList[i];
 					list.append('<li><a onclick=GetProduct('+product.product_id+')><h2>'+product.name+'</h2>'+
@@ -1266,7 +1273,7 @@ function LogOut(){
 	if(uExit == true){
 		$.mobile.loading("show");
 		//global variables are reset to initial values.
-		currentUser = {"id": null};
+		currentUser = {"account_id": null};
 		
 		//Empty User Specific Arrays
 		Cart = [];
