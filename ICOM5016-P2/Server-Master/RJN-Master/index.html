@@ -287,6 +287,7 @@
 				</div><!-- /navbar -->
 			</header>
 			<div data-role="content">
+				<h3 id="admin-title"></h3>
 				<h3 align="center">Admin Tools</h3>
 				<ul>
 					<li>
@@ -765,6 +766,7 @@
 			</header>
 			
 			<div data-role="content">
+				<h3 id="product-title"></h3>
 				<h3 align="center">Product Details</h3>
 				<ul id="prod-details" data-role="listview" data-inset="true">	  			  	
 				</ul>
@@ -775,7 +777,8 @@
 					<p>Time left on auction: <strong id="auction-timer"></strong></p><!-- <a onclick='AuctionTimer()' data-role="button">Show Time</a> -->
 					<p>Current bid: <strong id="showBidPrice"></strong> &nbsp;|&nbsp; Number of bids: <strong id="numOfBids"></strong></p>
 					<div data-role="fieldcontain" data-theme="a">
-					<input name="bidInput" type="text" data-theme="a" data-mini="true" /><a id="bidButton" onclick="PlaceBid()" data-role="button" data-inline="true" data-theme="e" data-mini="true">Bid</a>
+    					<label for="name">Enter your bid: </label>
+						<input name="bidInput" type="text" data-theme="a"/><a id="bidButton" onclick="PlaceBid()" data-role="button" data-inline="true" data-theme="e" data-mini="true">Bid</a>
 					</div>
 				</span>
 				<p id="buyout-display">Buyout Price: <strong id="showBuyoutPrice"></strong>

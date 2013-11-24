@@ -234,7 +234,7 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 						on_sale_product = on_sale_list[i];
 						list.append('<li><a onclick=GetProduct('+on_sale_product.product_id+')><h2>'+on_sale_product.name+'</h2>'+
 						'<p><img class="img-size" src="'+on_sale_product.image_filename+'"" /></p>'+ 
-						'<p class=\"ui-li-aside\"><h4>Price: ' + accounting.formatMoney(on_sale_product.instant_price) + '</h4></p></a>'+
+						'<p class=\"ui-li-aside\"><h4>Price: ' + accounting.formatMoney(on_sale_product.instant_price) + '</h4></p>'+
 						'<p class=\"ui-li-aside\"><h4>Quantity: ' + on_sale_product.quantity + '</h4></p></a></li>');	
 					}
 				}
@@ -711,7 +711,7 @@ $(document).on('pagebeforeshow', "#admin", function( event, ui ) {
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
 			var user = currentUser;
-			$('#adminTitle').html(user.username);
+			$('#admin-title').html(user.username);
 			var categories = data.categoriesList;
 			var users = data.userList;
 			
@@ -856,7 +856,7 @@ $(document).on('pagebeforeshow', "#product-view", function( event, ui ) {
 	// currentProduct has been set at this point
 	var product = currentProduct;
 
-	$("#productTitle").html(product.name);
+	$("#product-title").html(product.name);
 	$('#seller-details').attr("onclick", "GetSellerProfile("+product.seller_id+")");
 	
 	if(product.has_auction == true){
