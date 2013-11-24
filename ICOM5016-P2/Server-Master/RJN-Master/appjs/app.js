@@ -225,10 +225,25 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 				for (var i=0; i < maxLength; ++i){
 					if(i < auction_list.length){
 						auction_product = auction_list[i];
-						list.append('<li><a onclick=GetProduct('+auction_product.product_id+')><h2>'+auction_product.name+'</h2>'+
+/*						list.append('<li><a onclick=GetProduct('+auction_product.product_id+')><h2>'+auction_product.name+'</h2>'+
 						'<p><img class="img-size" src="'+auction_product.image_filename+'"" /></p>'+ 
-						'<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(auction_product.current_bid) + '</h4></p>'+
-						'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(auction_product.instant_price) + '</h4></p></a></li>');	
+						'<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(auction_product.current_bid) + '</h4></p>');
+						if(auction_product.instant_price > 0.00){
+							list.append('<p class=\"ui-li-aside\"><h4>Buyout Price: ' + accounting.formatMoney(auction_product.instant_price) + '</h4></p></a></li>');
+						}
+						else {
+							list.append('</a></li>');
+						}	*/
+						var string1 = '<li><a onclick=GetProduct('+auction_product.product_id+')><h2>'+auction_product.name+'</h2>'+
+						'<p><img class="img-size" src="'+auction_product.image_filename+'"" /></p>'+ 
+						'<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(auction_product.current_bid) + '</h4></p>';
+						if(auction_product.instant_price > 0.00){
+							string1+='<p class=\"ui-li-aside\"><h4>Buyout Price: ' + accounting.formatMoney(auction_product.instant_price) + '</h4></p></a></li>';
+						}
+						else {
+							string1+='</a></li>';
+						}
+						list.append(string1);
 					}
 					if(i < on_sale_list.length){
 						on_sale_product = on_sale_list[i];
@@ -327,20 +342,28 @@ $(document).ready(function() {
 	                	list2.empty();
 						for (var i=0; i < len; ++i){
 							product = productList[i];
+							// print in #home
 							list.append('<li><a onclick=GetProduct('+product.product_id+')><h2>'+product.name+'</h2>'+
 							'<p><img class="img-size" src="'+product.image_filename+'"" /></p>'+ 
-							'<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(product.current_bid) + '</h4></p>'+
-							'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(product.instant_price) + '</h4></p></a></li>');	
-						} 
-						list.listview("refresh");	
-						
-						for (var i=0; i < len; ++i){
-							product = productList[i];
+							'<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(product.current_bid) + '</h4></p>');
+							if(product.instant_price > 0.00){
+								list.append('<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(product.instant_price) + '</h4></p></a></li>');
+							}
+							else {
+								list.append('</a></li>');
+							}
+							// print in #browse list
 							list2.append('<li><a onclick=GetProduct('+product.product_id+')><h2>'+product.name+'</h2>'+
 							'<p><img class="img-size" src="'+product.image_filename+'"" /></p>'+ 
-							'<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(product.current_bid) + '</h4></p>'+
-							'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(product.instant_price) + '</h4></p></a></li>');	
+							'<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(product.current_bid) + '</h4></p>');
+							if(product.instant_price > 0.00){
+								list2.append('<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(product.instant_price) + '</h4></p></a></li>');
+							}
+							else {
+								list2.append('</a></li>');
+							}	
 						} 
+						list.listview("refresh");	
 						list2.listview("refresh");	    
 		            }
 	            },
@@ -364,9 +387,11 @@ $(document).ready(function() {
 	          	method: 'get',
 				contentType: "application/json",
 	            success : function(data, textStatus, jqXHR){
-	                var productList = data.ListOfProducts;
+	               	                var productList = data.ListOfProducts;
 	                var len = productList.length;
 					var list = $("#category-list");
+					var list2 = $("#browse-list");
+					
 	                if (len == 1) {
 	                	GetProduct(productList[0].product_id);
 	                }
@@ -375,23 +400,44 @@ $(document).ready(function() {
 	        	
 	        			list.html("<li><h2>Product(s) Not Found!</h2></li>");
 	        			list.listview("refresh");	
+	        			
+	        			list2.html("<li><h2>Product(s) Not Found!</h2></li>");
+	        			list2.listview("refresh");	
 	        		}
 	                else {
 	                	list.empty();
+	                	list2.empty();
 						for (var i=0; i < len; ++i){
 							product = productList[i];
+							// print in #home
 							list.append('<li><a onclick=GetProduct('+product.product_id+')><h2>'+product.name+'</h2>'+
 							'<p><img class="img-size" src="'+product.image_filename+'"" /></p>'+ 
-							'<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(product.current_bid) + '</h4></p>'+
-							'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(product.instant_price) + '</h4></p></a></li>');	
+							'<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(product.current_bid) + '</h4></p>');
+							if(product.instant_price > 0.00){
+								list.append('<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(product.instant_price) + '</h4></p></a></li>');
+							}
+							else {
+								list.append('</a></li>');
+							}
+							// print in #browse list
+							list2.append('<li><a onclick=GetProduct('+product.product_id+')><h2>'+product.name+'</h2>'+
+							'<p><img class="img-size" src="'+product.image_filename+'"" /></p>'+ 
+							'<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(product.current_bid) + '</h4></p>');
+							if(product.instant_price > 0.00){
+								list2.append('<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(product.instant_price) + '</h4></p></a></li>');
+							}
+							else {
+								list2.append('</a></li>');
+							}	
 						} 
-						list.listview("refresh");	  
-		         }
-            },
-        	error: function(data, textStatus, jqXHR){
-                console.log("textStatus: " + textStatus);
-                alert("Product not found!");
-            }
+						list.listview("refresh");	
+						list2.listview("refresh");	    
+		            }
+	            },
+	        	error: function(data, textStatus, jqXHR){
+	                console.log("textStatus: " + textStatus);
+	                alert("Product not found!");
+	            }
         });
     });
 });
@@ -889,7 +935,7 @@ $(document).on('pagebeforeshow', "#product-view", function( event, ui ) {
 	var list = $("#prod-details");
 	list.empty();
 
-	list.append('<li><img src="'+product.image_filename+'" /></li>'+
+	list.append('<li><center><img src="'+product.image_filename+'" /></center></li>'+
 	'<li><strong>Product ID: </strong>' + product.product_id + '</li><li><strong>Brand: </strong>' + product.brand + '</li>'+
 	'<li><strong>Model: </strong>' + product.model + '</li><li><strong>Description: </strong>' + product.description + '</li>'+
 	'<li><strong>Dimensions: </strong>'+product.dimensions+'</li>'+

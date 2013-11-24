@@ -1059,7 +1059,6 @@ app.get('/Server-Master/admin/:id', function(req, res){
 	});
 	query2.on("end", function (result){
 		theCategories = result.rows;
-		console.log("Categories row count: " + result.rowCount);
 	});
 
 	var query3 = client.query("SELECT account_id, username from accounts");
@@ -1068,7 +1067,6 @@ app.get('/Server-Master/admin/:id', function(req, res){
 	});
 	query3.on("end", function (result){
 		theUsers = result.rows;
-		console.log("Users row count: " + result.rowCount);
 		var response = {"adminInfo" : theAdmin, "categoriesList": theCategories, "userList" : theUsers};
 		client.end();
 		res.json(response);
