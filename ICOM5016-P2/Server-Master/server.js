@@ -247,7 +247,7 @@ app.post('/Server-Master/home', function(req, res) {
 app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 	var id = req.params.id;
 	var SortType = req.params.SortType;
-
+	var theAuctionProducts, theParent;
 	var theType = true; // if remains true at end content of response is subcategories
 	var client = new pg.Client(dbConnInfo);
 	client.connect();
@@ -270,35 +270,63 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 			theType = false; //content of theChildren are products
 			console.log("GET products of category " +id+ ", sorted by " + SortType);
 
-			//query2 returns sorted list based on SortType
+		 	// returns products that are being auctioned get auction id and current bid if product is up for auction
+			var query1 = client.query("SELECT product_id, name, instant_price, cid as parent, image_filename, cname as parent_name, current_bid, auction_id from auctions natural join products natural join categories where cid = $1", [id]);
+			query1.on("row", function (row, result) {
+		    	result.addRow(row);
+			    //get number of bids for this product
+/*			 	var query2 = client.query("SELECT count(*) as num_of_bids from placed_bids natural join auctions where product_id = $1", [result1.product_id]);
+			 	query2.on('row', function (row2, result2){
+			 		result2.addRow(row2);
+			 	});
+			 	query2.on('end', function (result2){
+			 		if(result2.rowCount == 0){
+			 			result.num_of_bids = 0;
+			 		}
+			 		if(result2.rowCount > 0){
+			 			result.num_of_bids = result2.rows[0].num_of_bids;
+					}
+			 	});*/
+			});
+			query1.on("end", function (result) {
+				if(result.rows > 0){
+					theParent = result.rows[0].parent_name;
+				}
+				theAuctionProducts = result.rows;
+			});
 
-			//Need to change this into two queries (like in the GetProduct() GET function). Add the results of 
-			// num_of_bids and current bid to each row product in the product response
-			var query2;
+			// returns products being sold but not auctioned (quantity > 0)
+			var query3;
 			switch(SortType) {
 				case "name":
-			  		query2 = client.query("SELECT product_id, name, instant_price, cid as parent, image_filename, cname as parent_name, current_bid from products natural join categories natural join auctions where cid = $1 order by name", [id]);
+			  		query3 = client.query("SELECT product_id, name, instant_price, cid as parent, image_filename, quantity, cname as parent_name from products natural join categories where cid = $1 and quantity > 0 and product_id not in (select product_id from auctions) order by name", [id]);
 			  		break; 
 			  	case "price":
-			  		query2 = client.query("SELECT product_id, name, instant_price, cid as parent, image_filename, cname as parent_name, current_bid from products natural join categories natural join auctions where cid = $1 order by instant_price", [id]);
+			  		query3 = client.query("SELECT product_id, name, instant_price, cid as parent, image_filename, quantity, cname as parent_name from products natural join categories where cid = $1 and quantity > 0 and product_id not in (select product_id from auctions) order by instant_price", [id]);
 			  		break;
 			  	case "brand":
-			  		query2 = client.query("SELECT product_id, name, instant_price, cid as parent, image_filename, cname as parent_name, current_bid from products natural join categories natural join auctions where cid = $1 order by brand", [id]);
+			  		query3 = client.query("SELECT product_id, name, instant_price, cid as parent, image_filename, quantity, cname as parent_name from products natural join categories where cid = $1 and quantity > 0 and product_id not in (select product_id from auctions) order by brand", [id]);
 			  		break;
 			  	default:
-			  		query2 = client.query("SELECT product_id, name, instant_price, cid as parent, image_filename, cname as parent_name from products natural join categories where cid = $1", [id]);
+			  		query3 = client.query("SELECT product_id, name, instant_price, cid as parent, image_filename, quantity, cname as parent_name from products natural join categories where cid = $1 and quantity > 0 and product_id not in (select product_id from auctions)", [id]);
 			};
-			query2.on("row", function (row, result) {
+			query3.on("row", function (row, result) {
 		    	result.addRow(row);
 			});
-			query2.on("end", function (result) {
-				if(result.rowCount == 0){
+			query3.on("end", function (result) {
+				if(result.rowCount == 0 && theAuctionProducts.rowCount ==0){
 					client.end();
 					res.statusCode = 404;
-					res.send("Parent category not found.");	
+					res.send("No products found.");	
 				}
-				else {
-					var response = {"products" : result.rows, "type" : theType, "parent" : result.rows[0].parent_name};
+				else{
+					var response;
+					if(result.rowCount == 0){
+						response = {"sale_products" : [], "auction_products" : theAuctionProducts, "type" : theType, "parent" : theParent};
+					}
+					else{
+						response = {"sale_products" : result.rows, "auction_products" : theAuctionProducts, "type" : theType, "parent" : result.rows[0].parent_name};
+					}		
 					client.end();
 					res.json(response);
 				}
@@ -407,7 +435,7 @@ app.get('/Server-Master/product/:id', function(req, res) {
 	// Query to get product information. 
 	// second query checks if the product is up for auction, then adds info to the response
 	// if product is up for auction, third query checks number of bids and adds info to the response
-	var theProduct, theBids;
+	var theProduct;
 
 	var query = client.query("SELECT * from products natural join (select account_id as seller_id, username from accounts) as seller where product_id = $1", [id]);
 	query.on("row", function (row, result) {

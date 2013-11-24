@@ -46,3 +46,9 @@ h3, h4 , h2, strong, li, label, p, .ui-header, .ui-li-heading, .ui-li, .ui-li-st
 	background-image:      -o-linear-gradient( #3c3c3c /*{a-bar-background-start}*/, #111 /*{a-bar-background-end}*/)!important; /* Opera 11.10+ */
 	background-image:         linear-gradient( #3c3c3c /*{a-bar-background-start}*/, #111 /*{a-bar-background-end}*/)!important;
 }
+
+.img-size {
+/*The following will work in almost all browsers*/
+max-height:100px;
+max-width:100px;
+}

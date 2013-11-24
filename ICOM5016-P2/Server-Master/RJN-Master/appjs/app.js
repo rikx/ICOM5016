@@ -214,23 +214,36 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 			}
 			//when data contains products
 			else {
-				var productsList = data.products;
-				var product;
+				// adds sort buttons and initilializes them
 				$("#sortTypes").html('<button onclick=sortByType("name")>SortByName</button><button onclick=sortByType("brand")>SortByBrand</button><button onclick=sortByType("price")>SortByPrice</button>').trigger('create');
-				for (var i=0; i < productsList.length; ++i){
-					product = productsList[i];
-					list.append('<li><a onclick=GetProduct('+product.product_id+')><h2>'+product.name+'</h2>'+
-					'<p><img src="'+product.image_filename+'"" /></p>'+ 
-					'<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(product.current_bid) + '</h4></p>'+
-					'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(product.instant_price) + '</h4></p></a>'+
-					'<a onclick=EditProduct('+product.product_id+') data-icon="gear">Edit</a></li>');	
+				var auction_list = data.auction_products;
+				var on_sale_list = data.sale_products;
+				var maxLength = Math.max(auction_list.length, on_sale_list.length);
+				var auction_product, on_sale_product;
+				
+				// prints list element depending on product type
+				for (var i=0; i < maxLength; ++i){
+					if(i < auction_list.length){
+						auction_product = auction_list[i];
+						list.append('<li><a onclick=GetProduct('+auction_product.product_id+')><h2>'+auction_product.name+'</h2>'+
+						'<p><img class="img-size" src="'+auction_product.image_filename+'"" /></p>'+ 
+						'<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(auction_product.current_bid) + '</h4></p>'+
+						'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(auction_product.instant_price) + '</h4></p></a></li>');	
+					}
+					if(i < on_sale_list.length){
+						on_sale_product = on_sale_list[i];
+						list.append('<li><a onclick=GetProduct('+on_sale_product.product_id+')><h2>'+on_sale_product.name+'</h2>'+
+						'<p><img class="img-size" src="'+on_sale_product.image_filename+'"" /></p>'+ 
+						'<p class=\"ui-li-aside\"><h4>Price: ' + accounting.formatMoney(on_sale_product.instant_price) + '</h4></p></a>'+
+						'<p class=\"ui-li-aside\"><h4>Quantity: ' + on_sale_product.quantity + '</h4></p></a></li>');	
+					}
 				}
 			}
 			list.listview("refresh");	
 		},
 		error: function(data, textStatus, jqXHR){
 			console.log("textStatus: " + textStatus);
-			alert("Data not found!");
+			alert("No products found.");
 		}
 	});
 
@@ -315,20 +328,18 @@ $(document).ready(function() {
 						for (var i=0; i < len; ++i){
 							product = productList[i];
 							list.append('<li><a onclick=GetProduct('+product.product_id+')><h2>'+product.name+'</h2>'+
-							'<p><img src="'+product.image_filename+'"" /></p>'+ 
+							'<p><img class="img-size" src="'+product.image_filename+'"" /></p>'+ 
 							'<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(product.current_bid) + '</h4></p>'+
-							'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(product.instant_price) + '</h4></p></a>'+
-							'<a onclick=EditProduct('+product.product_id+') data-icon="gear">Edit</a></li>');	
+							'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(product.instant_price) + '</h4></p></a></li>');	
 						} 
 						list.listview("refresh");	
 						
 						for (var i=0; i < len; ++i){
 							product = productList[i];
 							list2.append('<li><a onclick=GetProduct('+product.product_id+')><h2>'+product.name+'</h2>'+
-							'<p><img src="'+product.image_filename+'"" /></p>'+ 
+							'<p><img class="img-size" src="'+product.image_filename+'"" /></p>'+ 
 							'<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(product.current_bid) + '</h4></p>'+
-							'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(product.instant_price) + '</h4></p></a>'+
-							'<a onclick=EditProduct('+product.product_id+') data-icon="gear">Edit</a></li>');	
+							'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(product.instant_price) + '</h4></p></a></li>');	
 						} 
 						list2.listview("refresh");	    
 		            }
@@ -370,10 +381,9 @@ $(document).ready(function() {
 						for (var i=0; i < len; ++i){
 							product = productList[i];
 							list.append('<li><a onclick=GetProduct('+product.product_id+')><h2>'+product.name+'</h2>'+
-							'<p><img src="'+product.image_filename+'"" /></p>'+ 
+							'<p><img class="img-size" src="'+product.image_filename+'"" /></p>'+ 
 							'<p class=\"ui-li-aside\"><h4>Current Bid: ' + accounting.formatMoney(product.current_bid) + '</h4></p>'+
-							'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(product.instant_price) + '</h4></p></a>'+
-							'<a onclick=EditProduct('+product.product_id+') data-icon="gear">Edit</a></li>');	
+							'<p class=\"ui-li-aside\"><h4>Buyout: ' + accounting.formatMoney(product.instant_price) + '</h4></p></a></li>');	
 						} 
 						list.listview("refresh");	  
 		         }
