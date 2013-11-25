@@ -12,7 +12,7 @@
 		<script src="js/accounting.js"></script>
 		<script src="appjs/app.js"></script>
 		<script src="appjs/auction.js"></script>
-		
+		<script src="appjs/order.js"></script>
 		
 		
 	</head>
@@ -750,6 +750,49 @@
 			</div><!-- /content -->
 		</div><!-- /page -->
 		<!--///////////////////////////////////		INVOICE END	  ////////////////////////////////////////-->
+
+		<!--///////////////////////////////////		ORDER SUMMARY		//////////////////////////////////////////-->
+		<div id ="order-summary" data-role="page">
+			
+			<div data-role="header" data-theme="a" data-position="fixed">
+				<div class="ui-grid-b" align="center">
+					<div class="ui-block-a">
+						<h3>Order ID: <span id="order-id"></span></h3>
+					</div><!-- /block-a -->
+					<div class="ui-block-b">
+					</div><!-- /block-b -->
+					<div class="ui-block-c">
+						<h4>Purchased on: <span id="order-date"></span></h4>
+					</div><!-- /block-c -->
+				</div><!-- /grid-b -->
+				<div data-role="navbar">
+					<ul>
+						<li><a href="#home" 				data-role="button" data-icon="home"			 title="Home"	>HOME</a></li>
+						<li><a onclick="GetAccount()"	data-role="button" data-icon="user"			  title="Account"	>ACCOUNT</a></li>
+					</ul>
+				</div><!-- /navbar -->
+			</div>
+			<div data-role="content">
+				<div class="ui-grid-a">
+						<div class="ui-block-a">
+							<h3 align="center">Ship To</h3>
+							<ul id="order-shipping" data-role="listview" data-inset="true">	  			  	
+							</ul>
+						</div>
+						<div class="ui-block-b">
+							<h3 align="center">Bill To</h3>
+							<ul id="order-billing" data-role="listview" data-inset="true">	  			  	
+							</ul>
+						</div>
+				</div><!-- /grid-a -->
+				<div>
+					<h3 align="center">Order Summary</h3>	
+					<ul id="order-checkout-list" data-role="listview" data-inset="true">
+					</ul>
+				</div>
+			</div><!-- /content -->
+		</div><!-- /page -->
+		<!--///////////////////////////////////		ORDER SUMMARY END	  ////////////////////////////////////////-->
 				
 		<!--///////////////////////////////////		PRODUCT-VIEW	//////////////////////////////////////-->
 		<div id="product-view" data-role="page">

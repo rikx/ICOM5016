@@ -541,7 +541,7 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 							'<center>'+
 								'<p>Order #'+boughtProducts[i].order_id+'</p>'+
 								'<p>From <a onclick="GetSellerProfile('+boughtProducts[i].seller_id+')">'+boughtProducts[i].username+'</a></p>'+
-								'<p><a href="#invoice">View Invoice</a></p>'+
+								'<p><a onclick="GetOrder('+boughtProducts[i].order_id+')">View Order Summary</a></p>'+
 							'</center>'+
 
 								'<div data-role="fieldcontain">'+
@@ -1343,12 +1343,12 @@ function LogOut(){
 		$.mobile.loading("hide");
 	}
 }
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //											THE USER ADDRESS										  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 var currentAddress = {}; //address obtained in GetAddress PS: These Annoy Rick so they are fun
-
 function GetAddress(id){
 	$.mobile.loading("show");
 	$.ajax({

@@ -1286,6 +1286,30 @@ app.get('/Server-Master/account/:id', function(req, res) {
 	});
 });
 
+app.get('/Server-Master/account/orders/:id', function(req, res) {
+	var id = req.params.id;
+	console.log("GET order "+id);
+
+	var client = new pg.Client(dbConnInfo);
+	client.connect();
+
+	var query = client.query("SELECT order_id, purchase_date, payment_option, products.name, username as seller, bought_quantity, purchase_price, card_number, street_address ||' '||city||' '||country||' '||state||' '||zipcode as billing_address from orders natural join sales natural join products, accounts, credit_cards, addresses where seller_id = accounts.account_id and orders.payment_option = credit_cards.payment_id and credit_cards.billing_address = addresses.address_id and order_id = $1", [id]);
+	query.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query.on("end", function (result){
+		if(result.rowCount ==0){
+			client.end();
+			res.statusCode = 404;
+		}
+		else{
+			var response = {"order" : result.rows[0]};
+			client.end();
+			res.json(response);
+		}
+	});
+});
+
 // REST Operation - HTTP PUT to updated an account based on its id
 app.put('/Server-Master/account/:id', function(req, res) {
 	var id = req.params.id;
