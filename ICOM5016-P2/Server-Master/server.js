@@ -1293,7 +1293,7 @@ app.get('/Server-Master/account/orders/:id', function(req, res) {
 	var client = new pg.Client(dbConnInfo);
 	client.connect();
 
-	var query = client.query("SELECT order_id, purchase_date, payment_option, products.name, username as seller, bought_quantity, purchase_price, card_number, street_address ||' '||city||' '||country||' '||state||' '||zipcode as billing_address from orders natural join sales natural join products, accounts, credit_cards, addresses where seller_id = accounts.account_id and orders.payment_option = credit_cards.payment_id and credit_cards.billing_address = addresses.address_id and order_id = $1", [id]);
+	var query = client.query("SELECT order_id, purchase_date, payment_option, product_id, name, s.street_address ||' '||s.city||' '||s.country||' '||s.state||' '||s.zipcode as shipping_address, seller_id, username as seller, bought_quantity, purchase_price, card_number, b.street_address ||' '||b.city||' '||b.country||' '||b.state||' '||b.zipcode as billing_address from orders natural join sales natural join products, accounts, credit_cards, addresses as b, addresses as s where seller_id = accounts.account_id and orders.payment_option = credit_cards.payment_id and credit_cards.billing_address = b.address_id and shipping_option = s.address_id and order_id = $1", [id]);
 	query.on("row", function (row, result){
 		result.addRow(row);
 	});

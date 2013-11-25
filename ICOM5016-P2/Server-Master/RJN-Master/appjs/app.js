@@ -465,7 +465,7 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 			//Populate user information list
 			var infoList = $("#user-info");
 			infoList.empty();
-			infoList.append('<li><img src="'+user.photo_filename+'" /></li><li><strong>Account ID: </strong>' + user.account_id + '</li></li>'+
+			infoList.append('<li><center><img src="'+user.photo_filename+'" /></center></li><li><strong>Account ID: </strong>' + user.account_id + '</li></li>'+
 				'<li><strong>First Name: </strong>' + user.first_name + '</li></li><li><strong>Last Name: </strong>' + user.last_name + 
 				'</li></li><li><strong>Email: </strong>' + user.email + '</li>'	
 			);
