@@ -1,6 +1,7 @@
 // Express is the web framework 
 var express = require('express');
 var pg = require('pg');
+var nodemailer = require('nodemailer');
 
 var app = express();
 var allowCrossDomain = function(req, res, next) {
@@ -1286,30 +1287,6 @@ app.get('/Server-Master/account/:id', function(req, res) {
 	});
 });
 
-app.get('/Server-Master/account/orders/:id', function(req, res) {
-	var id = req.params.id;
-	console.log("GET order "+id);
-
-	var client = new pg.Client(dbConnInfo);
-	client.connect();
-
-	var query = client.query("SELECT order_id, purchase_date, payment_option, product_id, name, s.street_address ||' '||s.city||' '||s.country||' '||s.state||' '||s.zipcode as shipping_address, seller_id, username as seller, bought_quantity, purchase_price, card_number, b.street_address ||' '||b.city||' '||b.country||' '||b.state||' '||b.zipcode as billing_address from orders natural join sales natural join products, accounts, credit_cards, addresses as b, addresses as s where seller_id = accounts.account_id and orders.payment_option = credit_cards.payment_id and credit_cards.billing_address = b.address_id and shipping_option = s.address_id and order_id = $1", [id]);
-	query.on("row", function (row, result){
-		result.addRow(row);
-	});
-	query.on("end", function (result){
-		if(result.rowCount ==0){
-			client.end();
-			res.statusCode = 404;
-		}
-		else{
-			var response = {"order" : result.rows[0]};
-			client.end();
-			res.json(response);
-		}
-	});
-});
-
 // REST Operation - HTTP PUT to updated an account based on its id
 app.put('/Server-Master/account/:id', function(req, res) {
 	var id = req.params.id;
@@ -1376,6 +1353,67 @@ app.del('/Server-Master/account/:id', function(req, res) {
   			res.json(true);
   		}		
 	}
+});
+
+// REST Operation - HTTP GET to get order information
+app.get('/Server-Master/account/orders/:id', function(req, res) {
+	var id = req.params.id;
+	console.log("GET order "+id);
+
+	var client = new pg.Client(dbConnInfo);
+	client.connect();
+
+	var query = client.query("SELECT order_id, purchase_date, payment_option, product_id, name, s.street_address ||' '||s.city||' '||s.country||' '||s.state||' '||s.zipcode as shipping_address, seller_id, username as seller, bought_quantity, purchase_price, card_number, b.street_address ||' '||b.city||' '||b.country||' '||b.state||' '||b.zipcode as billing_address from orders natural join sales natural join products, accounts, credit_cards, addresses as b, addresses as s where seller_id = accounts.account_id and orders.payment_option = credit_cards.payment_id and credit_cards.billing_address = b.address_id and shipping_option = s.address_id and order_id = $1", [id]);
+	query.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query.on("end", function (result){
+		if(result.rowCount ==0){
+			client.end();
+			res.statusCode = 404;
+		}
+		else{
+			var response = {"order" : result.rows[0]};
+			client.end();
+			res.json(response);
+		}
+	});
+});
+
+//NOT FINISHED. NEEDS to implement checkout function a
+// REST Operation - HTTP POST for an order's checkout 
+app.post('/Server-Master/orders', function (res, req) {
+
+	var theUser, theOrder; // query the user's required info into here or get it from client side through req.body values.
+
+	// code For emailing 
+	// setup e-mail data with unicode symbols
+/*	var mailOptions = {
+	    from: "RJNBAY <rjnbay@gmail.com>", // sender address
+	    to: "" + theUser.email, // list of receivers
+	    subject: "Order summary for Order ID: " + theOrder.order_id, // Subject line
+	    text: "Thank you for your purchase!", // plaintext body
+	    html: "<h3>Thank you for your purchase "+theUser.first_name+"!</h3><h4>Made on " +theOrder.purchase_date+ "</h4><p><strong>Shipped to: </strong>"+theOrder.shipping_address+"</p><p><strong>Billed to Card Ending with </strong>"+ order.card_number.substr(15)+"</p><p><strong>Billing Address: </strong>"+order.billing_address+"</p>" // html body
+	}
+
+	// send mail with defined transport object
+	smtpTransport.sendMail(mailOptions, function(error, response){
+	    if(error){
+	        console.log(error);
+	    }else{
+	        console.log("Message sent: " + response.message);
+		}
+	});*/
+});
+
+// Mailer settings to email order summary information
+// create reusable transport method (opens pool of SMTP connections)
+var smtpTransport = nodemailer.createTransport("SMTP",{
+    service: "Gmail",
+    auth: {
+        user: "rjnbay@gmail.com",
+        pass: "RJNBAYdatabase"
+    }
 });
 
 // Server starts running when listen is called.

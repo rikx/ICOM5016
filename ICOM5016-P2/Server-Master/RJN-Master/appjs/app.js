@@ -935,7 +935,7 @@ $(document).on('pagebeforeshow', "#product-view", function( event, ui ) {
 	var list = $("#prod-details");
 	list.empty();
 
-	list.append('<li><center><img src="'+product.image_filename+'" /></center></li>'+
+	list.append('<li><center><img class="product-img-size" src="'+product.image_filename+'" /></center></li>'+
 	'<li><strong>Product ID: </strong>' + product.product_id + '</li><li><strong>Brand: </strong>' + product.brand + '</li>'+
 	'<li><strong>Model: </strong>' + product.model + '</li><li><strong>Description: </strong>' + product.description + '</li>'+
 	'<li><strong>Dimensions: </strong>'+product.dimensions+'</li>'+

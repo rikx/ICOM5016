@@ -52,3 +52,9 @@ h3, h4 , h2, strong, li, label, p, .ui-header, .ui-li-heading, .ui-li, .ui-li-st
 max-height:100px;
 max-width:100px;
 }
+
+.product-img-size {
+/*The following will work in almost all browsers*/
+max-height:200px;
+max-width:200px;
+}
