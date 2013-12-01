@@ -952,32 +952,34 @@ for (var i=0; i < ratingsList.length;++i){
 // REST Operation - HTTP POST to add a new a user
 app.post('/Server-Master/register', function(req, res) {
 	console.log("POST new user");
-	var exists = false;
-	//new-firstname, new-lastname, new-email, new-password, new-confirmpassword
+/*
   	if( !req.body.hasOwnProperty('username') || !req.body.hasOwnProperty('firstname') ||
   		!req.body.hasOwnProperty('lastname') || !req.body.hasOwnProperty('email') ||
-  		!req.body.hasOwnProperty('password') || !req.body.hasOwnProperty('confirmpassword')){
+  		!req.body.hasOwnProperty('password') || !req.body.hasOwnProperty('middleinitial')){
     	res.statusCode = 400;
     	return res.send('Error: Missing fields for new user.');
-  	}
-	for (var i=0; i < userList.length; ++i){
-		if (userList[i].username == req.body.username){
-			exists = true;
-			break;
+  	}*/
+  	var client = new pg.Client(dbConnInfo);
+	client.connect();
+
+	var query1 = client.query("SELECT username from accounts where username = '"+req.body.username+"'");
+	query1.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query1.on("end", function (result){
+		if(result.rowCount != 0){
+			client.end();
+			res.statusCode = 409; // is this the correct code for when username already exists?
+  			return res.send('Error: A user by this username already exists.');
 		}
-	}
-  	if (exists) {
-  		res.statusCode = 409; // is this the correct code for when username already exists?
-  		return res.send('Error: A user by this username already exists.');
-  	}
-  	else {
-	  	var newUser = new User("user", req.body.username, req.body.password, req.body.firstname, 
-	  		req.body.lastname, req.body.email);
-	  	console.log("New User: " + JSON.stringify(newUser));
-	  	newUser.id = userNextId++;
-	  	userList.push(newUser);
-	  	res.json(true);
-  	}
+		else {
+			var values = "'"+req.body.firstname+"', '"+req.body.middleinitial+"', '"+req.body.lastname+"', '"+req.body.email+"', FALSE, "+req.body.username+"', '"+req.body.password+"'";
+			var query2 = client.query("INSERT INTO accounts (first_name, middle_initial, last_name, email, permission, username, password) values ($1)", values);
+			console.log("New User: " + req.body.username);
+			client.end();
+	  		res.json(true);
+		}
+	});
 });
 
 // REST Operation - HTTP POST to login user
