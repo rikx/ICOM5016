@@ -1223,7 +1223,7 @@ function GetSellerProfile(id){
 }
 //--------------- REGISTER NEW USER ACCOUNT - Checks if passwords do not match before sending information, and cheks if username is already taken ---------------//
 function RegisterAccount(){
-	if($('#newusername').val() == ""){
+	if($('#new-username').val() == ""){
 		alert("Please type in a username of your choosing.");
 	}
 	else if($('#new-password').val() == "" || $('#new-confirmpassword').val() == ""){
@@ -1238,9 +1238,8 @@ function RegisterAccount(){
 		var formData = form.serializeArray();
 		console.log("form Data: " + formData);
 		var newUser = ConverToJSON(formData);
-		console.log("New User: " + JSON.stringify(newUser));
+		console.log("User Login: " + JSON.stringify(newUser));
 		var newUserJSON = JSON.stringify(newUser);
-		alert(newUserJSON);
 		$.ajax({
 			url : "http://localhost:3412/Server-Master/register",
 			method: 'post',

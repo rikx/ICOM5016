@@ -155,13 +155,10 @@
 			<div data-role="content" data-theme="a">	
 				<form id="login-form">
 					<fieldset data-role="controlgroup">
-					<ul data-role="list">
-					<li><label for="loginusername"> Name: <input id="loginusername" name="username" type="text"/></label></li>
-					<li><label for="loginpassword"> Password: <input id="loginpassword" name="password" type="password"/></label></li>
-					<li><a id="clickLogIn" data-role="button" data-theme="a" onclick="LogIn()" href="#">Log In</a></li>
-				    <!-- <input type="submit" value="Submit Button" onclick="LogIn(); return false;"/> -->
-				    <li><a data-role="button" data-theme="a" href="#register-account" rel="external">New User? Register here</a></li>
-					</ul>
+					<label for="loginusername"> Name: <input id="loginusername" name="username" type="text"/></label>
+					<label for="loginpassword"> Password: <input id="loginpassword" name="password" type="password"/></label>
+					<a id="clickLogIn" data-role="button" data-theme="a" onclick="LogIn()" href="#">Log In</a>
+				    <a data-role="button" data-theme="a" href="#register-account" rel="external">New User? Register here</a>
 					</fieldset>
 				</form>	
 			</div><!-- /content -->
@@ -411,16 +408,14 @@
 				<h3 align="center">Create your personal account</h3>
 				<form id="register-form">
 	 				<fieldset data-role="controlgroup">
-	 					<ul>
-	 					<li><label for="new-username"> Username: <input id="new-username" name="username" type="text" maxlength="12"/></label></li>
-	 					<li><label for="new-firstname"> First Name: <input id="new-firstname" name="firstname" type="text"/></label></li>
-	 					<li><label for="new-middleinitial"> First Name: <input id="new-middleinitial" name="middleinitial" type="text" maxlength="1"/></label></li>
-	  					<li><label for="new-lastname"> Last Name: <input id="new-lastname" name="lastname" type="text"/></label></li>
-	 					<li><label for="new-email"> Email: <input id="new-email" name="email" type="email"/></label></li>
-	 					<li><label for="new-description"> Description: <textarea id="new-description" name="description"></textarea></label></li>
-	 					<li><label for="new-password"> Password: <input id="new-password" name="password" type="password" maxlength="30"/></label></li>
-	 					<li><label for="new-confirmpassword"> Confirm Password: <input id="new-confirmpassword" name="confirmpassword" type="password" maxlength="30"/></label></li>	
-	  			  		</ul>
+	 					<label for="new-username"> Username: <input id="new-username" name="new-username" type="text" maxlength="12"/></label>
+	 					<label for="new-firstname"> First Name: <input id="new-firstname" name="new-firstname" type="text"/></label>
+	 					<label for="new-middleinitial"> Initial: <input id="new-middleinitial" name="new-middleinitial" type="text" maxlength="1"/></label>
+	  					<label for="new-lastname"> Last Name: <input id="new-lastname" name="new-lastname" type="text"/></label>
+	 					<label for="new-email"> Email: <input id="new-email" name="new-email" type="email"/></label>
+	 					<label for="new-description"> Description: <textarea id="new-description" name="new-description"></textarea></label>
+	 					<label for="new-password"> Password: <input id="new-password" name="new-password" type="password" maxlength="30"/></label>
+	 					<label for="new-confirmpassword"> Confirm Password: <input id="new-confirmpassword" name="new-confirmpassword" type="password" maxlength="30"/></label>
 				 	</fieldset>
 				</form>
 			</div>
