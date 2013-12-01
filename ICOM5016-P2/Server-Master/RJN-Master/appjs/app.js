@@ -1236,10 +1236,9 @@ function RegisterAccount(){
 		$.mobile.loading("show");
 		var form = $("#register-form");
 		var formData = form.serializeArray();
-		alert(formData);
 		console.log("form Data: " + formData);
 		var newUser = ConverToJSON(formData);
-		console.log("New Category: " + JSON.stringify(newUser));
+		console.log("New User: " + JSON.stringify(newUser));
 		var newUserJSON = JSON.stringify(newUser);
 		alert(newUserJSON);
 		$.ajax({
