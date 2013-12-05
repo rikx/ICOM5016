@@ -1604,14 +1604,14 @@ function GetProduct(id){
 
 function AddProduct(){
 	$.mobile.loading("show");
-	var form = $("#addProduct-form");// Not Implemented in This Phase
+	var form = $("#add-product-form");
 	var formData = form.serializeArray();
 	console.log("form Data: " + formData);
 	var newProduct = ConverToJSON(formData);
 	console.log("New Product: " + JSON.stringify(newProduct));
 	var newProductJSON = JSON.stringify(newProduct);
 	$.ajax({
-		url : "http://localhost:3412/Server-Master/product/"+currentUser.id,
+		url : "http://localhost:3412/Server-Master/product/"+currentUser.account_id,
 		method: 'post',
 		data : newProductJSON,
 		contentType: "application/json",
@@ -1634,7 +1634,7 @@ $.mobile.loading("show");
 	var formData = form.serializeArray();
 	console.log("form Data: " + formData);
 	var updProduct = ConverToJSON(formData);
-	updProduct.id = currentProduct.id;
+	updProduct.id = currentProduct.product_id;
 	console.log("Updated Product: " + JSON.stringify(updProduct));
 	var updProductJSON = JSON.stringify(updProduct);
 	$.ajax({
@@ -1661,7 +1661,7 @@ $.mobile.loading("show");
 }
 function DeleteProduct(id){
 	$.mobile.loading("show");
-	var id = currentProduct.id;
+	var id = currentProduct.product_id;
 		$.ajax({
 			url : "http://localhost:3412/Server-Master/product/" + id,
 			method: 'delete',
@@ -1686,7 +1686,7 @@ function DeleteProduct(id){
 
 function PlaceBid(id){
 	$.mobile.loading("show");
-	if(currentUser.id == null){
+	if(currentUser.account_id == null){
 		$.mobile.navigate('#login');
 	}
 	else{
@@ -1697,7 +1697,7 @@ function PlaceBid(id){
 		console.log("Updated Bid for product "+id+": " + JSON.stringify(newBid));
 		var newBidJSON = JSON.stringify(newBid);*/
 		$.ajax({
-			url : "http://localhost:3412/Server-Master/home/product/" + id+"/bid",
+			url : "http://localhost:3412/Server-Master/home/product/" + id +"/bid",
 			method: 'put',
 			data : JSON.stringify({"bid" : $('input[name="bidInput"]').val()}),
 			contentType: "application/json",
@@ -1741,10 +1741,10 @@ function sortByType(type){
 var Cart=[];//ARRAY OF CURRENT PRODUCTS IN CART
 //--------------- ADD PRODUCTS TO CART ---------------//
 function addToCart(){
-	var ID = currentProduct.id;
+	var ID = currentProduct.product_id;
 	var New=true;
 	for(i=0;i<Cart.length;i++)
-		if(ID==Cart[i].id){
+		if(ID==Cart[i].product_id){
 			New=false;
 			alert("Product is in Cart");
 		}

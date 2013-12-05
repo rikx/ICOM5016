@@ -22,7 +22,6 @@ app.configure(function () {
   app.use(allowCrossDomain);
 });
 
-
 app.use(express.bodyParser());
 
 // Database connection string: pg://<username>:<password>@host:port/dbname 
@@ -489,23 +488,26 @@ app.get('/Server-Master/product/:id', function(req, res) {
 
 // REST Operation - HTTP POST to add a new product
 app.post('/Server-Master/product/:sellerId', function(req, res) {
-	console.log("POST");
+	console.log("POST new product");
 
-  	if(!req.body.hasOwnProperty('name')||!req.body.hasOwnProperty('parent')||!req.body.hasOwnProperty('instantPrice')
-			||!req.body.hasOwnProperty('bidPrice')||!req.body.hasOwnProperty('description')||!req.body.hasOwnProperty('model')
+  	if(!req.body.hasOwnProperty('name')||!req.body.hasOwnProperty('description')||!req.body.hasOwnProperty('model')
 			||!req.body.hasOwnProperty('brand')||!req.body.hasOwnProperty('dimensions')){
-				
     	res.statusCode = 400;
     	return res.send('Error: Missing fields for product.');
   	}
 
-  	var newProduct = new Product(req.body.name,req.body.parent,sellerId,
-  								 req.body.instantPrice,req.body.bidPrice,req.body.description,
-  								 req.body.model,req.body.brand,req.body.dimensions,0);
-  								 
-  	console.log("New Product: " + JSON.stringify(newProduct));
-  	newProduct.id = productNextId++;
-  	productList.push(newProduct);
+  	// need boolean for if product is for auction or regular sale
+  	// need boolean for if auction product has buyout price or not
+  	var sellerId = req.params.id;
+  	var new_product = "'"+req.body.name+"'";
+
+  	var client = new pg.Client(dbConnInfo);
+	client.connect();
+
+	var query = client.query("INSERT INTO products (name) VALUES ($1)", new_product);
+	client.end();
+
+  	console.log("New Product: " + JSON.stringify(new_product));
   	res.json(true);
 });
 

@@ -3,7 +3,7 @@
 	<head> 
 
 		<title>RJN BAY</title>
-		<meta name="viewport" content="width=device-width; initial-scale=1.0" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="stylesheet" href="css/jquery.mobile-1.3.1.css" />
 		<link rel="stylesheet" href="font-awesome/jqm-icon-pack-fa.css" />
 		<link rel="stylesheet" href="css/Juan-edit.css" />
@@ -465,17 +465,24 @@
 			</div>
 			<div data-role="content">
 				<h2 align="center">Enter the new product info</h2>
-				<form id="product-form">
+				<form id="add-product-form">
 	 				<fieldset data-role="controlgroup">
 	 					<ul>
-		  					<li><label for="name"> Name: <input id="name" name="name" type="text"/></label></li>
-		  					<li><label for="parent"> Parent: <input id="parent" name="parent" type="text"/></label></li>
-		  					<li><label for="instantPrice"> Buyout Price $: <input id="instantPrice" name="instantPrice" type="number"/></label></li>
-		  					<li><label for="bidPrice"> Bid Price $: <input id="bidPrice" name="bidPrice" type="number"/></label></li>
-		  					<li><label for="description"> Description: <input id="description" name="description" type="text"/></label></li>
-		  					<li><label for="model"> Model: <input id="model" name="model" type="text"/></label></li>
-		  					<li><label for="brand"> Brand: <input id="brand" name="brand" type="text"/></label></li>
-		  			  		<li><label for="dimensions"> Dimensions: <input id="dimensions" name="dimensions" type="text"/></label></li>
+		  					<li><label for="add-product-name"> Name: <input id="add-product-name" name="name" type="text"/></label></li>
+		  					<li><label for="select-parent-category" class="select"> Category: </label>
+					        <select name="parent-category" id="select-parent-category">
+					            <option value="books-1">Children Books</option>
+					            <option value="books-2">Fiction Books</option>
+					            <option value="books-3">Technology Books</option>
+					            <option value="books-4">Business Books</option>
+					            <!-- etc. -->
+					        </select></li>
+		  					<li><label for="add-product-buyout"> Buyout Price $: <input id="add-product-buyout" name="buyout_price" type="number"/></label></li>
+		  					<li><label for="add-product-bid"> Bid Price $: <input id="add-product-bid" name="bid_price" type="number"/></label></li>
+		  					<li><label for="add-product-description"> Description: <textarea id="add-product-description" name="description" type="text"></textarea></label></li>
+		  					<li><label for="add-product-model"> Model: <input id="add-product-model" name="model" type="text"/></label></li>
+		  					<li><label for="add-product-brand"> Brand: <input id="add-product-brand" name="brand" type="text"/></label></li>
+		  			  		<li><label for="add-product-dimensions"> Dimensions: <input id="add-product-dimensions" name="dimensions" type="text"/></label></li>
 	  			  	  	</ul>
 				 	</fieldset>
 				</form>
