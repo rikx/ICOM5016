@@ -406,23 +406,22 @@
 							
 			<div data-role="content">
 				<h3 align="center">Create your personal account</h3>
-				<form id="register-form">
+				<form id="new-user-form">
 	 				<fieldset data-role="controlgroup">
-	 					<label for="new-username"> Username: <input id="new-username" name="new-username" type="text" maxlength="12"/></label>
-	 					<label for="new-firstname"> First Name: <input id="new-firstname" name="new-firstname" type="text"/></label>
-	 					<label for="new-middleinitial"> Initial: <input id="new-middleinitial" name="new-middleinitial" type="text" maxlength="1"/></label>
-	  					<label for="new-lastname"> Last Name: <input id="new-lastname" name="new-lastname" type="text"/></label>
+	 					<label for="new-username"> Username: <input id="new-username" name="username" type="text" maxlength="12"/></label>
+	 					<label for="new-firstname"> First Name: <input id="new-firstname" name="firstname" type="text"/></label>
+	 					<label for="new-middleinitial"> Middle Initial: <input id="new-middleinitial" name="middleinitial" type="text" maxlength="1"/></label>
+	  					<label for="new-lastname"> Last Name: <input id="new-lastname" name="lastname" type="text"/></label>
 	 					<label for="new-email"> Email: <input id="new-email" name="new-email" type="email"/></label>
-	 					<label for="new-description"> Description: <textarea id="new-description" name="new-description"></textarea></label>
+	 					<label for="new-description"> Description: <textarea id="new-description" name="description"></textarea></label>
 	 					<label for="new-password"> Password: <input id="new-password" name="new-password" type="password" maxlength="30"/></label>
-	 					<label for="new-confirmpassword"> Confirm Password: <input id="new-confirmpassword" name="new-confirmpassword" type="password" maxlength="30"/></label>
+	 					<label for="new-confirmpassword"> Confirm Password: <input id="new-confirmpassword" name="confirmpassword" type="password" maxlength="30"/></label>
 				 	</fieldset>
 				</form>
 			</div>
 		</div><!--/page-->
 
 		<div id="update-account" data-role="page">
-			
 			<header data-role ="header" data-theme="a" data-position="fixed"> 
   				<h1 class="ui-title" aling="center">RJN BAY</h1>
   				<div data-role="navbar">
@@ -439,14 +438,15 @@
 				<form id="update-account-form">
 	 				<fieldset data-role="controlgroup">
 	 					<ul>
-	 					<li><label for="acc-firstname"> First Name: <input id="acc-fname" name="firstname" type="text"/></label></li>
-	  					<li><label for="acc-lastname"> Last Name: <input id="acc-lname" name="lastname" type="text"/></label></li>
-	 					<li><label for="acc-email"> Email: <input id="acc-email" name="email" type="email"/></label></li>
-
-	 					<li><label for="acc-oldpassword"> Old Password: <input id="acc-oldpassword" name="oldpassword" type="password"/></label></li>
-	 					<li><label for="acc-newpassword"> New Password: <input id="acc-newpassword" name="newpassword" type="password"/></label></li>
-	 					<li><label for="acc-confirmpassword"> Confirm Password: <input id="acc-confirmpassword" name="confirmpassword" type="password"/></label></li>
-	  			  	</ul>
+	 					<li><label for="upd-firstname"> First Name: <input id="upd-firstname" name="firstname" type="text"/></label></li>
+	 					<li><label for="upd-middleinitial"> Middle Initial: <input id="new-middleinitial" name="middleinitial" type="text" maxlength="1"/></label></li>
+	  					<li><label for="upd-lastname"> Last Name: <input id="upd-lastname" name="lastname" type="text"/></label></li>
+	 					<li><label for="upd-email"> Email: <input id="upd-email" name="email" type="email"/></label></li>
+	 					<li><label for="upd-description"> Description: <textarea id="upd-description" name="description"></textarea></label></li>
+	 					<li><label for="upd-oldpassword"> Old Password: <input id="upd-oldpassword" name="oldpassword" type="password"/></label></li>
+	 					<li><label for="upd-newpassword"> New Password: <input id="upd-newpassword" name="newpassword" type="password"/></label></li>
+	 					<li><label for="upd-confirmpassword"> Confirm Password: <input id="upd-confirmpassword" name="confirmpassword" type="password"/></label></li>
+	  			  		</ul>
 				 	</fieldset>
 				</form>
 				<center>
@@ -475,6 +475,36 @@
 					            <option value="8">Fiction Books</option>
 					            <option value="9">Technology Books</option>
 					            <option value="10">Business Books</option>
+					            <option value="11">TV</option>
+					            <option value="12">Audio</option>
+					            <option value="13">Phones</option>
+					            <option value="14">Cameras</option>
+					            <option value="15">Videos</option>
+					            <option value="16">Laptops</option>
+					            <option value="17">Desktops</option>
+					            <option value="18">Tablets</option>
+								<option value="19">Printers</option>
+					            <option value="20">Children's Clothing</option>
+					            <option value="21">Men's Clothing</option>
+					            <option value="22">Women's Clothing</option>
+					            <option value="23">Children's Shoes</option>
+					            <option value="24">Men's Shoes</option>
+					            <option value="25">Women's Shoes</option>
+								<option value="26">Bicycles</option>
+								<option value="27">Fishing</option>
+								<option value="28">Baseball</option>
+								<option value="29">Golf</option>
+								<option value="30">Basketball</option>
+								<option value="31">Men's Shirts</option>
+								<option value="32">Men's Pants</option>
+								<option value="33">Men's Socks</option>
+								<option value="34">Woman's Shirts</option>
+								<option value="35">Woman's Pants</option>
+								<option value="36">Woman's Dresses</option>
+								<option value="37">Bicycle Frames</option>
+								<option value="38">Bicycle Wheels</option>
+								<option value="39">Bicycle Helmet</option>
+								<option value="40">Bicycle Parts</option>
 					            <!-- etc. -->
 					        </select></li>
 		  					<li><label for="add-product-buyout"> Buyout Price $: <input id="add-product-buyout" name="buyout_price" type="number"/></label></li>

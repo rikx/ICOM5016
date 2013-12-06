@@ -490,8 +490,8 @@ app.get('/Server-Master/product/:id', function(req, res) {
 app.post('/Server-Master/product/:sellerID', function(req, res) {
 	console.log("POST new product");
 
-  	if(!req.body.hasOwnProperty('name')||!req.body.hasOwnProperty('description')||!req.body.hasOwnProperty('model')
-			||!req.body.hasOwnProperty('brand')||!req.body.hasOwnProperty('dimensions')){
+  	if(!req.body.hasOwnProperty('name')||!req.body.hasOwnProperty('model')||!req.body.hasOwnProperty('brand')||!req.body.hasOwnProperty('description')
+			||!req.body.hasOwnProperty('parent_category')||!req.body.hasOwnProperty('quantity')||!req.body.hasOwnProperty('dimensions')){
     	res.statusCode = 400;
     	return res.send('Error: Missing fields for product.');
   	}
@@ -500,31 +500,34 @@ app.post('/Server-Master/product/:sellerID', function(req, res) {
   	// need boolean for if auction product has buyout price or not
   	// need to take into account if a product being added has the same seller;
   	var sellerID = req.params.sellerID;
-  	var new_product = "'"+req.body.name+"', "+req.body.parent_category+", "+sellerID+"";
+  	var name = req.body.name.replace(/'/g,"''"); //avoids error with name that has apostrophes
+
+  	var new_product = "'"+name+"', "+req.body.parent_category+", "+sellerID+"";
   	console.log(new_product);
 
   	var client = new pg.Client(dbConnInfo);
 	client.connect();
 
+// not sure why this isnt working. it should be.
 /*	var query = client.query("INSERT INTO products (name, cid, seller_id) VALUES ($1)", [new_product], function(err, result) {
-    	if(err){
-    		return res.send('Error inserting product to db');
-    	}
-    	else{
-    		client.end();
-  			console.log("New Product: " + new_product);
-    	}
+		client.end();
+		console.log("New Product: " + new_product);
+		res.json(true);
   	});*/
-	var name = req.body.name.replace(/'/g,"''");
-	var query = client.query("INSERT INTO products (name, cid, seller_id) VALUES ('"+name+"', "+req.body.parent_category+", "+sellerID+")");
+	var query = client.query("INSERT INTO products (name, model, brand, description, cid, seller_id, quantity, dimensions) VALUES ("+new_product+")");
 	query.on("row", function (row, result){
 		result.addRow(row);
 	});
-	query.on("end", function (result) {
+	query.on("end", function (err, result) {
+/*    	if(err){
+    		return res.send('Error inserting product to db');
+    	}
+    	else{*/
     		client.end();
   			console.log("New Product: " + new_product);
-	});
-  	res.json(true);
+  			res.json(true);
+    	//}
+  	});
 });
 
 //REST Operation - HTTP PUT to edit product based on its id
@@ -993,9 +996,11 @@ app.post('/Server-Master/register', function(req, res) {
 		else {
 			var values = "'"+req.body.firstname+"', '"+req.body.middleinitial+"', '"+req.body.lastname+"', '"+req.body.email+"', FALSE, "+req.body.username+"', '"+req.body.password+"'";
 			var query2 = client.query("INSERT INTO accounts (first_name, middle_initial, last_name, email, permission, username, password) values ($1)", [values]);
-			console.log("New User: " + req.body.username);
-			client.end();
-	  		res.json(true);
+			query2.on("end", function (result){
+				console.log("New User: " + req.body.username);
+				client.end();
+		  		res.json(true);
+			});
 		}
 	});
 });
