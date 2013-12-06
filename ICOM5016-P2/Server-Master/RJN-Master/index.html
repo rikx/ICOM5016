@@ -40,7 +40,8 @@
 					<a class="submit" data-role="button" data-theme="a" data-iconpos="left" data-icon="search" title="Search">Search</a>
 									
 					<!--Search Bar End-->
-				
+				<div class="sort-type" data-role="controlgroup" data-type="horizontal">		
+				</div><!-- Sort Buttons End-->
 				<ul id="category-list" data-role="listview" data-inset="true">
 				</ul>
 			</div><!-- /content -->
@@ -70,7 +71,7 @@
 				<!--Search Bar End-->
 				
 				<!-- Sort Buttons -->
-				<div id="sortTypes" data-role="controlgroup" data-type="horizontal">		
+				<div class="sort-type" data-role="controlgroup" data-type="horizontal">		
 				</div><!-- Sort Buttons End-->
 				
 				<ul id="browse-list" data-role="listview" data-inset="true">
@@ -96,12 +97,7 @@
 	 				<fieldset data-role="controlgroup">
 	 					<ul>
 	  					<li><label for="name"> Name: <input id="name" name="name" type="text"/></label></li>
-	  					<!-- Don't Delete -- ><li><label for="model"> Model: <input id="model" name="model" type="text"/></label></li>
-	  					<li><label for="year"> Year: <input id="year" name="year" type="number"/></label></li>
-	  					<li><label for="price"> Price $: <input id="price" name="price" type="number"/></label></li>
-	  			  		<li><label for="description"> Description: <input id="description" name="description" type="text"/></label></li>
-	  			  		</-->
-	  			  	</ul>
+	  			  		</ul>
 				 	</fieldset>
 				</form>
 			</div><!-- /content -->
@@ -124,12 +120,7 @@
 	 				<fieldset data-role="controlgroup">
 	 					<ul>
 	  					<li><label for="upd-name"> Name: <input id="upd-name" name="name" type="text"/></label></li>
-	  					<!-- Don't Delete -- ><li><label for="upd-model"> Model: <input id="upd-model" name="model" type="text"/></label></li>
-	  					<li><label for="upd-year"> Year: <input id="upd-year" name="year" type="number"/></label></li>
-	  					<li><label for="upd-price"> Price $: <input id="upd-price" name="price" type="number"/></label></li>
-	  			  		<li><label for="upd-description"> Description: <input id="upd-description" name="description" type="text"/></label></li>
-	  			  		</-->
-	  			  	</ul>
+	  			  		</ul>
 				 </fieldset>
 				</form>
 				<center>
@@ -485,12 +476,9 @@
 					            <option value="18">Tablets</option>
 								<option value="19">Printers</option>
 					            <option value="20">Children's Clothing</option>
-					            <option value="21">Men's Clothing</option>
-					            <option value="22">Women's Clothing</option>
 					            <option value="23">Children's Shoes</option>
 					            <option value="24">Men's Shoes</option>
 					            <option value="25">Women's Shoes</option>
-								<option value="26">Bicycles</option>
 								<option value="27">Fishing</option>
 								<option value="28">Baseball</option>
 								<option value="29">Golf</option>
@@ -513,6 +501,7 @@
 		  					<li><label for="add-product-model"> Model: <input id="add-product-model" name="model" type="text"/></label></li>
 		  					<li><label for="add-product-brand"> Brand: <input id="add-product-brand" name="brand" type="text"/></label></li>
 		  			  		<li><label for="add-product-dimensions"> Dimensions: <input id="add-product-dimensions" name="dimensions" type="text"/></label></li>
+		  			  		<li><label for="add-product-quantity"> Quantity: <input id="add-product-quantity" name="quantity" type="number"/></label></li>
 	  			  	  	</ul>
 				 	</fieldset>
 				</form>

@@ -9,7 +9,7 @@ $(document).on('pagebeforeshow', "#home", function( event, ui ) {
 		contentType: "application/json",
 		success : function(data, textStatus, jqXHR){
 			var categoryList = data.categories;
-
+			$(".sort-type").html('');
 			var len = categoryList.length;
 			var list = $("#category-list");
 			list.empty();
@@ -18,7 +18,8 @@ $(document).on('pagebeforeshow', "#home", function( event, ui ) {
 				category = categoryList[i];
 				list.append("<li><a onclick=GetSubCategory("+category.id+")><h2>"+category.name+"</h2></a></li>");	
 			}
-			list.listview("refresh");	
+			list.listview("refresh");
+			SortType="none";	
 		},
 		error: function(data, textStatus, jqXHR){
 			
@@ -188,7 +189,7 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 			//$("#browse-title").html(data.parent);
 			var list = $("#browse-list");
 			list.empty();
-			$("#sortTypes").html('');
+			$(".sort-type").html('');
 			
 			//shows history breadcrumb
 			$('#breadcrumb-history').html('');
@@ -215,7 +216,7 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 			//when data contains products
 			else {
 				// adds sort buttons and initilializes them
-				$("#sortTypes").html('<button onclick=sortByType("name")>SortByName</button><button onclick=sortByType("brand")>SortByBrand</button><button onclick=sortByType("price")>SortByPrice</button>').trigger('create');
+				$(".sort-type").html('<button onclick=sortByType("name")>SortByName</button><button onclick=sortByType("brand")>SortByBrand</button><button onclick=sortByType("price")>SortByPrice</button>').trigger('create');
 				var auction_list = data.auction_products;
 				var on_sale_list = data.sale_products;
 				var maxLength = Math.max(auction_list.length, on_sale_list.length);
@@ -324,7 +325,7 @@ $(document).ready(function() {
 	                var len = productList.length;
 					var list = $("#category-list");
 					var list2 = $("#browse-list");
-					
+					$(".sort-type").html('<button onclick=sortByType("name")>SortByName</button><button onclick=sortByType("brand")>SortByBrand</button><button onclick=sortByType("price")>SortByPrice</button>').trigger('create');
 	                if (len == 1) {
 	                	GetProduct(productList[0].product_id);
 	                }
@@ -391,7 +392,7 @@ $(document).ready(function() {
 	                var len = productList.length;
 					var list = $("#category-list");
 					var list2 = $("#browse-list");
-					
+					$(".sort-type").html('<button onclick=sortByType("name")>SortByName</button><button onclick=sortByType("brand")>SortByBrand</button><button onclick=sortByType("price")>SortByPrice</button>').trigger('create');
 	                if (len == 1) {
 	                	GetProduct(productList[0].product_id);
 	                }

@@ -500,15 +500,20 @@ app.post('/Server-Master/product/:sellerID', function(req, res) {
   	// need boolean for if auction product has buyout price or not
   	// need to take into account if a product being added has the same seller;
   	var sellerID = req.params.sellerID;
-  	var name = req.body.name.replace(/'/g,"''"); //avoids error with name that has apostrophes
+  	//avoids error with name that has apostrophes
+  	var name = req.body.name.replace(/'/g,"''"); 
+	var model = req.body.model.replace(/'/g,"''"); 
+	var brand = req.body.brand.replace(/'/g,"''"); 
+	var description = req.body.description.replace(/'/g,"''");
+	var dimensions = req.body.dimensions.replace(/'/g,"''"); 
 
-  	var new_product = "'"+name+"', "+req.body.parent_category+", "+sellerID+"";
-  	console.log(new_product);
+  	var new_product = "'"+name+"', "+"'"+model+"', "+"'"+brand+"', "+"'"+description+"', "+req.body.parent_category+
+  	", "+sellerID+", "+req.body.quantity+", '"+dimensions+"'";
 
   	var client = new pg.Client(dbConnInfo);
 	client.connect();
 
-// not sure why this isnt working. it should be.
+// not sure why this version isnt working. it should woek.
 /*	var query = client.query("INSERT INTO products (name, cid, seller_id) VALUES ($1)", [new_product], function(err, result) {
 		client.end();
 		console.log("New Product: " + new_product);
@@ -519,7 +524,9 @@ app.post('/Server-Master/product/:sellerID', function(req, res) {
 		result.addRow(row);
 	});
 	query.on("end", function (err, result) {
-/*    	if(err){
+		//error handling is also acting funky.
+/*	   	if(err){
+			res.statusCode = 400;
     		return res.send('Error inserting product to db');
     	}
     	else{*/
