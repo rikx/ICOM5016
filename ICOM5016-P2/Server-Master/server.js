@@ -487,7 +487,7 @@ app.get('/Server-Master/product/:id', function(req, res) {
 });
 
 // REST Operation - HTTP POST to add a new product
-app.post('/Server-Master/product/:sellerId', function(req, res) {
+app.post('/Server-Master/product/:sellerID', function(req, res) {
 	console.log("POST new product");
 
   	if(!req.body.hasOwnProperty('name')||!req.body.hasOwnProperty('description')||!req.body.hasOwnProperty('model')
@@ -498,16 +498,21 @@ app.post('/Server-Master/product/:sellerId', function(req, res) {
 
   	// need boolean for if product is for auction or regular sale
   	// need boolean for if auction product has buyout price or not
-  	var sellerId = req.params.id;
-  	var new_product = "'"+req.body.name+"'";
+  	// need to take into account if a product being added has the same seller;
+  	var sellerID = req.params.sellerID;
+  	var new_product = "'"+req.body.name+"', "+req.body.parent_category+", "+sellerID+"";
+  	console.log(new_product);
 
   	var client = new pg.Client(dbConnInfo);
 	client.connect();
 
-	var query = client.query("INSERT INTO products (name) VALUES ($1)", new_product);
-	client.end();
-
-  	console.log("New Product: " + JSON.stringify(new_product));
+	var query = client.query("INSERT INTO products (name, cid, seller_id) VALUES ($1)", [new_product], function(err, result) {
+    	if(err) return res.send('Error inserting product to db');
+    	else{
+    		client.end();
+  			console.log("New Product: " + new_product);
+    	}
+  	});
   	res.json(true);
 });
 
@@ -976,7 +981,7 @@ app.post('/Server-Master/register', function(req, res) {
 		}
 		else {
 			var values = "'"+req.body.firstname+"', '"+req.body.middleinitial+"', '"+req.body.lastname+"', '"+req.body.email+"', FALSE, "+req.body.username+"', '"+req.body.password+"'";
-			var query2 = client.query("INSERT INTO accounts (first_name, middle_initial, last_name, email, permission, username, password) values ($1)", values);
+			var query2 = client.query("INSERT INTO accounts (first_name, middle_initial, last_name, email, permission, username, password) values ($1)", [values]);
 			console.log("New User: " + req.body.username);
 			client.end();
 	  		res.json(true);
