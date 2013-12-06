@@ -506,13 +506,24 @@ app.post('/Server-Master/product/:sellerID', function(req, res) {
   	var client = new pg.Client(dbConnInfo);
 	client.connect();
 
-	var query = client.query("INSERT INTO products (name, cid, seller_id) VALUES ($1)", [new_product], function(err, result) {
-    	if(err) return res.send('Error inserting product to db');
+/*	var query = client.query("INSERT INTO products (name, cid, seller_id) VALUES ($1)", [new_product], function(err, result) {
+    	if(err){
+    		return res.send('Error inserting product to db');
+    	}
     	else{
     		client.end();
   			console.log("New Product: " + new_product);
     	}
-  	});
+  	});*/
+	var name = req.body.name.replace(/'/g,"''");
+	var query = client.query("INSERT INTO products (name, cid, seller_id) VALUES ('"+name+"', "+req.body.parent_category+", "+sellerID+")");
+	query.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query.on("end", function (result) {
+    		client.end();
+  			console.log("New Product: " + new_product);
+	});
   	res.json(true);
 });
 
