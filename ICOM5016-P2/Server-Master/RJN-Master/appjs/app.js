@@ -1629,6 +1629,21 @@ function AddProduct(){
 	});
 }
 
+// Toggle auction fields when adding a product
+/*$('#checkbox-auction').click(function () {
+    $('.product-auction-li').toggle(this.checked);
+    $('#add-buyout-li').toggle();
+});*/
+
+if($("#checkbox-auction").is(':checked')){
+	$('#add-buyout-li').hide();
+    $(".product-auction-li").show();  // checked
+}
+else {
+    $('#add-buyout-li').show();
+    $(".product-auction-li").hide();  // checked
+}
+
 function EditProduct(id){
 $.mobile.loading("show");
 	var form = $("#addProduct-form");// Not Implemented in This Phase

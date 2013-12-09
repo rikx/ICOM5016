@@ -495,13 +495,22 @@
 								<option value="40">Bicycle Parts</option>
 					            <!-- etc. -->
 					        </select></li>
-		  					<li><label for="add-product-buyout"> Buyout Price $: <input id="add-product-buyout" name="buyout_price" type="number"/></label></li>
-		  					<li><label for="add-product-bid"> Bid Price $: <input id="add-product-bid" name="bid_price" type="number"/></label></li>
-		  					<li><label for="add-product-description"> Description: <textarea id="add-product-description" name="description" type="text"></textarea></label></li>
 		  					<li><label for="add-product-model"> Model: <input id="add-product-model" name="model" type="text"/></label></li>
 		  					<li><label for="add-product-brand"> Brand: <input id="add-product-brand" name="brand" type="text"/></label></li>
 		  			  		<li><label for="add-product-dimensions"> Dimensions: <input id="add-product-dimensions" name="dimensions" type="text"/></label></li>
 		  			  		<li><label for="add-product-quantity"> Quantity: <input id="add-product-quantity" name="quantity" type="number"/></label></li>
+		  			  		<li><label for="add-product-description"> Description: <textarea id="add-product-description" name="description" type="text"></textarea></label></li>
+		  					<li><div data-role="fieldcontain">
+							    <fieldset data-role="controlgroup">
+								   <legend>Item up for auction?:</legend>
+								   <input type="checkbox" name="checkbox-auction" id="checkbox-auction" class="custom" />
+								   <label for="checkbox-auction">Yes</label>
+							    </fieldset>
+							</div></li>
+							
+		  					<li class="product-auction-li" style="display:none"><label for="add-product-bid"> Bid Price $: <input id="add-product-bid" name="bid_price" type="number"/></label></li>
+		  					<li class="product-auction-li" style="display:none"><label for="add-product-auc-buyout"> Buyout Price (Optional) $: <input id="add-product-auc-buyout" name="buyout_price" type="number"/></label></li>
+		  					<li id="add-buyout-li"><label for="add-product-buyout"> Buyout Price $: <input id="add-product-buyout" name="buyout_price" type="number"/></label></li>
 	  			  	  	</ul>
 				 	</fieldset>
 				</form>
