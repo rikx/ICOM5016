@@ -538,21 +538,18 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 				}
 				//History: orders | products bought
 				if(i < boughtProducts.length){
-					boughtList.append('<li>'+
-							'<center>'+
-								'<p>Order #'+boughtProducts[i].order_id+'</p>'+
-								'<p>From <a onclick="GetSellerProfile('+boughtProducts[i].seller_id+')">'+boughtProducts[i].username+'</a></p>'+
-								'<p><a onclick="GetOrder('+boughtProducts[i].order_id+')">View Order Summary</a></p>'+
-							'</center>'+
-
-								'<div data-role="fieldcontain">'+
-									'<center><label for="slider-mini"> Rate this seller:</label></center>'+
-									'<p>'+
-										'<input id="rating-slider-order_'+boughtProducts[i].order_id+'-product_'+boughtProducts[i].product_id+'" type="text" data-type="range" name="slider-mini" id="slider-mini" value="2" min="0" max="4" step="1" data-highlight="true" data-mini="true" />'+
-									'</p>'+
-								'</div>'+
-								'<center><a onclick="SubmitRating('+boughtProducts[i].order_id+','+boughtProducts[i].product_id+')" data-icon="ok"> Submit</a></center>'+
-							'</li>');
+					boughtList.append('<li><center><p>Order #'+boughtProducts[i].order_id+'</p>'+
+					'<p>From <a onclick="GetSellerProfile('+boughtProducts[i].seller_id+')">'+boughtProducts[i].username+'</a></p>'+
+					'<p><a onclick="GetOrder('+boughtProducts[i].order_id+')">View Order Summary</a></p></center>');
+					if(boughtProducts[i].rating == null){
+						boughtList.append('<div data-role="fieldcontain">'+
+						'<center><label for="slider-mini"> Rate this seller:</label></center>'+
+						'<p>'+
+						'<input id="rating-slider-order_'+boughtProducts[i].order_id+'-product_'+boughtProducts[i].product_id+'" type="text" data-type="range" name="slider-mini" id="slider-mini" value="2" min="0" max="4" step="1" data-highlight="true" data-mini="true" />'+
+						'</p>'+
+						'<center><a onclick="SubmitRating('+boughtProducts[i].order_id+','+boughtProducts[i].product_id+')" data-icon="ok"> Submit</a></center></div>');
+					}
+					boughtList.append('</li>');
 				}
 				//History: products sold
 				if(i < soldProducts.length){
