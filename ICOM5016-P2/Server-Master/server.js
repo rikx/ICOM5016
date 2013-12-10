@@ -875,7 +875,7 @@ app.get('/Server-Master/account/payment/:id', function(req, res) {
 
 // REST Operation - HTTP POST to add a new payment
 app.post('/Server-Master/account/payment/:userId', function(req, res) {
-	console.log("POST");
+	console.log("POST payment");
 	
   	if(!req.body.hasOwnProperty('type')||!req.body.hasOwnProperty('cNumber')||!req.body.hasOwnProperty('billAddress')){
 				
@@ -1197,6 +1197,10 @@ app.get('/Server-Master/seller/:id', function(req, res) {
 app.put('/Server-Master/seller/rating', function(req, res) {
 	console.log("PUT rating");
 
+	if(!req.body.hasOwnProperty('order_id')||!req.body.hasOwnProperty('product_id')||!req.body.hasOwnProperty('rating')){		
+    	res.statusCode = 400;
+    	return res.send('Error: Missing fields for payment.');
+  	}
 	var rating = req.body.rating;
 	var order = req.body.order_id;
 	var product = req.body.product_id;
@@ -1209,27 +1213,13 @@ app.put('/Server-Master/seller/rating', function(req, res) {
 		result.addRow(row);
 	});
 	query.on("end", function (result){
+/*		//need error handling code
+		res.statusCode = 404;
+		res.send("Sale not found.");*/
 		console.log("New Rating for order "+order+": " + rating);
 		client.end();
 		res.json(true);
 	});
-
-/*	if ((id < 0) || (id >= userNextId)){
-		// not found
-		res.statusCode = 404;
-		res.send("Seller not found.");
-	}
-	else {
-		//id, seller id, rater id, rating
-	  	var newRating = new Rating(id,rater,rating);
-	  								 
-	  	console.log("New Rating: " + JSON.stringify(newRating));
-	  	newRating.id = ratingsNextId++;
-	  	ratingsList.push(newRating);
-	  	res.json(true);
-	}*/
-
-
 });
 
 // REST Operation - HTTP GET to read a user account based on its id
@@ -1292,7 +1282,7 @@ app.get('/Server-Master/account/:id', function(req, res) {
 	});
 
 	//returns products bought in the past
-	//have it return necesary info link to invoice and an order summary panel or page
+	//have it return necesary info link to invoice 
 	var query6 = client.query("SELECT order_id, seller_id, username, product_id, rating from orders natural join sales natural join products, accounts where seller_id = account_id and buyer_id = $1", [id]);
 	query6.on('row', function (row, result){
 		result.addRow(row);
@@ -1302,7 +1292,6 @@ app.get('/Server-Master/account/:id', function(req, res) {
 	});
 
 	//returns products sold in the past
-	//have it return necesary info linking to user and sale details.
 	var query7 = client.query("SELECT * from orders natural join sales natural join products where seller_id = $1", [id]);
 	query7.on('row', function (row, result){
 		result.addRow(row);
@@ -1427,7 +1416,7 @@ app.get('/Server-Master/account/orders/:id', function(req, res) {
 	});
 });
 
-//NOT FINISHED. NEEDS to implement checkout function a
+// NOT FINISHED. NEEDS to implement checkout function a
 // REST Operation - HTTP POST for an order's checkout 
 app.post('/Server-Master/orders', function (res, req) {
 
