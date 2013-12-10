@@ -548,10 +548,10 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 								'<div data-role="fieldcontain">'+
 									'<center><label for="slider-mini"> Rate this seller:</label></center>'+
 									'<p>'+
-										'<input id="rating-slider-'+boughtProducts[i].seller_id+'" type="text" data-type="range" name="slider-mini" id="slider-mini" value="2" min="0" max="4" step="1" data-highlight="true" data-mini="true" />'+
+										'<input id="rating-slider-order_'+boughtProducts[i].order_id+'-seller_'+boughtProducts[i].seller_id+'" type="text" data-type="range" name="slider-mini" id="slider-mini" value="2" min="0" max="4" step="1" data-highlight="true" data-mini="true" />'+
 									'</p>'+
 								'</div>'+
-								'<center><a onclick="SubmitRating('+boughtProducts[i].seller_id+')" data-icon="ok"> Submit</a></center>'+
+								'<center><a onclick="SubmitRating('+boughtProducts[i].order_id+','+boughtProducts[i].product_id+')" data-icon="ok"> Submit</a></center>'+
 							'</li>');
 				}
 				//History: products sold
@@ -652,13 +652,13 @@ function sellHistory(){
     $('#sold-history-list').show();
 }
 
-function SubmitRating(id){
+function SubmitRating(oid,sid){
 	$.mobile.loading("show");
-	var rating_form = $('#rating-slider-'+id);
+	var rating_form = $('#rating-slider-order_'+oid+'-product_'+pid);
 	$.ajax({
-		url : "http://localhost:3412/Server-Master/seller/" + id,
+		url : "http://localhost:3412/Server-Master/seller/rating",
 		method: 'post',
-		data : JSON.stringify({"rater": currentUser.account_id,"rating" : rating_form.val()}),
+		data : JSON.stringify({"rater": currentUser.account_id, "order_id" : oid, "seller_id" : sid, "rating" : rating_form.val()}),
 		contentType: "application/json",
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){

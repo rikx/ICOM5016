@@ -1194,14 +1194,28 @@ app.get('/Server-Master/seller/:id', function(req, res) {
 });
 
 //REST Operation - HTTP POST to set rating on product sale for a seller by id
-app.post('/Server-Master/seller/:id', function(req, res) {
+app.post('/Server-Master/seller/rating', function(req, res) {
 	var id = req.params.id;
 	console.log("POST rating on seller id " + id);
 
 	var rating = req.body.rating;
 	var rater = req.body.rater;
+	var order = req.body.order_id;
+	var product = req.body.product_id;
 
-	if ((id < 0) || (id >= userNextId)){
+	var new_rating = ""
+	var client = new pg.Client(dbConnInfo);
+	client.connect();
+
+	var query = client.query('');
+	query.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query.on("end", function (result){
+		console.log("New Rating: " + new_rating);
+	});
+
+/*	if ((id < 0) || (id >= userNextId)){
 		// not found
 		res.statusCode = 404;
 		res.send("Seller not found.");
@@ -1214,7 +1228,9 @@ app.post('/Server-Master/seller/:id', function(req, res) {
 	  	newRating.id = ratingsNextId++;
 	  	ratingsList.push(newRating);
 	  	res.json(true);
-	}
+	}*/
+
+
 });
 
 // REST Operation - HTTP GET to read a user account based on its id
