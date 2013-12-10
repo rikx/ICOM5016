@@ -277,6 +277,18 @@ $(document).on('pagebeforeshow', "#category-view", function( event, ui ) {
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
+//										CATEGORY DETAILS PAGE										  //
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+$(document).on('pagebeforeshow', "#edit-address-view", function( event, ui ) {
+	// currentAddress has been set at this point
+	$("#edit-street_address").val(currentAddress.street_address);
+	$("#edit-city").val(currentAddress.city);
+	$("#edit-country").val(currentAddress.country);
+	$("#edit-state").val(currentAddress.state);
+	$("#edit-zipcode").val(currentAddress.zipcode);
+});
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 //							    	Enter Button Fixes - Juan										  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 $(document).ready(function(){
@@ -505,7 +517,7 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 				if(i < shippingAddresses.length){
 						shipAddressList.append('<li><div><center><strong> Address: '+ shippingAddresses[i].street_address +'</strong></center>'+
 						'<center>'+ shippingAddresses[i].city +', '+ shippingAddresses[i].state +' | '+shippingAddresses[i].country+' '+shippingAddresses[i].zipcode+'</center></div></li>'+
-						'<li><a onclick=EditAddress('+shippingAddresses[i].address_id+') data-icon="gear">Edit</a></li>'+
+						'<li><a onclick=GetAddress('+shippingAddresses[i].address_id+') data-icon="gear">Edit</a></li>'+
 						'<li><a onclick=DeleteAddress('+shippingAddresses[i].address_id+') data-icon="trash">Delete</a></li>'
 						);
 				}
@@ -1351,14 +1363,14 @@ var currentAddress = {}; //address obtained in GetAddress PS: These Annoy Rick s
 function GetAddress(id){
 	$.mobile.loading("show");
 	$.ajax({
-		url : "http://localhost:3412/Server-Master/address/" + id,
+		url : "http://localhost:3412/Server-Master/account/address/" + id,
 		method: 'get',
 		contentType: "application/json",
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
 			currentAddress = data.address;
 			$.mobile.loading("hide");
-			$.mobile.navigate("#address-view");// Not Implemented in This Phase
+			$.mobile.navigate("#edit-address-view");
 		},
 		error: function(data, textStatus, jqXHR){
 			console.log("textStatus: " + textStatus);

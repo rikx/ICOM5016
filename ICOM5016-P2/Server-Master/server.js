@@ -750,6 +750,7 @@ app.get('/Server-Master/account/address/:id', function(req, res) {
     	else {
 			var response = {"address" : result.rows[0]};
 			client.end();
+			console.log("Ricky D!");
     		res.json(response);
     	}
  	});
