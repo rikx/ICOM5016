@@ -1193,26 +1193,25 @@ app.get('/Server-Master/seller/:id', function(req, res) {
 	});
 });
 
-//REST Operation - HTTP POST to set rating on product sale for a seller by id
-app.post('/Server-Master/seller/rating', function(req, res) {
-	var id = req.params.id;
-	console.log("POST rating on seller id " + id);
+//REST Operation - HTTP PUT to set rating on product sale for a seller by id
+app.put('/Server-Master/seller/rating', function(req, res) {
+	console.log("PUT rating");
 
 	var rating = req.body.rating;
-	var rater = req.body.rater;
 	var order = req.body.order_id;
 	var product = req.body.product_id;
 
-	var new_rating = ""
 	var client = new pg.Client(dbConnInfo);
 	client.connect();
 
-	var query = client.query('');
+	var query = client.query('UPDATE sales SET rating = $1 WHERE order_id = $2 and product_id = $3', [rating, order, product]);
 	query.on("row", function (row, result){
 		result.addRow(row);
 	});
 	query.on("end", function (result){
-		console.log("New Rating: " + new_rating);
+		console.log("New Rating for order "+order+": " + rating);
+		client.end();
+		res.json(true);
 	});
 
 /*	if ((id < 0) || (id >= userNextId)){
@@ -1294,7 +1293,7 @@ app.get('/Server-Master/account/:id', function(req, res) {
 
 	//returns products bought in the past
 	//have it return necesary info link to invoice and an order summary panel or page
-	var query6 = client.query("SELECT order_id, seller_id, username from orders natural join sales natural join products, accounts where seller_id = account_id and buyer_id = $1", [id]);
+	var query6 = client.query("SELECT order_id, seller_id, username, product_id from orders natural join sales natural join products, accounts where seller_id = account_id and buyer_id = $1", [id]);
 	query6.on('row', function (row, result){
 		result.addRow(row);
 	});
