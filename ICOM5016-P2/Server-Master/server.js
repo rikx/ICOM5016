@@ -1199,8 +1199,9 @@ app.put('/Server-Master/seller/rating', function(req, res) {
 
 	if(!req.body.hasOwnProperty('order_id')||!req.body.hasOwnProperty('product_id')||!req.body.hasOwnProperty('rating')){		
     	res.statusCode = 400;
-    	return res.send('Error: Missing fields for payment.');
+    	return res.send('Error: Missing fields for rating.');
   	}
+
 	var rating = req.body.rating;
 	var order = req.body.order_id;
 	var product = req.body.product_id;
