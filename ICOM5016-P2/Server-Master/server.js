@@ -163,8 +163,9 @@ app.get('/Server-Master/home/:id', function(req, res) {
  	});
 });
 
+// Add missing parent category input field (use the one for add product)
 // REST Operation - HTTP POST to add a new a category
-app.post('/Server-Master/home', function(req, res) {
+app.post('/Server-Master/admin/add-category', function(req, res) {
 	console.log("POST category");
 
   	if(!req.body.hasOwnProperty('name') ){
@@ -175,8 +176,13 @@ app.post('/Server-Master/home', function(req, res) {
     var client = new pg.Client(dbConnInfo);
 	client.connect();
 
-	var query = client.query("INSERT INTO categories (name) VALUES ($1)", [req.body.name]);
-	
+	var query;
+	if(req.body.parent_category == -1){
+		query = client.query("INSERT INTO categories (cname) VALUES ($1)", [req.body.name]);
+	}
+	else {
+		query = client.query("INSERT INTO categories (cname, cparent) VALUES ('"+req.body.name+"', "+req.body.parent_category+")");
+	}
 	query.on("row", function (row, result) {
     	result.addRow(row);
 	});
