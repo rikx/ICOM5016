@@ -163,6 +163,32 @@ app.get('/Server-Master/home/:id', function(req, res) {
  	});
 });
 
+// REST Operation - HTTP POST to add a new a category
+app.post('/Server-Master/home', function(req, res) {
+	console.log("POST category");
+
+  	if(!req.body.hasOwnProperty('name') ){
+    	res.statusCode = 400;
+    	return res.send('Error: Missing fields for category.');
+  	}
+
+    var client = new pg.Client(dbConnInfo);
+	client.connect();
+
+	var query = client.query("INSERT INTO categories (name) VALUES ($1)", [req.body.name]);
+	
+	query.on("row", function (row, result) {
+    	result.addRow(row);
+	});
+	query.on("end", function (result) {
+		// error code if category exists
+/*		res.statusCode = 404;
+		res.send("Category already exists");*/
+		client.end();
+		res.json(true);
+ 	});
+});
+
 // REST Operation - HTTP PUT to updated a category based on its id
 app.put('/Server-Master/home/:id', function(req, res) {
 	var id = req.params.id;
@@ -225,22 +251,6 @@ app.del('/Server-Master/home/:id', function(req, res) {
   			res.json(true);
   		}		
 	}
-});
-
-// REST Operation - HTTP POST to add a new a category
-app.post('/Server-Master/home', function(req, res) {
-	console.log("POST");
-
-  	if(!req.body.hasOwnProperty('name') ){
-    	res.statusCode = 400;
-    	return res.send('Error: Missing fields for category.');
-  	}
-
-  	var newCategory = new Category(req.body.name);
-  	console.log("New Category: " + JSON.stringify(newCategory));
-  	newCategory.id = categoryNextId++;
-  	categoryList.push(newCategory);
-  	res.json(true);
 });
 
 // REST Operation - HTTP GET to read all children (if they exist)
