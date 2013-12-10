@@ -96,7 +96,43 @@
 				<form id="category-form">
 	 				<fieldset data-role="controlgroup">
 	 					<ul>
-	  					<li><label for="name"> Name: <input id="name" name="name" type="text"/></label></li>
+	  					<li><label for="add-category-name"> Name: <input id="add-category-name" name="name" type="text"/></label></li>
+	  					<li><label for="add-parent-category" class="select"> Category: </label>
+					        <select name="parent_category" id="add-parent-category">
+					        	<option value="-1">None</option>
+					            <option value="7">Children Books</option>
+					            <option value="8">Fiction Books</option>
+					            <option value="9">Technology Books</option>
+					            <option value="10">Business Books</option>
+					            <option value="11">TV</option>
+					            <option value="12">Audio</option>
+					            <option value="13">Phones</option>
+					            <option value="14">Cameras</option>
+					            <option value="15">Videos</option>
+					            <option value="16">Laptops</option>
+					            <option value="17">Desktops</option>
+					            <option value="18">Tablets</option>
+								<option value="19">Printers</option>
+					            <option value="20">Children's Clothing</option>
+					            <option value="23">Children's Shoes</option>
+					            <option value="24">Men's Shoes</option>
+					            <option value="25">Women's Shoes</option>
+								<option value="27">Fishing</option>
+								<option value="28">Baseball</option>
+								<option value="29">Golf</option>
+								<option value="30">Basketball</option>
+								<option value="31">Men's Shirts</option>
+								<option value="32">Men's Pants</option>
+								<option value="33">Men's Socks</option>
+								<option value="34">Woman's Shirts</option>
+								<option value="35">Woman's Pants</option>
+								<option value="36">Woman's Dresses</option>
+								<option value="37">Bicycle Frames</option>
+								<option value="38">Bicycle Wheels</option>
+								<option value="39">Bicycle Helmet</option>
+								<option value="40">Bicycle Parts</option>
+					            <!-- etc. -->
+					        </select></li>
 	  			  		</ul>
 				 	</fieldset>
 				</form>
@@ -460,8 +496,8 @@
 	 				<fieldset data-role="controlgroup">
 	 					<ul>
 		  					<li><label for="add-product-name"> Name: <input id="add-product-name" name="name" type="text"/></label></li>
-		  					<li><label for="select-parent-category" class="select"> Category: </label>
-					        <select name="parent_category" id="select-parent-category">
+		  					<li><label for="product-parent-category" class="select"> Category: </label>
+					        <select name="parent_category" id="product-parent-category">
 					            <option value="7">Children Books</option>
 					            <option value="8">Fiction Books</option>
 					            <option value="9">Technology Books</option>

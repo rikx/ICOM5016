@@ -273,7 +273,8 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 
 $(document).on('pagebeforeshow', "#category-view", function( event, ui ) {
 	// currentCategory has been set at this point
-	$("#upd-name").val(currentCategory.name);
+	$("#upd-name").val(currentCategory.cname);
+	
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1008,7 +1009,7 @@ function SaveCategory(){
 	console.log("New Category: " + JSON.stringify(newCategory));
 	var newCategoryJSON = JSON.stringify(newCategory);
 	$.ajax({
-		url : "http://localhost:3412/Server-Master/home",
+		url : "http://localhost:3412/Server-Master/admin/add-category",
 		method: 'post',
 		data : newCategoryJSON,
 		contentType: "application/json",
