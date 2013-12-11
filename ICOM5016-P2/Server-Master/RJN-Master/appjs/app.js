@@ -1405,14 +1405,14 @@ function GetAddress(id){
 
 function AddAddress(){
 $.mobile.loading("show");
-	var form = $("#addAddress-form");// Not Implemented in Thi Phase
+	var form = $("#add-address-form");// Not Implemented in Thi Phase
 	var formData = form.serializeArray();
 	console.log("form Data: " + formData);
 	var newAddress = ConverToJSON(formData);
 	console.log("New Address: " + JSON.stringify(newAddress));
 	var newAddressJSON = JSON.stringify(newAddress);
 	$.ajax({
-		url : "http://localhost:3412/Server-Master/address/"+currentUser.id,
+		url : "http://localhost:3412/Server-Master/account/address/"+currentUser.account_id,
 		method: 'post',
 		data : newAddressJSON,
 		contentType: "application/json",

@@ -163,7 +163,6 @@ app.get('/Server-Master/home/:id', function(req, res) {
  	});
 });
 
-// Add missing parent category input field (use the one for add product)
 // REST Operation - HTTP POST to add a new a category
 app.post('/Server-Master/admin/add-category', function(req, res) {
 	console.log("POST category");
@@ -750,21 +749,35 @@ app.get('/Server-Master/account/address/:id', function(req, res) {
 });
 
 // REST Operation - HTTP POST to add a new address
-app.post('/Server-Master/account/address/:userId', function(req, res) {
-	console.log("POST");
-	
-  	if(!req.body.hasOwnProperty('address')){
-				
+app.post('/Server-Master/account/address/:id', function(req, res) {
+	console.log("POST address");
+	var account_id = req.params.id;
+
+  	if(!req.body.hasOwnProperty('street_address') || !req.body.hasOwnProperty('city') || !req.body.hasOwnProperty('country')
+  		|| !req.body.hasOwnProperty('state') || !req.body.hasOwnProperty('zipcode')){	
     	res.statusCode = 400;
     	return res.send('Error: Missing fields for address.');
   	}
 
-  	var newAddress = new ShippingAddress(userId,req.body.address);
-  								 
-  	console.log("New Address: " + JSON.stringify(newAddress));
-  	newAddress.id = shipAddressNextId++;
-  	shipAddressList.push(newAddress);
-  	res.json(true);
+  	var street_address = req.body.street_address.replace(/'/g,"''"); 
+	var city = req.body.city.replace(/'/g,"''"); 
+	var country = req.body.country.replace(/'/g,"''"); 
+	var state = req.body.state.replace(/'/g,"''");
+  	
+  	var new_address = "'"+street_address+"', '"+city+"', '"+country+"', '"+state+"', '"+req.body.zipcode+"', "+account_id;
+  	console.log(new_address);
+  	var client = new pg.Client(dbConnInfo);
+	client.connect();
+
+  	var query = client.query("INSERT into addresses (street_address, city, country, state, zipcode, account_id) VALUES ('"+street_address+"', '"+city+"', '"+country+"', '"+state+"', '"+req.body.zipcode+"', "+account_id+")");
+  	query.on("row", function (row, result){
+  		result.addRow(row);
+  	});
+  	query.on("end", function (result){
+	  	console.log("New Address: " + new_address);
+	  	client.end();
+  		res.json(true);
+  	})							 
 });
 
 //REST Operation - HTTP PUT to edit address based on its id

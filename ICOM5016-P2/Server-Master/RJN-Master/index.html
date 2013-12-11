@@ -100,6 +100,12 @@
 	  					<li><label for="add-parent-category" class="select"> Category: </label>
 					        <select name="parent_category" id="add-parent-category">
 					        	<option value="-1">None</option>
+					        	<option value="1">Books</option>
+					        	<option value="2">Electronics</option>
+					        	<option value="3">Computers</option>
+					        	<option value="4">Clothing</option>
+					        	<option value="5">Shoes</option>
+					        	<option value="6">Sports</option>
 					            <option value="7">Children Books</option>
 					            <option value="8">Fiction Books</option>
 					            <option value="9">Technology Books</option>
@@ -114,6 +120,8 @@
 					            <option value="18">Tablets</option>
 								<option value="19">Printers</option>
 					            <option value="20">Children's Clothing</option>
+					            <option value="21">Men's Clothing</option>
+					            <option value="22">Women's Clothing</option>
 					            <option value="23">Children's Shoes</option>
 					            <option value="24">Men's Shoes</option>
 					            <option value="25">Women's Shoes</option>
@@ -612,14 +620,14 @@
 			</div>
 			<div data-role="content">
 				<h2 align="center">Enter the new address info</h2>
-				<form id="address-form">
+				<form id="add-address-form">
 	 				<fieldset data-role="controlgroup">
 	 					<ul>
-		  					<li><label for="add_street_address">Street Address: <input id="add_street_address" name="add_street_address" type="text"/></label></li>
-		  					<li><label for="add_city">City: <input id="add_city" name="add_city" type="text"/></label></li>
-		  					<li><label for="add_country">Country: <input id="add_country" name="add_country" type="text"/></label></li>
-		  					<li><label for="add_state">State: <input id="add_state" name="add_state" type="text"/></label></li>
-		  					<li><label for="add_zipcode">Zipcode: <input id="add_zipcode" name="add_zipcode" type="text"/></label></li>
+		  					<li><label for="add-street_address">Street Address: <input id="add-street_address" name="street_address" type="text" maxlength="40"/></label></li>
+		  					<li><label for="add-city">City: <input id="add-city" name="city" type="text" maxlength="15"/></label></li>
+		  					<li><label for="add-country">Country: <input id="add-country" name="country" type="text" maxlength="30"/></label></li>
+		  					<li><label for="add-state">State: <input id="add-state" name="state" type="text" maxlength="2"/></label></li>
+		  					<li><label for="add-zipcode">Zipcode: <input id="add-zipcode" name="zipcode" type="text" maxlength="6"/></label></li>
 	  			  	  	</ul>
 				 	</fieldset>
 				</form>
