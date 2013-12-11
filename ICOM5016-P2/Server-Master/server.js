@@ -565,14 +565,14 @@ app.put('/Server-Master/account/product/:product_id', function(req, res) {
   		  	client.connect();
   		  	
   		  	//--Product Info--//
-  		  	var name = req.body.edit_name;
-			var instant_price = req.body.edit_instant_price;
-			var model = req.body.edit_model;
-			var brand = req.body.edit_brand;
-			var description = req.body.edit_description;
-			var image_filename = req.body.edit_image_filename;
-			var quantity = req.body.edit_quantity;
-			var dimensions = req.body.edit_dimensions;
+  		  	var name = req.body.edit_name(/'/g,"''");
+			var instant_price = req.body.edit_instant_price(/'/g,"''");
+			var model = req.body.edit_model(/'/g,"''");
+			var brand = req.body.edit_brand(/'/g,"''");
+			var description = req.body.edit_description(/'/g,"''");
+			var image_filename = req.body.edit_image_filename(/'/g,"''");
+			var quantity = req.body.edit_quantity(/'/g,"''");
+			var dimensions = req.body.edit_dimensions(/'/g,"''");
 			
 			//--Product Update Query--//
 			var query = client.query('UPDATE products SET name = $1, instant_price = $2, model = $3, brand = $4, description = $5, image_filename = $6, quantity = $7, dimensions = $8 WHERE product_id = $9',
@@ -803,24 +803,26 @@ app.put('/Server-Master/account/address/:address_id', function(req, res) {
     	return res.send('Error: Missing fields for address.');
   	}
   	else{
-  	var street_address = req.body.edit_street_address.replace(/'/g,"''");
-	var city = req.body.edit_city.replace(/'/g,"''");
-	var country = req.body.edit_country.replace(/'/g,"''");
-	var state = req.body.edit_state.replace(/'/g,"''");
-	var zipcode = req.body.edit_zipcode.replace(/'/g,"''");
-	
-	var client = new pg.Client(dbConnInfo);
-	client.connect();
-
-	var query = client.query('UPDATE addresses SET street_address = $1, city = $2, country = $3, state = $4, zipcode = $5 WHERE address_id = $6', [street_address,city,country,state,zipcode,address_id]);
-	query.on("row", function (row, result){
-		result.addRow(row);
-	});
-	query.on("end", function (result){
-		console.log("New Address for user "+street_address+": " + city+": " + country+": " + state+": " + zipcode);
-		client.end();
-		res.json(true);
-	});
+  			//--Address Info--//
+		  	var street_address = req.body.edit_street_address.replace(/'/g,"''");
+			var city = req.body.edit_city.replace(/'/g,"''");
+			var country = req.body.edit_country.replace(/'/g,"''");
+			var state = req.body.edit_state.replace(/'/g,"''");
+			var zipcode = req.body.edit_zipcode.replace(/'/g,"''");
+			
+			var client = new pg.Client(dbConnInfo);
+			client.connect();
+			
+			//--Address Update Query--//
+			var query = client.query('UPDATE addresses SET street_address = $1, city = $2, country = $3, state = $4, zipcode = $5 WHERE address_id = $6', [street_address,city,country,state,zipcode,address_id]);
+			query.on("row", function (row, result){
+				result.addRow(row);
+			});
+			query.on("end", function (result){
+				console.log("New Address for user "+street_address+": " + city+": " + country+": " + state+": " + zipcode);
+				client.end();
+				res.json(true);
+			});
 	}
 });
 
@@ -924,16 +926,16 @@ app.put('/Server-Master/account/payment/:payment_id', function(req, res) {
   		  	client.connect();
   		  	
   		  	//--Card Info--//
-  		  	var card_number = req.body.edit_card_number;
-			var card_holder = req.body.edit_card_holder;
-			var exp_month = req.body.edit_exp_month;
-			var exp_year = req.body.edit_exp_year;
-			var security_code = req.body.edit_security_code;
+  		  	var card_number = req.body.edit_card_number(/'/g,"''");
+			var card_holder = req.body.edit_card_holder(/'/g,"''");
+			var exp_month = req.body.edit_exp_month(/'/g,"''");
+			var exp_year = req.body.edit_exp_year(/'/g,"''");
+			var security_code = req.body.edit_security_code(/'/g,"''");
 			
 			//--Bank Info--//
-			var account_number = req.body.edit_account_number;
-			var routing_number = req.body.edit_routing_number;
-			var b_account_type = req.body.edit_b_account_type;
+			var account_number = req.body.edit_account_number(/'/g,"''");
+			var routing_number = req.body.edit_routing_number(/'/g,"''");
+			var b_account_type = req.body.edit_b_account_type(/'/g,"''");
 			
 			//--Card Update Query--//
 			var query = client.query('UPDATE credit_cards SET card_number = $1, card_holder = $2, exp_month = $3, exp_year = $4, security_code = $5 WHERE payment_id = $6',
