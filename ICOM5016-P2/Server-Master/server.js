@@ -549,40 +549,44 @@ app.post('/Server-Master/product/:sellerID', function(req, res) {
 });
 
 //REST Operation - HTTP PUT to edit product based on its id
-app.put('/Server-Master/product/:id', function(req, res) {
-	var id = req.params.id;
-		console.log("PUT product: " + id);
-
-	if ((id < 0) || (id >= productNextId)){
-		// not found
-		res.statusCode = 404;
-		res.send("Product not found.");
-	}
-	else if(!req.body.hasOwnProperty('name')||!req.body.hasOwnProperty('parent')||!req.body.hasOwnProperty('instantPrice')
-			||!req.body.hasOwnProperty('bidPrice')||!req.body.hasOwnProperty('description')||!req.body.hasOwnProperty('model')
-			||!req.body.hasOwnProperty('brand')||!req.body.hasOwnProperty('dimensions')){
+app.put('/Server-Master/account/product/:product_id', function(req, res) {
+	var product_id = req.params.product_id;
+	console.log("PUT product: " + product_id);
+	
+	if(!req.body.hasOwnProperty('edit_name')||!req.body.hasOwnProperty('edit_instant_price')||!req.body.hasOwnProperty('edit_model')
+	||!req.body.hasOwnProperty('edit_brand')||!req.body.hasOwnProperty('edit_description')||!req.body.hasOwnProperty('edit_image_filename')
+	||!req.body.hasOwnProperty('edit_quantity')||!req.body.hasOwnProperty('edit_dimensions')){
 				
     	res.statusCode = 400;
-    	return res.send('Error: Missing fields for product.');
+    	return res.send('Error: Missing fields for payment.');
   	}
-	else {
-		var target = -1;
-		for (var i=0; i < productList.length; ++i){
-			if (productList[i].id == id){
-				target = i;
-				break;	
-			}
-		}
-		if (target == -1){
-			res.statusCode = 404;
-			res.send("Product not found.");			
-		}	
-		else {
-			var theProduct= productList[target];
-			theProduct.name = req.body.name;
-			var response = {"product" : theProduct};
-  			res.json(response);		
-  		}
+  	else{
+  			var client = new pg.Client(dbConnInfo);
+  		  	client.connect();
+  		  	
+  		  	//--Product Info--//
+  		  	var name = req.body.edit_name;
+			var instant_price = req.body.edit_instant_price;
+			var model = req.body.edit_model;
+			var brand = req.body.edit_brand;
+			var description = req.body.edit_description;
+			var image_filename = req.body.edit_image_filename;
+			var quantity = req.body.edit_quantity;
+			var dimensions = req.body.edit_dimensions;
+			
+			//--Product Update Query--//
+			var query = client.query('UPDATE products SET name = $1, instant_price = $2, model = $3, brand = $4, description = $5, image_filename = $6, quantity = $7, dimensions = $8 WHERE product_id = $9',
+			[name, instant_price, model, brand, description, image_filename, quantity, dimensions, product_id]);
+			
+			query.on("row", function (row, result){
+			result.addRow(row);
+			});
+		
+			query.on("end", function (result){
+			console.log("New Product info: "+ name +": " + instant_price +": " + model +": " + brand +": " + description +": " + image_filename +": " + quantity +": " + dimensions);
+			client.end();
+			res.json(true);
+			});
 	}
 });
 
@@ -798,24 +802,26 @@ app.put('/Server-Master/account/address/:address_id', function(req, res) {
     	return res.send('Error: Missing fields for address.');
   	}
   	else{
-  	var street_address = req.body.edit_street_address;
-	var city = req.body.edit_city;
-	var country = req.body.edit_country;
-	var state = req.body.edit_state;
-	var zipcode = req.body.edit_zipcode;
-	
-	var client = new pg.Client(dbConnInfo);
-	client.connect();
-
-	var query = client.query('UPDATE addresses SET street_address = $1, city = $2, country = $3, state = $4, zipcode = $5 WHERE address_id = $6', [street_address,city,country,state,zipcode,address_id]);
-	query.on("row", function (row, result){
-		result.addRow(row);
-	});
-	query.on("end", function (result){
-		console.log("New Address for user "+street_address+": " + city+": " + country+": " + state+": " + zipcode);
-		client.end();
-		res.json(true);
-	});
+  			//--Address Info--//
+		  	var street_address = req.body.edit_street_address;
+			var city = req.body.edit_city;
+			var country = req.body.edit_country;
+			var state = req.body.edit_state;
+			var zipcode = req.body.edit_zipcode;
+			
+			var client = new pg.Client(dbConnInfo);
+			client.connect();
+			
+			//--Address Update Query--//
+			var query = client.query('UPDATE addresses SET street_address = $1, city = $2, country = $3, state = $4, zipcode = $5 WHERE address_id = $6', [street_address,city,country,state,zipcode,address_id]);
+			query.on("row", function (row, result){
+				result.addRow(row);
+			});
+			query.on("end", function (result){
+				console.log("New Address for user "+street_address+": " + city+": " + country+": " + state+": " + zipcode);
+				client.end();
+				res.json(true);
+			});
 	}
 });
 
@@ -930,7 +936,7 @@ app.put('/Server-Master/account/payment/:payment_id', function(req, res) {
 			var routing_number = req.body.edit_routing_number;
 			var b_account_type = req.body.edit_b_account_type;
 			
-			//--Card Query--//
+			//--Card Update Query--//
 			var query = client.query('UPDATE credit_cards SET card_number = $1, card_holder = $2, exp_month = $3, exp_year = $4, security_code = $5 WHERE payment_id = $6',
 			[card_number,card_holder,exp_month,exp_year,security_code,payment_id]);
 			
@@ -939,7 +945,7 @@ app.put('/Server-Master/account/payment/:payment_id', function(req, res) {
 			console.log("New Card info: "+card_number+": " + card_holder+": " + exp_month+": " + exp_year+": " + security_code);
 			});
 			
-			//--Bank Query--//
+			//--Bank Update Query--//
 			var query2 = client.query('UPDATE bank_accounts SET account_number = $1, routing_number = $2, b_account_type = $3 WHERE payment_id = $4',
 			[account_number,routing_number,b_account_type,payment_id]);
 			
