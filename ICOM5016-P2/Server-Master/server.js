@@ -756,7 +756,6 @@ app.get('/Server-Master/account/address/:id', function(req, res) {
     	else {
 			var response = {"address" : result.rows[0]};
 			client.end();
-			console.log("Ricky D!");
     		res.json(response);
     	}
  	});
@@ -871,7 +870,7 @@ app.get('/Server-Master/account/payment/:id', function(req, res) {
     var client = new pg.Client(dbConnInfo);
 	client.connect();
 
-	var query = client.query("SELECT * from payment_options where payment_id = $1", [id]);
+	var query = client.query("SELECT * from credit_cards full outer join bank_accounts on credit_cards.payment_id = bank_accounts.payment_id where bank_accounts.payment_id = $1 or credit_cards.payment_id = $1", [id]);
 	
 	query.on("row", function (row, result) {
     	result.addRow(row);
