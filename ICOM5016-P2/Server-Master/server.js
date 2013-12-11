@@ -803,6 +803,7 @@ app.put('/Server-Master/account/address/:address_id', function(req, res) {
     	return res.send('Error: Missing fields for address.');
   	}
   	else{
+<<<<<<< HEAD
   			//--Address Info--//
 		  	var street_address = req.body.edit_street_address;
 			var city = req.body.edit_city;
@@ -823,6 +824,8 @@ app.put('/Server-Master/account/address/:address_id', function(req, res) {
 				client.end();
 				res.json(true);
 			});
+=======
+>>>>>>> c73ef6e107cab8063e0203b07ac06b9066397470
   	var street_address = req.body.edit_street_address.replace(/'/g,"''");
 	var city = req.body.edit_city.replace(/'/g,"''");
 	var country = req.body.edit_country.replace(/'/g,"''");
