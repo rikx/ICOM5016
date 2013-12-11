@@ -904,40 +904,54 @@ app.post('/Server-Master/account/payment/:userId', function(req, res) {
 });
 
 //REST Operation - HTTP PUT to edit payment based on its id
-app.put('/Server-Master/account/payment/:id', function(req, res) {
-	var id = req.params.id;
-		console.log("PUT payment: " + id);
-
-	if ((id < 0) || (id >= paymentNextId)){
-		// not found
-		res.statusCode = 404;
-		res.send("Payment not found.");
-	}
-	else if(!req.body.hasOwnProperty('type')||!req.body.hasOwnProperty('cNumber')||!req.body.hasOwnProperty('billAddress')){
+app.put('/Server-Master/account/payment/:payment_id', function(req, res) {
+	var payment_id = req.params.payment_id;
+	console.log("PUT payment: " + payment_id);
+	
+	if(!req.body.hasOwnProperty('edit_card_number')||!req.body.hasOwnProperty('edit_card_holder')||!req.body.hasOwnProperty('edit_exp_month')
+	||!req.body.hasOwnProperty('edit_exp_year')||!req.body.hasOwnProperty('edit_security_code')||!req.body.hasOwnProperty('edit_account_number')
+	||!req.body.hasOwnProperty('edit_routing_number')||!req.body.hasOwnProperty('edit_b_account_type')){
 				
     	res.statusCode = 400;
     	return res.send('Error: Missing fields for payment.');
   	}
-	else {
-		var target = -1;
-		for (var i=0; i < payTypeList.length; ++i){
-			if (payTypeList[i].id == id){
-				target = i;
-				break;	
-			}
-		}
-		if (target == -1){
-			res.statusCode = 404;
-			res.send("Payment not found.");			
-		}	
-		else {
-			var thePayment= payTypeList[target];
-			thePayment.type = req.body.type;
-			thePayment.cNumber = req.body.cNumber;
-			thePayment.billAddress = req.body.billAddress;
-			var response = {"payment" : thePayment};
-  			res.json(response);		
-  		}
+  	else{
+  			var client = new pg.Client(dbConnInfo);
+  		  	client.connect();
+  		  	
+  		  	//--Card Info--//
+  		  	var card_number = req.body.edit_card_number;
+			var card_holder = req.body.edit_card_holder;
+			var exp_month = req.body.edit_exp_month;
+			var exp_year = req.body.edit_exp_year;
+			var security_code = req.body.edit_security_code;
+			
+			//--Bank Info--//
+			var account_number = req.body.edit_account_number;
+			var routing_number = req.body.edit_routing_number;
+			var b_account_type = req.body.edit_b_account_type;
+			
+			//--Card Query--//
+			var query = client.query('UPDATE credit_cards SET card_number = $1, card_holder = $2, exp_month = $3, exp_year = $4, security_code = $5 WHERE payment_id = $6',
+			[card_number,card_holder,exp_month,exp_year,security_code,payment_id]);
+			
+			query.on("row", function (row, result){
+			result.addRow(row);
+			console.log("New Card info: "+card_number+": " + card_holder+": " + exp_month+": " + exp_year+": " + security_code);
+			});
+			
+			//--Bank Query--//
+			var query2 = client.query('UPDATE bank_accounts SET account_number = $1, routing_number = $2, b_account_type = $3 WHERE payment_id = $4',
+			[account_number,routing_number,b_account_type,payment_id]);
+			
+			query2.on("row", function (row, result){
+			result.addRow(row);
+			console.log("New Bank info: "+account_number+": " + routing_number+": " + b_account_type);
+			});
+			query2.on("end", function (result){
+			client.end();
+			res.json(true);
+			});
 	}
 });
 

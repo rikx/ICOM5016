@@ -1501,6 +1501,7 @@ function GetPayment(id){
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
 			currentPayment = data.payment;
+			currentPayment.payment_id = id;
 			alert(JSON.stringify(data.payment));
 			$.mobile.loading("hide");
 			$.mobile.navigate("#edit-payment-view");
@@ -1544,17 +1545,16 @@ $.mobile.loading("show");
 	});
 }
 
-function EditPayment(id){
+function EditPayment(){
 $.mobile.loading("show");
-	var form = $("#addPayment-form");// Not Implemented in This Phase
+	var form = $("#payment-view-form");
 	var formData = form.serializeArray();
 	console.log("form Data: " + formData);
 	var updPayment = ConverToJSON(formData);
-	updPayment.id = currentPayment.id;
 	console.log("Updated Payment: " + JSON.stringify(updPayment));
 	var updPaymentJSON = JSON.stringify(updPayment);
 	$.ajax({
-		url : "http://localhost:3412/Server-Master/payment/" + updPayment.id,
+		url : "http://localhost:3412/Server-Master/account/payment/" + currentPayment.payment_id,
 		method: 'put',
 		data : updPaymentJSON,
 		contentType: "application/json",
