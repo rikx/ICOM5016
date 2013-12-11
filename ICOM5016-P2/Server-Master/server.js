@@ -774,6 +774,7 @@ app.post('/Server-Master/account/address/:id', function(req, res) {
   		result.addRow(row);
   	});
   	query.on("end", function (result){
+  		//error code here
 	  	console.log("New Address: " + new_address);
 	  	client.end();
   		res.json(true);
