@@ -778,6 +778,7 @@ app.post('/Server-Master/account/address/:id', function(req, res) {
   		result.addRow(row);
   	});
   	query.on("end", function (result){
+  		//error code here
 	  	console.log("New Address: " + new_address);
 	  	client.end();
   		res.json(true);
@@ -822,6 +823,24 @@ app.put('/Server-Master/account/address/:address_id', function(req, res) {
 				client.end();
 				res.json(true);
 			});
+  	var street_address = req.body.edit_street_address.replace(/'/g,"''");
+	var city = req.body.edit_city.replace(/'/g,"''");
+	var country = req.body.edit_country.replace(/'/g,"''");
+	var state = req.body.edit_state.replace(/'/g,"''");
+	var zipcode = req.body.edit_zipcode.replace(/'/g,"''");
+	
+	var client = new pg.Client(dbConnInfo);
+	client.connect();
+
+	var query = client.query('UPDATE addresses SET street_address = $1, city = $2, country = $3, state = $4, zipcode = $5 WHERE address_id = $6', [street_address,city,country,state,zipcode,address_id]);
+	query.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query.on("end", function (result){
+		console.log("New Address for user "+street_address+": " + city+": " + country+": " + state+": " + zipcode);
+		client.end();
+		res.json(true);
+	});
 	}
 });
 
@@ -1002,13 +1021,14 @@ for (var i=0; i < ratingsList.length;++i){
 // REST Operation - HTTP POST to add a new a user
 app.post('/Server-Master/register', function(req, res) {
 	console.log("POST new user");
-/*
+
   	if( !req.body.hasOwnProperty('username') || !req.body.hasOwnProperty('firstname') ||
   		!req.body.hasOwnProperty('lastname') || !req.body.hasOwnProperty('email') ||
   		!req.body.hasOwnProperty('password') || !req.body.hasOwnProperty('middleinitial')){
     	res.statusCode = 400;
     	return res.send('Error: Missing fields for new user.');
-  	}*/
+  	}
+
   	var client = new pg.Client(dbConnInfo);
 	client.connect();
 
