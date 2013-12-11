@@ -1262,7 +1262,7 @@ function RegisterAccount(){
 	}
 	else{
 		$.mobile.loading("show");
-		var form = $("#new-user-form");
+		var form = $("#register_form");
 		var formData = form.serializeArray();
 		console.log("form Data: " + formData);
 		var newUser = ConverToJSON(formData);
