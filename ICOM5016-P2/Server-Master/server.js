@@ -803,9 +803,7 @@ app.put('/Server-Master/account/address/:address_id', function(req, res) {
     	return res.send('Error: Missing fields for address.');
   	}
   	else{
-<<<<<<< HEAD
-<<<<<<< HEAD
-  			//--Address Info--//
+
 		  	var street_address = req.body.edit_street_address;
 			var city = req.body.edit_city;
 			var country = req.body.edit_country;
@@ -815,7 +813,7 @@ app.put('/Server-Master/account/address/:address_id', function(req, res) {
 			var client = new pg.Client(dbConnInfo);
 			client.connect();
 			
-			//--Address Update Query--//
+			
 			var query = client.query('UPDATE addresses SET street_address = $1, city = $2, country = $3, state = $4, zipcode = $5 WHERE address_id = $6', [street_address,city,country,state,zipcode,address_id]);
 			query.on("row", function (row, result){
 				result.addRow(row);
@@ -825,10 +823,7 @@ app.put('/Server-Master/account/address/:address_id', function(req, res) {
 				client.end();
 				res.json(true);
 			});
-=======
->>>>>>> c73ef6e107cab8063e0203b07ac06b9066397470
-=======
->>>>>>> c73ef6e107cab8063e0203b07ac06b9066397470
+
   	var street_address = req.body.edit_street_address.replace(/'/g,"''");
 	var city = req.body.edit_city.replace(/'/g,"''");
 	var country = req.body.edit_country.replace(/'/g,"''");
