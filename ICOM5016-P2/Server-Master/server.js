@@ -804,26 +804,6 @@ app.put('/Server-Master/account/address/:address_id', function(req, res) {
   	}
   	else{
 
-		  	var street_address = req.body.edit_street_address;
-			var city = req.body.edit_city;
-			var country = req.body.edit_country;
-			var state = req.body.edit_state;
-			var zipcode = req.body.edit_zipcode;
-			
-			var client = new pg.Client(dbConnInfo);
-			client.connect();
-			
-			
-			var query = client.query('UPDATE addresses SET street_address = $1, city = $2, country = $3, state = $4, zipcode = $5 WHERE address_id = $6', [street_address,city,country,state,zipcode,address_id]);
-			query.on("row", function (row, result){
-				result.addRow(row);
-			});
-			query.on("end", function (result){
-				console.log("New Address for user "+street_address+": " + city+": " + country+": " + state+": " + zipcode);
-				client.end();
-				res.json(true);
-			});
-
   	var street_address = req.body.edit_street_address.replace(/'/g,"''");
 	var city = req.body.edit_city.replace(/'/g,"''");
 	var country = req.body.edit_country.replace(/'/g,"''");
