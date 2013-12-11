@@ -726,7 +726,7 @@ for (var i=0; i < shipAddressList.length;++i){
 // REST Operation - HTTP GET to read an address information based on its id
 app.get('/Server-Master/account/address/:id', function(req, res) {
 	var id = req.params.id;
-
+	console.log("GET address: " + id);
     var client = new pg.Client(dbConnInfo);
 	client.connect();
 
@@ -781,38 +781,41 @@ app.post('/Server-Master/account/address/:id', function(req, res) {
 });
 
 //REST Operation - HTTP PUT to edit address based on its id
-app.put('/Server-Master/account/address/:id', function(req, res) {
-	var id = req.params.id;
-		console.log("PUT address: " + id);
+app.put('/Server-Master/account/address/:address_id', function(req, res) {
+	
+	var address_id = req.params.address_id;
+	console.log("PUT address: " + address_id);
 
-	if ((id < 0) || (id >= shipAddressNextId)){
+	/*if ((id < 0) || (id >= shipAddressNextId)){
 		// not found
 		res.statusCode = 404;
 		res.send("Address not found.");
-	}
-	else if(!req.body.hasOwnProperty('address')){
+	}*/	
+	if(!req.body.hasOwnProperty('edit_street_address')||!req.body.hasOwnProperty('edit_city')||!req.body.hasOwnProperty('edit_country')
+	||!req.body.hasOwnProperty('edit_state')||!req.body.hasOwnProperty('edit_zipcode')){
 				
     	res.statusCode = 400;
     	return res.send('Error: Missing fields for address.');
   	}
-	else {
-		var target = -1;
-		for (var i=0; i < shipAddressList.length; ++i){
-			if (shipAddressList[i].id == id){
-				target = i;
-				break;	
-			}
-		}
-		if (target == -1){
-			res.statusCode = 404;
-			res.send("Address not found.");			
-		}	
-		else {
-			var theAddress= shipAddressList[target];
-			theAddress.address = req.body.address;
-			var response = {"address" : theAddress};
-  			res.json(response);		
-  		}
+  	else{
+  	var street_address = req.body.edit_street_address;
+	var city = req.body.edit_city;
+	var country = req.body.edit_country;
+	var state = req.body.edit_state;
+	var zipcode = req.body.edit_zipcode;
+	
+	var client = new pg.Client(dbConnInfo);
+	client.connect();
+
+	var query = client.query('UPDATE addresses SET street_address = $1, city = $2, country = $3, state = $4, zipcode = $5 WHERE address_id = $6', [street_address,city,country,state,zipcode,address_id]);
+	query.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query.on("end", function (result){
+		console.log("New Address for user "+street_address+": " + city+": " + country+": " + state+": " + zipcode);
+		client.end();
+		res.json(true);
+	});
 	}
 });
 
