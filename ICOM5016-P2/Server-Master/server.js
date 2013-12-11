@@ -233,30 +233,26 @@ app.put('/Server-Master/home/:id', function(req, res) {
 // REST Operation - HTTP DELETE to delete a category based on its id
 app.del('/Server-Master/home/:id', function(req, res) {
 	var id = req.params.id;
-		console.log("DELETE category: " + id);
+	console.log("DELETE category: " + id);
 
-	if ((id < 0) || (id >= categoryNextId)){
-		// not found
-		res.statusCode = 404;
-		res.send("Category not found.");
-	}
-	else {
-		var target = -1;
-		for (var i=0; i < categoryList.length; ++i){
-			if (categoryList[i].id == id){
-				target = i;
-				break;	
-			}
-		}
-		if (target == -1){
-			res.statusCode = 404;
-			res.send("Category not found.");			
-		}	
-		else {
-			categoryList.splice(target, 1);
+	var client = new pg.Client(dbConnInfo);
+	client.connect();
+
+	//update all products that have the category as it's parent
+	var query1 = client.query('UPDATE sales SET rating = $1 WHERE order_id = $2 and product_id = $3', [rating, order, product]);
+	//update all children of the category
+
+	//delete the category entry
+	var query3 = client.query("DELETE FROM category WHERE cid = $1", [id]);
+	query.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query.on("end", function (err, result) {
+    		client.end();
+  			console.log("Deleted category: " + id);
   			res.json(true);
-  		}		
-	}
+    	//}
+  	});
 });
 
 // REST Operation - HTTP GET to read all children (if they exist)
@@ -594,30 +590,22 @@ app.put('/Server-Master/product/:id', function(req, res) {
 //REST Operation - HTTP DELETE to delete product based on its id
 app.del('/Server-Master/product/:id', function(req, res) {
 	var id = req.params.id;
-		console.log("DELETE product: " + id);
+	console.log("DELETE product: " + id);
 
-	if ((id < 0) || (id >= productNextId)){
-		// not found
-		res.statusCode = 404;
-		res.send("Product not found.");
-	}
-	else {
-		var target = -1;
-		for (var i=0; i < productList.length; ++i){
-			if (productList[i].id == id){
-				target = i;
-				break;	
-			}
-		}
-		if (target == -1){
-			res.statusCode = 404;
-			res.send("Product not found.");			
-		}	
-		else {
-			productList.splice(target, 1);
+	var client = new pg.Client(dbConnInfo);
+	client.connect();
+
+	var query = client.query("DELETE FROM product WHERE pid = $1", [id]);
+	query.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query.on("end", function (err, result) {
+    		client.end();
+  			console.log("Deleted Product: " + id);
   			res.json(true);
-  		}		
-	}
+    	//}
+  	});
+
 });
 
 //REST Operation - HTTP PUT to update current bid on product by id
@@ -673,7 +661,7 @@ app.get('/Server-Master/product/:id/bid-history', function(req, res) {
 		console.log("GET bid history for product id " + id);
 		var response = {"bidHistory" : result.rows};
 		client.end();
-		res.json(response);		
+		res.json(response);
 	});
 });
 
@@ -756,7 +744,6 @@ app.get('/Server-Master/account/address/:id', function(req, res) {
     	else {
 			var response = {"address" : result.rows[0]};
 			client.end();
-			console.log("Ricky D!");
     		res.json(response);
     	}
  	});
@@ -819,30 +806,21 @@ app.put('/Server-Master/account/address/:id', function(req, res) {
 //REST Operation - HTTP DELETE to delete address based on its id
 app.del('/Server-Master/account/address/:id', function(req, res) {
 	var id = req.params.id;
-		console.log("DELETE address: " + id);
+	console.log("DELETE address: " + id);
 
-	if ((id < 0) || (id >= shipAddressNextId)){
-		// not found
-		res.statusCode = 404;
-		res.send("Address not found.");
-	}
-	else {
-		var target = -1;
-		for (var i=0; i < shipAddressList.length; ++i){
-			if (shipAddressList[i].id == id){
-				target = i;
-				break;	
-			}
-		}
-		if (target == -1){
-			res.statusCode = 404;
-			res.send("Address not found.");			
-		}	
-		else {
-			shipAddressList.splice(target, 1);
+	var client = new pg.Client(dbConnInfo);
+	client.connect();
+
+	var query = client.query("DELETE FROM address WHERE address_id = $1", [id]);
+	query.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query.on("end", function (err, result) {
+    		client.end();
+  			console.log("Deleted Address: " + id);
   			res.json(true);
-  		}		
-	}
+    	//}
+  	});
 });
 //SHIPADDRESS REST CALLS END
 
@@ -871,7 +849,7 @@ app.get('/Server-Master/account/payment/:id', function(req, res) {
     var client = new pg.Client(dbConnInfo);
 	client.connect();
 
-	var query = client.query("SELECT * from payment_options where payment_id = $1", [id]);
+	var query = client.query("SELECT * from credit_cards full outer join bank_accounts on credit_cards.payment_id = bank_accounts.payment_id where bank_accounts.payment_id = $1 or credit_cards.payment_id = $1", [id]);
 	
 	query.on("row", function (row, result) {
     	result.addRow(row);
@@ -949,30 +927,21 @@ app.put('/Server-Master/account/payment/:id', function(req, res) {
 //REST Operation - HTTP DELETE to delete payment based on its id
 app.del('/Server-Master/account/payment/:id', function(req, res) {
 	var id = req.params.id;
-		console.log("DELETE payment: " + id);
+	console.log("DELETE payment: " + id);
 
-	if ((id < 0) || (id >= paymentNextId)){
-		// not found
-		res.statusCode = 404;
-		res.send("Payment not found.");
-	}
-	else {
-		var target = -1;
-		for (var i=0; i < payTypeList.length; ++i){
-			if (payTypeList[i].id == id){
-				target = i;
-				break;	
-			}
-		}
-		if (target == -1){
-			res.statusCode = 404;
-			res.send("Payment not found.");			
-		}	
-		else {
-			payTypeList.splice(target, 1);
+	var client = new pg.Client(dbConnInfo);
+	client.connect();
+
+	var query = client.query("DELETE FROM payment_option WHERE payment_id = $1", [id]);
+	query.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query.on("end", function (err, result) {
+    		client.end();
+  			console.log("Deleted payment option: " + id);
   			res.json(true);
-  		}		
-	}
+    	//}
+  	});
 });
 
 //PAYMENT REST CALLS END

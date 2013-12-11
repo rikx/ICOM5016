@@ -278,7 +278,7 @@ $(document).on('pagebeforeshow', "#category-view", function( event, ui ) {
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-//										CATEGORY DETAILS PAGE										  //
+//										ADDRESS DETAILS PAGE										  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 $(document).on('pagebeforeshow', "#edit-address-view", function( event, ui ) {
 	// currentAddress has been set at this point
@@ -287,6 +287,22 @@ $(document).on('pagebeforeshow', "#edit-address-view", function( event, ui ) {
 	$("#edit-country").val(currentAddress.country);
 	$("#edit-state").val(currentAddress.state);
 	$("#edit-zipcode").val(currentAddress.zipcode);
+});
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//										PAYMENT DETAILS PAGE										  //
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+$(document).on('pagebeforeshow', "#edit-payment-view", function( event, ui ) {
+	// currentPayment has been set at this point
+	$("#edit-card_number").val(currentPayment.card_number);
+	$("#edit-card_holder").val(currentPayment.card_holder);
+	$("#edit-exp_month").val(currentPayment.exp_month);
+	$("#edit-exp_year").val(currentPayment.exp_year);
+	$("#edit-security_code").val(currentPayment.security_code);
+	
+	$("#edit-account_number").val(currentPayment.account_number);
+	$("#edit-routing_number").val(currentPayment.routing_number);
+	$("#edit-b_account_type").val(currentPayment.b_account_type);
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -527,7 +543,7 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 					//Need to add a check later for type if its credit card or paypal
 						payList.append('<li><div><center>Card Ending with '+ paymentTypes[i].card_number.substr(15)+'</center>'+
 						'<center><strong>Billing Address: </strong>'+paymentTypes[i].street_address+'</center></div></li>'+
-						'<li><a onclick=EditPayment('+paymentTypes[i].payment_id+') data-icon="gear">Edit</a></li>'+
+						'<li><a onclick=GetPayment('+paymentTypes[i].payment_id+') data-icon="gear">Edit</a></li>'+
 						'<li><a onclick=DeletePayment('+paymentTypes[i].payment_id+') data-icon="trash">Delete</a></li>'
 						);
 				}
@@ -1478,14 +1494,15 @@ var currentPayment = {}; //payment obtained in GetPayment PS: These Annoy Rick s
 function GetPayment(id){
 	$.mobile.loading("show");
 	$.ajax({
-		url : "http://localhost:3412/Server-Master/payment/" + id,
+		url : "http://localhost:3412/Server-Master/account/payment/" + id,
 		method: 'get',
 		contentType: "application/json",
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
 			currentPayment = data.payment;
+			alert(JSON.stringify(data.payment));
 			$.mobile.loading("hide");
-			$.mobile.navigate("#payment-view");// Not Implemented in This Phase
+			$.mobile.navigate("#edit-payment-view");
 		},
 		error: function(data, textStatus, jqXHR){
 			console.log("textStatus: " + textStatus);
