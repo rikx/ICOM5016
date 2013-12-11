@@ -804,6 +804,7 @@ app.put('/Server-Master/account/address/:address_id', function(req, res) {
   	}
   	else{
 <<<<<<< HEAD
+<<<<<<< HEAD
   			//--Address Info--//
 		  	var street_address = req.body.edit_street_address;
 			var city = req.body.edit_city;
@@ -824,6 +825,8 @@ app.put('/Server-Master/account/address/:address_id', function(req, res) {
 				client.end();
 				res.json(true);
 			});
+=======
+>>>>>>> c73ef6e107cab8063e0203b07ac06b9066397470
 =======
 >>>>>>> c73ef6e107cab8063e0203b07ac06b9066397470
   	var street_address = req.body.edit_street_address.replace(/'/g,"''");
