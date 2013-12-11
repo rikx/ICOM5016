@@ -282,11 +282,11 @@ $(document).on('pagebeforeshow', "#category-view", function( event, ui ) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 $(document).on('pagebeforeshow', "#edit-address-view", function( event, ui ) {
 	// currentAddress has been set at this point
-	$("#edit-street_address").val(currentAddress.street_address);
-	$("#edit-city").val(currentAddress.city);
-	$("#edit-country").val(currentAddress.country);
-	$("#edit-state").val(currentAddress.state);
-	$("#edit-zipcode").val(currentAddress.zipcode);
+	$("#edit_street_address").val(currentAddress.street_address);
+	$("#edit_city").val(currentAddress.city);
+	$("#edit_country").val(currentAddress.country);
+	$("#edit_state").val(currentAddress.state);
+	$("#edit_zipcode").val(currentAddress.zipcode);
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -294,15 +294,15 @@ $(document).on('pagebeforeshow', "#edit-address-view", function( event, ui ) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 $(document).on('pagebeforeshow', "#edit-payment-view", function( event, ui ) {
 	// currentPayment has been set at this point
-	$("#edit-card_number").val(currentPayment.card_number);
-	$("#edit-card_holder").val(currentPayment.card_holder);
-	$("#edit-exp_month").val(currentPayment.exp_month);
-	$("#edit-exp_year").val(currentPayment.exp_year);
-	$("#edit-security_code").val(currentPayment.security_code);
+	$("#edit_card_number").val(currentPayment.card_number);
+	$("#edit_card_holder").val(currentPayment.card_holder);
+	$("#edit_exp_month").val(currentPayment.exp_month);
+	$("#edit_exp_year").val(currentPayment.exp_year);
+	$("#edit_security_code").val(currentPayment.security_code);
 	
-	$("#edit-account_number").val(currentPayment.account_number);
-	$("#edit-routing_number").val(currentPayment.routing_number);
-	$("#edit-b_account_type").val(currentPayment.b_account_type);
+	$("#edit_account_number").val(currentPayment.account_number);
+	$("#edit_routing_number").val(currentPayment.routing_number);
+	$("#edit_b_account_type").val(currentPayment.b_account_type);
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1386,6 +1386,7 @@ function GetAddress(id){
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
 			currentAddress = data.address;
+			//alert(JSON.stringify(currentAddress));
 			$.mobile.loading("hide");
 			$.mobile.navigate("#edit-address-view");
 		},
@@ -1428,17 +1429,17 @@ $.mobile.loading("show");
 	});
 }
 
-function EditAddress(id){
+function EditAddress(){
 $.mobile.loading("show");
-	var form = $("#addAddress-form");// Not Implemented in Thi Phase
+	var form = $("#address-view-form");
 	var formData = form.serializeArray();
 	console.log("form Data: " + formData);
 	var updAddress = ConverToJSON(formData);
-	updAddress.id = currentAddress.id;
 	console.log("Updated Address: " + JSON.stringify(updAddress));
 	var updAddressJSON = JSON.stringify(updAddress);
+	//alert(updAddressJSON);
 	$.ajax({
-		url : "http://localhost:3412/Server-Master/address/" + updAddress.id,
+		url : "http://localhost:3412/Server-Master/account/address/" + currentAddress.address_id,
 		method: 'put',
 		data : updAddressJSON,
 		contentType: "application/json",
