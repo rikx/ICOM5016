@@ -803,7 +803,6 @@ app.put('/Server-Master/account/address/:address_id', function(req, res) {
     	return res.send('Error: Missing fields for address.');
   	}
   	else{
-
   	var street_address = req.body.edit_street_address.replace(/'/g,"''");
 	var city = req.body.edit_city.replace(/'/g,"''");
 	var country = req.body.edit_country.replace(/'/g,"''");
