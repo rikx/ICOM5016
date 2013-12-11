@@ -306,6 +306,22 @@ $(document).on('pagebeforeshow', "#edit-payment-view", function( event, ui ) {
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
+//										PRODUCT DETAILS PAGE										  //
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+$(document).on('pagebeforeshow', "#edit-product-view", function( event, ui ) {
+	// currentProduct has been set at this point
+
+	$("#edit_name").val(currentProduct.name);
+	$("#edit_instant_price").val(currentProduct.instant_price);
+	$("#edit_model").val(currentProduct.model);
+	$("#edit_brand").val(currentProduct.brand);
+	$("#edit_description").val(currentProduct.description);
+	$("#edit_image_filename").val(currentProduct.image_filename);
+	$("#edit_quantity").val(currentProduct.quantity);
+	$("#edit_dimensions").val(currentProduct.dimensions);
+});
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 //							    	Enter Button Fixes - Juan										  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 $(document).ready(function(){
@@ -514,7 +530,7 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 			var ratingsList = $('#ratings-list');
 			var sellingList = $('#currentSales-list');
 			var bidsList = $('#currentBids-list');
-			var boughtList = $('#bought-history-list')
+			var boughtList = $('#bought-history-list');
 			var soldList = $('#sold-history-list');
 
 			shipAddressList.empty();
@@ -556,7 +572,7 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 				//Populate Current Sales list
 				if(i < sellingProducts.length){
 					sellingList.append('<li><a onclick=GetProduct('+sellingProducts[i].product_id+')><h4>'+sellingProducts[i].name+'</h4></a></li>'+
-					'<li><a onclick=EditProduct('+sellingProducts[i].product_id+') data-icon="gear">Edit</a></li>'+
+					'<li><a onclick=GetProductInfo('+sellingProducts[i].product_id+') data-icon="gear">Edit</a></li>'+
 					'<li><a onclick=DeleteProduct('+sellingProducts[i].product_id+') data-icon="trash">Delete</a></li>'
 					);
 				}
@@ -1502,7 +1518,7 @@ function GetPayment(id){
 		success : function(data, textStatus, jqXHR){
 			currentPayment = data.payment;
 			currentPayment.payment_id = id;
-			alert(JSON.stringify(data.payment));
+			//alert(JSON.stringify(data.payment));
 			$.mobile.loading("hide");
 			$.mobile.navigate("#edit-payment-view");
 		},
@@ -1632,6 +1648,31 @@ function GetProduct(id){
 	});
 }
 
+function GetProductInfo(id){
+	$.mobile.loading("show");
+	$.ajax({
+		url : "http://localhost:3412/Server-Master/product/" + id,
+		method: 'get',
+		contentType: "application/json",
+		dataType:"json",
+		success : function(data, textStatus, jqXHR){
+			currentProduct = data.product;
+			$.mobile.loading("hide");
+			$.mobile.navigate("#edit-product-view");
+		},
+		error: function(data, textStatus, jqXHR){
+			console.log("textStatus: " + textStatus);
+			$.mobile.loading("hide");
+			if (data.status == 404){
+				alert("Product not found.");
+			}
+			else {
+				alert("Internal Server Error.");
+			}
+		}
+	});
+}
+
 function AddProduct(){
 	$.mobile.loading("show");
 	var form = $("#add-product-form");
@@ -1673,17 +1714,17 @@ else {
     $(".product-auction-li").hide();  // checked
 }
 
-function EditProduct(id){
+function EditProduct(){
 $.mobile.loading("show");
-	var form = $("#addProduct-form");// Not Implemented in This Phase
+	var form = $("#product-view-form");
 	var formData = form.serializeArray();
 	console.log("form Data: " + formData);
 	var updProduct = ConverToJSON(formData);
-	updProduct.id = currentProduct.product_id;
+	
 	console.log("Updated Product: " + JSON.stringify(updProduct));
 	var updProductJSON = JSON.stringify(updProduct);
 	$.ajax({
-		url : "http://localhost:3412/Server-Master/product/" + updProduct.id,
+		url : "http://localhost:3412/Server-Master/account/product/" + currentProduct.product_id,
 		method: 'put',
 		data : updProductJSON,
 		contentType: "application/json",
