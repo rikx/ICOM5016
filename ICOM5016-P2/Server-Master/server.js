@@ -236,19 +236,31 @@ app.del('/Server-Master/home/:id', function(req, res) {
 	client.connect();
 
 	//update all products that have the category as it's parent
-	var query1 = client.query('UPDATE sales SET rating = $1 WHERE order_id = $2 and product_id = $3', [rating, order, product]);
-	//update all children of the category
-
-	//delete the category entry
-	var query3 = client.query("DELETE FROM category WHERE cid = $1", [id]);
-	query.on("row", function (row, result){
+	var query1 = client.query("UPDATE products SET cid = (SELECT cparent FROM categories WHERE cid = $1) WHERE cid = $1", [id]);
+	query1.on("row", function (row, result){
 		result.addRow(row);
 	});
-	query.on("end", function (err, result) {
+	query1.on("end", function (err, result) {
+		console.log("Updated products belonging to category: " + id);
+	});
+	//update all children of the category
+	var query2 = client.query('UPDATE categories SET cparent = (SELECT cparent FROM categories WHERE cid = $1) WHERE cparent = $1', [id]);
+	query2.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query2.on("end", function (err, result) {
+  			console.log("Updated children belonging to category: " + id);
+   	});
+
+	//delete the category entry
+	var query3 = client.query("DELETE FROM categories WHERE cid = $1", [id]);
+	query3.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query3.on("end", function (err, result) {
     		client.end();
   			console.log("Deleted category: " + id);
   			res.json(true);
-    	//}
   	});
 });
 

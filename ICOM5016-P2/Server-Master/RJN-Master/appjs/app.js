@@ -1180,9 +1180,8 @@ function UpdateCategory(){
 }
 
 //--------------- DELETE CURRENT CATEGORY (ADMIN ONLY) ---------------//
-function DeleteCategory(){
+function DeleteCategory(id){
 	$.mobile.loading("show");
-	var id = currentCategory.id;
 	$.ajax({
 		url : "http://localhost:3412/Server-Master/home/" + id,
 		method: 'delete',
@@ -1190,7 +1189,7 @@ function DeleteCategory(){
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
 			$.mobile.loading("hide");
-			$.mobile.navigate("#home");
+			$.mobile.navigate("#admin");
 		},
 		error: function(data, textStatus, jqXHR){
 			console.log("textStatus: " + textStatus);
