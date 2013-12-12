@@ -1064,13 +1064,24 @@ app.post('/Server-Master/register', function(req, res) {
   			return res.send('Error: A user by this username already exists.');
 		}
 		else {
-			var values = "'"+req.body.firstname.replace(/'/g,"''")+"', '"+req.body.middleinitial+"', '"+req.body.lastname.replace(/'/g,"''")+"', '"+req.body.email.replace(/'/g,"''")+"', FALSE, '"+req.body.username+"', '"+req.body.password+"'";
+
+			console.log("Entered password: "+req.body.password);
+			var hashquery = client.query("SELECT crypt($1, gen_salt('md5'))", [req.body.password]);
+			hashquery.on("row", function (row, result){
+				result.addRow(row);
+			});
+			hashquery.on("end", function (result){
+				var passhash = result.rows[0].crypt;
+				console.log("New user hash: "+passhash);
+
+				var values = "'"+req.body.firstname.replace(/'/g,"''")+"', '"+req.body.middleinitial+"', '"+req.body.lastname.replace(/'/g,"''")+"', '"+req.body.email.replace(/'/g,"''")+"', FALSE, '"+req.body.username+"', '"+passhash+"'";
 			
-			var query2 = client.query("INSERT INTO accounts (first_name, middle_initial, last_name, email, permission, username, password) values ("+values+")");
-			query2.on("end", function (result){
-				console.log("New User: " + req.body.username);
-				client.end();
-		  		res.json(true);
+				var query2 = client.query("INSERT INTO accounts (first_name, middle_initial, last_name, email, permission, username, password) values ("+values+")");
+				query2.on("end", function (result){
+					console.log("New User: " + req.body.username);
+					client.end();
+		  			res.json(true);
+				});
 			});
 		}
 	});
