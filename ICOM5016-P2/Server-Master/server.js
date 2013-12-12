@@ -458,6 +458,7 @@ app.get('/Server-Master/product/:id', function(req, res) {
 	// if product is up for auction, third query checks number of bids and adds info to the response
 	var theProduct;
 
+	console.log("Fetching product: "+id);
 	var query = client.query("SELECT * from products natural join (select account_id as seller_id, username from accounts) as seller where product_id = $1", [id]);
 	query.on("row", function (row, result) {
     	result.addRow(row);
@@ -1148,7 +1149,7 @@ app.post('/Server-Master/home/:username', function(req, res) {
   				foundUser = true;
   				var theUser = result.rows[0];
 
-  				console.log("Checking entered password: ", passWord);
+  				//console.log("Checking entered password: ", passWord);
 				var passquery = client.query("SELECT (password = crypt($1, password)) AS hashcheck FROM accounts WHERE account_id = $2", [passWord, theUser.account_id]);
 				passquery.on("row", function (row, result){
 					result.addRow(row);
@@ -1235,13 +1236,13 @@ app.get('/Server-Master/admin/:id/report/:reportType', function(req, res){
 	var query, theReport;
 	//
 	if(reportType == "by Total Sales"){
-		query = client.query("SELECT purchase_date, count(*) as sales from sales natural join orders WHERE cid IS NOT NULL group by purchase_date order by purchase_date DESC");
+		query = client.query("SELECT purchase_date, count(*) as sales from sales natural join orders group by purchase_date order by purchase_date DESC");
 	}
 	else if (reportType == "by Products") {
-		query = client.query("SELECT name, count(product_id) as sales from sales natural join orders natural join products WHERE cid IS NOT NULL group by name order by sales DESC");
+		query = client.query("SELECT name, count(product_id) as sales from sales natural join orders natural join products group by name order by sales DESC");
 	}
 	else {
-		query = client.query("SELECT purchase_date, sum(purchase_price) as revenue, count(order_id) as sales from sales natural join orders WHERE cid IS NOT NULL group by purchase_date order by purchase_date DESC");
+		query = client.query("SELECT purchase_date, sum(purchase_price) as revenue, count(order_id) as sales from sales natural join orders group by purchase_date order by purchase_date DESC");
 	}
 	query.on('row', function (row, result){
 		result.addRow(row);
@@ -1469,7 +1470,7 @@ app.put('/Server-Master/account/:account_id', function(req, res) {
 			
 			//--Account Update Query--//
 
-			console.log("Edited password: "+req.body.edit_password);
+			//console.log("Edited password: "+req.body.edit_password);
 			var hashquery = client.query("SELECT crypt($1, gen_salt('md5'))", [req.body.edit_password]);
 			hashquery.on("row", function (row, result){
 				result.addRow(row);
