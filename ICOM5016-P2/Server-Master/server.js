@@ -234,17 +234,33 @@ app.del('/Server-Master/home/:id', function(req, res) {
 	client.connect();
 
 	//update all products that have the category as it's parent
-	var query1 = client.query('UPDATE sales SET rating = $1 WHERE order_id = $2 and product_id = $3', [rating, order, product]);
+	var query1 = client.query('UPDATE products SET cid = (SELECT cparent FROM categories WHERE cid = $1) WHERE cid = $1', [id]);
+	query1.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query1.on("end", function (err, result) {
+    		client.end();
+  			console.log("Updated products belonging to that category: " + id);
+  			res.json(true);
+
 	//update all children of the category
+	var query2 = client.query('UPDATE categories SET cparent = (SELECT cparent FROM categories WHERE cid = $1) WHERE cparent = $1', [id]);
+	query2.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query2.on("end", function (err, result) {
+    		client.end();
+  			console.log("Updated children belonging to that category: " + id);
+  			res.json(true);
 
 	//delete the category entry
 	var query3 = client.query("DELETE FROM category WHERE cid = $1", [id]);
-	query.on("row", function (row, result){
+	query3.on("row", function (row, result){
 		result.addRow(row);
 	});
-	query.on("end", function (err, result) {
+	query3.on("end", function (err, result) {
     		client.end();
-  			console.log("Deleted category: " + id);
+  			console.log("Deleting category: " + id);
   			res.json(true);
     	//}
   	});
@@ -594,13 +610,13 @@ app.del('/Server-Master/product/:id', function(req, res) {
 	var client = new pg.Client(dbConnInfo);
 	client.connect();
 
-	var query = client.query("DELETE FROM product WHERE pid = $1", [id]);
+	var query = client.query("DELETE FROM products WHERE product_id = $1", [id]);
 	query.on("row", function (row, result){
 		result.addRow(row);
 	});
 	query.on("end", function (err, result) {
     		client.end();
-  			console.log("Deleted Product: " + id);
+  			console.log("Deleting Product: " + id);
   			res.json(true);
     	//}
   	});
@@ -830,13 +846,13 @@ app.del('/Server-Master/account/address/:id', function(req, res) {
 	var client = new pg.Client(dbConnInfo);
 	client.connect();
 
-	var query = client.query("DELETE FROM address WHERE address_id = $1", [id]);
+	var query = client.query("DELETE FROM addresses WHERE address_id = $1", [id]);
 	query.on("row", function (row, result){
 		result.addRow(row);
 	});
 	query.on("end", function (err, result) {
     		client.end();
-  			console.log("Deleted Address: " + id);
+  			console.log("Deleting Address: " + id);
   			res.json(true);
     	//}
   	});
@@ -965,7 +981,7 @@ app.del('/Server-Master/account/payment/:id', function(req, res) {
 	var client = new pg.Client(dbConnInfo);
 	client.connect();
 
-	var query = client.query("DELETE FROM payment_option WHERE payment_id = $1", [id]);
+	var query = client.query("DELETE FROM payment_options WHERE payment_id = $1", [id]);
 	query.on("row", function (row, result){
 		result.addRow(row);
 	});
@@ -1390,30 +1406,21 @@ app.put('/Server-Master/account/:account_id', function(req, res) {
 //REST Operation - HTTP DEL for deleting user
 app.del('/Server-Master/account/:id', function(req, res) {
 	var id = req.params.id;
-		console.log("DELETE account: " + id);
+	console.log("DELETE account: " + id);
 
-	if ((id < 0) || (id >= userNextId)){
-		// not found
-		res.statusCode = 404;
-		res.send("User not found.");
-	}
-	else {
-		var target = -1;
-		for (var i=0; i < userList.length; ++i){
-			if (userList[i].id == id){
-				target = i;
-				break;	
-			}
-		}
-		if (target == -1){
-			res.statusCode = 404;
-			res.send("User not found.");			
-		}	
-		else {
-			userList.splice(target, 1);
+	var client = new pg.Client(dbConnInfo);
+	client.connect();
+
+	var query = client.query("UPDATE accounts SET password = $1 WHERE account_id = $2", ["-------------------------------", id]);
+	query.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query.on("end", function (err, result) {
+    		client.end();
+  			console.log("Deleting Account: " + id);
   			res.json(true);
-  		}		
-	}
+    	//}
+  	});
 });
 
 // REST Operation - HTTP GET to get order information

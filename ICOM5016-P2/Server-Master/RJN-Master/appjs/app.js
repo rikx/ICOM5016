@@ -1291,7 +1291,7 @@ function RegisterAccount(){
 	}
 	else{
 		$.mobile.loading("show");
-		var form = $("#register-account-form");
+		var form = $("#new-user-form");
 		var formData = form.serializeArray();
 		console.log("form Data: " + formData);
 		var newUser = ConverToJSON(formData);
@@ -1430,7 +1430,7 @@ function GetAddress(id){
 
 function AddAddress(){
 $.mobile.loading("show");
-	var form = $("#add-address-form");
+	var form = $("#add-address-form");// Not Implemented in Thi Phase
 	var formData = form.serializeArray();
 	console.log("form Data: " + formData);
 	var newAddress = ConverToJSON(formData);
@@ -1713,13 +1713,13 @@ function AddProduct(){
     $('#add-buyout-li').toggle();
 });*/
 
-if($("#checkbox_auction").is(':checked')){
+if($("#checkbox-auction").is(':checked')){
 	$('#add-buyout-li').hide();
-    $("#add-product-auction").show();  // checked
+    $(".product-auction-li").show();  // checked
 }
 else {
     $('#add-buyout-li').show();
-    $("#add-product-auction").hide();  // checked
+    $(".product-auction-li").hide();  // checked
 }
 
 function EditProduct(){
