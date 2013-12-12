@@ -517,8 +517,6 @@ app.post('/Server-Master/product/:sellerID', function(req, res) {
     	return res.send('Error: Missing fields for product.');
   	}
 
-  	// need boolean for if product is for auction or regular sale
-  	// need boolean for if auction product has buyout price or not
   	// need to take into account if a product being added has the same seller;
   	var sellerID = req.params.sellerID;
   	//avoids error with name that has apostrophes
@@ -528,11 +526,22 @@ app.post('/Server-Master/product/:sellerID', function(req, res) {
 	var description = req.body.description.replace(/'/g,"''");
 	var dimensions = req.body.dimensions.replace(/'/g,"''"); 
 
-  	var new_product = "'"+name+"', "+"'"+model+"', "+"'"+brand+"', "+"'"+description+"', "+req.body.parent_category+
-  	", "+sellerID+", "+req.body.quantity+", '"+dimensions+"'";
-
   	var client = new pg.Client(dbConnInfo);
 	client.connect();
+
+	var buyout_price = req.body.buyout_price;
+  	var current_bid = req.body.auc_bid_price;
+
+	var auction_exist = false; 
+  	if(current_bid >= 0){
+  		auction_exist = true;
+		buyout_price = req.body.auc_buyout_price;
+  	}
+  	else {
+  		current_bid = 0;
+  	}
+  	var new_product = "'"+name+"', "+"'"+model+"', "+"'"+brand+"', "+"'"+description+"', "+req.body.parent_category+
+  	", "+sellerID+", "+req.body.quantity+", '"+dimensions+"', "+buyout_price+"";
 
 // not sure why this version isnt working. it should woek.
 /*	var query = client.query("INSERT INTO products (name, cid, seller_id) VALUES ($1)", [new_product], function(err, result) {
@@ -540,22 +549,45 @@ app.post('/Server-Master/product/:sellerID', function(req, res) {
 		console.log("New Product: " + new_product);
 		res.json(true);
   	});*/
-	var query = client.query("INSERT INTO products (name, model, brand, description, cid, seller_id, quantity, dimensions) VALUES ("+new_product+")");
-	query.on("row", function (row, result){
+	var product_id = 0;
+	var query1 = client.query("INSERT INTO products (name, model, brand, description, cid, seller_id, quantity, dimensions, instant_price) VALUES ("+new_product+")");
+	query1.on("row", function (row, result){
 		result.addRow(row);
 	});
-	query.on("end", function (err, result) {
+	query1.on("end", function (err, result) {
 		//error handling is also acting funky.
 /*	   	if(err){
 			res.statusCode = 400;
     		return res.send('Error inserting product to db');
     	}
     	else{*/
-    		client.end();
-  			console.log("New Product: " + new_product);
-  			res.json(true);
     	//}
   	});
+    var query2 = client.query("SELECT product_id from products order by product_id DESC");
+	query2.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query2.on("end", function (result){
+		product_id = result.rows[0].product_id;
+		console.log("New Product: " + product_id);
+
+		if(auction_exist == true){
+		  	var new_auction = ""+sellerID+", "+product_id+", "+current_bid+"";
+			var query3 = client.query("INSERT INTO auctions (seller_id, product_id, current_bid) VALUES ("+new_auction+")");
+			query3.on("row", function (row, result){
+				result.addRow(row);
+			});
+			query3.on("end", function (result){
+				console.log("New auction for product "+ name);
+				client.end();
+	  			res.json(true);
+			});
+		}
+		else{
+			client.end();
+			res.json(true);
+		}
+	});
 });
 
 //REST Operation - HTTP PUT to edit product based on its id
@@ -1033,8 +1065,9 @@ app.post('/Server-Master/register', function(req, res) {
   			return res.send('Error: A user by this username already exists.');
 		}
 		else {
-			var values = "'"+req.body.firstname.replace(/'/g,"''")+"', '"+req.body.middleinitial+"', '"+req.body.lastname.replace(/'/g,"''")+"', '"+req.body.email.replace(/'/g,"''")+"', FALSE, "+req.body.username+"', '"+req.body.password+"'";
-			var query2 = client.query("INSERT INTO accounts (first_name, middle_initial, last_name, email, permission, username, password) values ($1)", [values]);
+			var values = "'"+req.body.firstname.replace(/'/g,"''")+"', '"+req.body.middleinitial+"', '"+req.body.lastname.replace(/'/g,"''")+"', '"+req.body.email.replace(/'/g,"''")+"', FALSE, '"+req.body.username+"', '"+req.body.password+"'";
+			
+			var query2 = client.query("INSERT INTO accounts (first_name, middle_initial, last_name, email, permission, username, password) values ("+values+")");
 			query2.on("end", function (result){
 				console.log("New User: " + req.body.username);
 				client.end();
