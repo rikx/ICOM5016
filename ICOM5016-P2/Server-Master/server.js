@@ -115,7 +115,7 @@ app.get('/Server-Master/home', function(req, res) {
     var client = new pg.Client(dbConnInfo);
 	client.connect();
 
-	var query = client.query("SELECT cid as id, cname as name from categories where cparent IS NULL");
+	var query = client.query("SELECT cid AS id, cname AS name FROM categories WHERE cparent IS NULL");
 	
 	query.on("row", function (row, result) {
     	result.addRow(row);
@@ -126,6 +126,32 @@ app.get('/Server-Master/home', function(req, res) {
 			client.end();
 			res.statusCode = 404;
     		res.send("No categories not found.");
+		}
+		else{
+			var response = {"categories" : result.rows};
+  			client.end();
+	  		res.json(response);
+	  	}
+ 	});
+});
+
+app.get('/Server-Master/categories/all', function(req, res) {
+	console.log("GET all categories");
+
+    var client = new pg.Client(dbConnInfo);
+	client.connect();
+
+	var query = client.query("SELECT names.cname AS parent, categories.cname AS name, categories.cid AS id FROM categories full outer join (select cid, cname from categories) AS names ON categories.cparent = names.cid WHERE categories.cid IS NOT NULL ORDER BY parent NULLS FIRST, name");
+	
+	query.on("row", function (row, result) {
+    	result.addRow(row);
+	});
+	query.on("end", function (result) {
+		// Do we want this msg? 
+		if(result.rowCount == 0){
+			client.end();
+			res.statusCode = 404;
+    		res.send("No categories found.");
 		}
 		else{
 			var response = {"categories" : result.rows};
@@ -534,15 +560,13 @@ app.post('/Server-Master/product/:sellerID', function(req, res) {
   	var current_bid = req.body.auc_bid_price;
 
 	var auction_exist = false; 
-  	if(current_bid >= 0){
+  	if(current_bid > 0) {
   		auction_exist = true;
 		buyout_price = req.body.auc_buyout_price;
   	}
-  	else {
-  		current_bid = 0;
-  	}
   	var new_product = "'"+name+"', "+"'"+model+"', "+"'"+brand+"', "+"'"+description+"', "+req.body.parent_category+
   	", "+sellerID+", "+req.body.quantity+", '"+dimensions+"', "+buyout_price+"";
+  	console.log("Product values: "+new_product);
 
 // not sure why this version isnt working. it should woek.
 /*	var query = client.query("INSERT INTO products (name, cid, seller_id) VALUES ($1)", [new_product], function(err, result) {
@@ -571,7 +595,6 @@ app.post('/Server-Master/product/:sellerID', function(req, res) {
 	query2.on("end", function (result){
 		product_id = result.rows[0].product_id;
 		console.log("New Product: " + product_id);
-
 		if(auction_exist == true){
 		  	var new_auction = ""+sellerID+", "+product_id+", "+current_bid+"";
 			var query3 = client.query("INSERT INTO auctions (seller_id, product_id, current_bid) VALUES ("+new_auction+")");

@@ -294,6 +294,35 @@ $(document).on('pagebeforeshow', "#category-view", function( event, ui ) {
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
+//										   	ADD PRODUCT PAGE										  //
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$(document).on('pagebeforeshow', "#add-product", function( event, ui ) {
+	$.ajax({
+				url : "http://localhost:3412/Server-Master/categories/all",
+				method: 'get',
+				contentType: "application/json",
+				dataType:"json",
+				success : function(data, textStatus, jqXHR){
+					var categories_all = data.categories;
+					var categories_select = $("#product-parent-category");
+					for (var i = 0; i < categories_all.length; i++){
+						if(categories_all[i].parent == null) {
+							categories_select.append("<option value='"+categories_all[i].id+"'>"+categories_all[i].name+"</option>");
+						}
+						else {
+							categories_select.append("<option value='"+categories_all[i].id+"'>"+categories_all[i].parent+" - "+categories_all[i].name+"</option>");
+						}
+					}
+				},
+				error: function(data, textStatus, jqXHR){
+					console.log("textStatus: " + textStatus);
+					alert("No categories found.");
+				}
+	});
+});
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 //										ACCOUNT DETAILS PAGE										  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
