@@ -250,11 +250,12 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 						else {
 							string1+='</a></li>';
 						}
+						list.append(string1);
 						auctions_ul.append(string1);
 					}
 					if(i < on_sale_list.length){
 						on_sale_product = on_sale_list[i];
-						sales_ul.append('<li><a onclick=GetProduct('+on_sale_product.product_id+')><h2>'+on_sale_product.name+'</h2>'+
+						list.append('<li><a onclick=GetProduct('+on_sale_product.product_id+')><h2>'+on_sale_product.name+'</h2>'+
 						'<p><img class="img-size" src="'+on_sale_product.image_filename+'"" /></p>'+ 
 						'<p class=\"ui-li-aside\"><h4>Price: ' + accounting.formatMoney(on_sale_product.instant_price) + '</h4></p>'+
 						'<p class=\"ui-li-aside\"><h4>Quantity: ' + on_sale_product.quantity + '</h4></p></a></li>');	
