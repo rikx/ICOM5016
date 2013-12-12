@@ -687,7 +687,7 @@ function ConvertToStars(rating){
 //										USER ACCOUNT DETAILS										  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-$(document).on('pagebeforeshow', "#update-account", function(event, ui){
+/*$(document).on('pagebeforeshow', "#update-account", function(event, ui){
 //  PHASE 1 CODE
 	$("#acc-fname").val(currentUser.firstname);
 	$("#acc-lname").val(currentUser.lastname);
@@ -696,7 +696,7 @@ $(document).on('pagebeforeshow', "#update-account", function(event, ui){
 	//not finished - missing the logic for changing password
 //  PHASE 2 CODE
 
-});
+});*/
 
 //User helper functions
 function boughtHistory(){
@@ -1180,9 +1180,8 @@ function UpdateCategory(){
 }
 
 //--------------- DELETE CURRENT CATEGORY (ADMIN ONLY) ---------------//
-function DeleteCategory(){
+function DeleteCategory(id){
 	$.mobile.loading("show");
-	var id = currentCategory.id;
 	$.ajax({
 		url : "http://localhost:3412/Server-Master/home/" + id,
 		method: 'delete',
@@ -1190,7 +1189,7 @@ function DeleteCategory(){
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
 			$.mobile.loading("hide");
-			$.mobile.navigate("#home");
+			$.mobile.navigate("#admin");
 		},
 		error: function(data, textStatus, jqXHR){
 			console.log("textStatus: " + textStatus);
@@ -1290,13 +1289,14 @@ function RegisterAccount(){
 		alert("Password fields do not match. Please type them again.");
 	}
 	else{
-		$.mobile.loading("show");
-		var form = $("#register-account-form");
-		var formData = form.serializeArray();
+		
+		var the_form = $('#form_register');
+		var formData = the_form.serializeArray();
 		console.log("form Data: " + formData);
 		var newUser = ConverToJSON(formData);
 		console.log("User Login: " + JSON.stringify(newUser));
 		var newUserJSON = JSON.stringify(newUser);
+		$.mobile.loading("show");
 		$.ajax({
 			url : "http://localhost:3412/Server-Master/register",
 			method: 'post',
@@ -1351,9 +1351,8 @@ function UpdateAccount(){
 	});
 }
 
-function DeleteAccount(){
+function DeleteAccount(id){
 	$.mobile.loading("show");
-	var id = currentUser.id;
 	$.ajax({
 		url : "http://localhost:3412/Server-Master/account/" + id,
 		method: 'delete',
@@ -1361,8 +1360,7 @@ function DeleteAccount(){
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
 			$.mobile.loading("hide");
-			currentUser = {"id": null};
-			$.mobile.navigate("#home");
+			$.mobile.navigate("#admin");
 		},
 		error: function(data, textStatus, jqXHR){
 			console.log("textStatus: " + textStatus);

@@ -410,6 +410,41 @@
 			</div><!-- /content -->
 		</div><!-- /page -->
 
+		<div id="register-account" data-role="page">
+			<header data-role ="header" data-theme="a" data-position="fixed"> 
+  				<h1 class="ui-title" aling="center">RJN BAY</h1>
+  				<div data-role="navbar">
+					<ul>
+						<li><a href="#home" 				data-role="button" data-icon="home"			 title="Home"	>HOME</a></li>
+						<li><a onclick="RegisterAccount()"	data-role="button" data-icon="save"			 title="CREATE"	>CREATE</a></li>
+						<li><a href="#cart" 				data-role="button" data-icon="shopping-cart"  title="Cart"	>CART</a></li>
+					</ul>
+				</div><!-- /navbar -->
+			</header>
+							
+			<div data-role="content">
+				<h3 align="center">Create your personal account</h3>
+				<form id="form_register1">
+					
+				</form>
+				<form id="form_register">
+	 				<fieldset data-role="controlgroup">
+	 					<ul>
+	 					<li><label for="new_username"> Username: <input id="new_username" name="username" type="text" maxlength="12"/></label></li>
+	 					<li><label for="new_first_name"> First Name: <input id="new_first_name" name="firstname" type="text" maxlength="12"/></label></li>
+	 					<li><label for="new_middle_initial"> Middle Initial: <input id="new_middle_initial" name="middleinitial" type="text" maxlength="1"/></label></li>
+	  					<li><label for="new_last_name"> Last Name: <input id="new_last_name" name="lastname" type="text"/></label></li>
+	 					<!-- <li><label for="new_photo_filename"> Photo URL: <input id="new_photo_filename" name="photo_filename" type="text"/></label></li> -->
+	 					<li><label for="new_email"> Email: <input id="new_email" name="email" type="email"/></label></li>
+	 					<li><label for="new-password"> New Password: <input id="new-password" name="password" type="password" maxlength="30"/></label></li>
+	 					<li><label for="new-confirmpassword"> Confirm Password: <input id="new-confirmpassword" name="confirmpassword" type="password" maxlength="30"/></label></li>
+	 					<li><label for="new_description"> Description: <textarea id="new_description" name="description"></textarea></label></li>
+	 					</ul>
+				 	</fieldset>
+				</form>
+			</div>
+		</div><!--/page-->
+
 		<div id="report" data-role="page">
 			<header data-role ="header" data-theme="a" data-position="fixed"> 
   				<h1 class="ui-title" aling="center">RJN BAY</h1>
@@ -426,49 +461,6 @@
 				<ul id="manage-reports-list" style="display: none" data-role="listview"></ul>
 			</div>
 		</div><!--/page -->
-
-		<div id="register-account" data-role="page">
-			<header data-role ="header" data-theme="a" data-position="fixed"> 
-  				<h1 class="ui-title" aling="center">RJN BAY</h1>
-  				<div data-role="navbar">
-					<ul>
-						<li><a href="#home" 				data-role="button" data-icon="home"			 title="Home"	>HOME</a></li>
-						<li><a onclick="RegisterAccount()"	data-role="button" data-icon="save"			 title="CREATE"	>CREATE</a></li>
-						<li><a href="#cart" 				data-role="button" data-icon="shopping-cart"  title="Cart"	>CART</a></li>
-					</ul>
-				</div><!-- /navbar -->
-			</header>
-							
-			<div data-role="content">
-				<h3 align="center">Create your personal account</h3>
-<!-- 				<form id="register-account-form">
-	 				<fieldset data-role="controlgroup">
-	 					<label for="new-username"> Username: <input id="new-username" name="username" type="text" maxlength="12"/></label>
-	 					<label for="new-firstname"> First Name: <input id="new-firstname" name="firstname" type="text"/></label>
-	 					<label for="new-middleinitial"> Middle Initial: <input id="new-middleinitial" name="middleinitial" type="text" maxlength="1"/></label>
-	  					<label for="new-lastname"> Last Name: <input id="new-lastname" name="lastname" type="text"/></label>
-	 					<label for="new-email"> Email: <input id="new-email" name="new-email" type="email"/></label>
-	 					<label for="new-description"> Description: <textarea id="new-description" name="description"></textarea></label>
-	 					<label for="new-password"> Password: <input id="new-password" name="new-password" type="password" maxlength="30"/></label>
-	 					<label for="new-confirmpassword"> Confirm Password: <input id="new-confirmpassword" name="confirmpassword" type="password" maxlength="30"/></label>
-				 	</fieldset>
-				</form> -->
-				<form id="register-account-form">
-	 				<fieldset data-role="controlgroup">
-	 					<ul>
-	 					<li><label for="new-username"> Username: <input id="new-username" name="username" type="text" maxlength="12"/></label></li>
-	 					<li><label for="new-firstname"> First Name: <input id="new-firstname" name="firstname" type="text" maxlength="12"/></label></li>
-	 					<li><label for="new-middleinitial"> Middle Initial: <input id="new-middleinitial" name="middleinitial" type="text" maxlength="1"/></label></li>
-	  					<li><label for="new-lastname"> Last Name: <input id="new-lastname" name="lastname" type="text"/></label></li>
-	 					<li><label for="new-email"> Email: <input id="new-email" name="email" type="email"/></label></li>
-	 					<li><label for="new-description"> Description: <textarea id="new-description" name="description"></textarea></label></li>
-	 					<li><label for="new-password"> New Password: <input id="new-password" name="password" type="password" maxlength="30"/></label></li>
-	 					<li><label for="new-confirmpassword"> Confirm Password: <input id="new-confirmpassword" name="confirmpassword" type="password" maxlength="30"/></label></li>
-	  			  		</ul>
-				 	</fieldset>
-				</form>
-			</div>
-		</div><!--/page-->
 
 		<div id="update-account" data-role="page">
 			<header data-role ="header" data-theme="a" data-position="fixed"> 

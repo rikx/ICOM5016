@@ -236,19 +236,31 @@ app.del('/Server-Master/home/:id', function(req, res) {
 	client.connect();
 
 	//update all products that have the category as it's parent
-	var query1 = client.query('UPDATE sales SET rating = $1 WHERE order_id = $2 and product_id = $3', [rating, order, product]);
-	//update all children of the category
-
-	//delete the category entry
-	var query3 = client.query("DELETE FROM category WHERE cid = $1", [id]);
-	query.on("row", function (row, result){
+	var query1 = client.query("UPDATE products SET cid = (SELECT cparent FROM categories WHERE cid = $1) WHERE cid = $1", [id]);
+	query1.on("row", function (row, result){
 		result.addRow(row);
 	});
-	query.on("end", function (err, result) {
+	query1.on("end", function (err, result) {
+		console.log("Updated products belonging to category: " + id);
+	});
+	//update all children of the category
+	var query2 = client.query('UPDATE categories SET cparent = (SELECT cparent FROM categories WHERE cid = $1) WHERE cparent = $1', [id]);
+	query2.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query2.on("end", function (err, result) {
+  			console.log("Updated children belonging to category: " + id);
+   	});
+
+	//delete the category entry
+	var query3 = client.query("DELETE FROM categories WHERE cid = $1", [id]);
+	query3.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query3.on("end", function (err, result) {
     		client.end();
   			console.log("Deleted category: " + id);
   			res.json(true);
-    	//}
   	});
 });
 
@@ -505,8 +517,6 @@ app.post('/Server-Master/product/:sellerID', function(req, res) {
     	return res.send('Error: Missing fields for product.');
   	}
 
-  	// need boolean for if product is for auction or regular sale
-  	// need boolean for if auction product has buyout price or not
   	// need to take into account if a product being added has the same seller;
   	var sellerID = req.params.sellerID;
   	//avoids error with name that has apostrophes
@@ -516,11 +526,22 @@ app.post('/Server-Master/product/:sellerID', function(req, res) {
 	var description = req.body.description.replace(/'/g,"''");
 	var dimensions = req.body.dimensions.replace(/'/g,"''"); 
 
-  	var new_product = "'"+name+"', "+"'"+model+"', "+"'"+brand+"', "+"'"+description+"', "+req.body.parent_category+
-  	", "+sellerID+", "+req.body.quantity+", '"+dimensions+"'";
-
   	var client = new pg.Client(dbConnInfo);
 	client.connect();
+
+	var buyout_price = req.body.buyout_price;
+  	var current_bid = req.body.auc_bid_price;
+
+	var auction_exist = false; 
+  	if(current_bid >= 0){
+  		auction_exist = true;
+		buyout_price = req.body.auc_buyout_price;
+  	}
+  	else {
+  		current_bid = 0;
+  	}
+  	var new_product = "'"+name+"', "+"'"+model+"', "+"'"+brand+"', "+"'"+description+"', "+req.body.parent_category+
+  	", "+sellerID+", "+req.body.quantity+", '"+dimensions+"', "+buyout_price+"";
 
 // not sure why this version isnt working. it should woek.
 /*	var query = client.query("INSERT INTO products (name, cid, seller_id) VALUES ($1)", [new_product], function(err, result) {
@@ -528,22 +549,45 @@ app.post('/Server-Master/product/:sellerID', function(req, res) {
 		console.log("New Product: " + new_product);
 		res.json(true);
   	});*/
-	var query = client.query("INSERT INTO products (name, model, brand, description, cid, seller_id, quantity, dimensions) VALUES ("+new_product+")");
-	query.on("row", function (row, result){
+	var product_id = 0;
+	var query1 = client.query("INSERT INTO products (name, model, brand, description, cid, seller_id, quantity, dimensions, instant_price) VALUES ("+new_product+")");
+	query1.on("row", function (row, result){
 		result.addRow(row);
 	});
-	query.on("end", function (err, result) {
+	query1.on("end", function (err, result) {
 		//error handling is also acting funky.
 /*	   	if(err){
 			res.statusCode = 400;
     		return res.send('Error inserting product to db');
     	}
     	else{*/
-    		client.end();
-  			console.log("New Product: " + new_product);
-  			res.json(true);
     	//}
   	});
+    var query2 = client.query("SELECT product_id from products order by product_id DESC");
+	query2.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query2.on("end", function (result){
+		product_id = result.rows[0].product_id;
+		console.log("New Product: " + product_id);
+
+		if(auction_exist == true){
+		  	var new_auction = ""+sellerID+", "+product_id+", "+current_bid+"";
+			var query3 = client.query("INSERT INTO auctions (seller_id, product_id, current_bid) VALUES ("+new_auction+")");
+			query3.on("row", function (row, result){
+				result.addRow(row);
+			});
+			query3.on("end", function (result){
+				console.log("New auction for product "+ name);
+				client.end();
+	  			res.json(true);
+			});
+		}
+		else{
+			client.end();
+			res.json(true);
+		}
+	});
 });
 
 //REST Operation - HTTP PUT to edit product based on its id
@@ -1020,8 +1064,9 @@ app.post('/Server-Master/register', function(req, res) {
   			return res.send('Error: A user by this username already exists.');
 		}
 		else {
-			var values = "'"+req.body.firstname.replace(/'/g,"''")+"', '"+req.body.middleinitial+"', '"+req.body.lastname.replace(/'/g,"''")+"', '"+req.body.email.replace(/'/g,"''")+"', FALSE, "+req.body.username+"', '"+req.body.password+"'";
-			var query2 = client.query("INSERT INTO accounts (first_name, middle_initial, last_name, email, permission, username, password) values ($1)", [values]);
+			var values = "'"+req.body.firstname.replace(/'/g,"''")+"', '"+req.body.middleinitial+"', '"+req.body.lastname.replace(/'/g,"''")+"', '"+req.body.email.replace(/'/g,"''")+"', FALSE, '"+req.body.username+"', '"+req.body.password+"'";
+			
+			var query2 = client.query("INSERT INTO accounts (first_name, middle_initial, last_name, email, permission, username, password) values ("+values+")");
 			query2.on("end", function (result){
 				console.log("New User: " + req.body.username);
 				client.end();
@@ -1047,11 +1092,12 @@ app.post('/Server-Master/home/:username', function(req, res) {
   		var client = new pg.Client(dbConnInfo);
   		client.connect();
 
-  		var query = client.query("SELECT * from accounts where username = $1", [userName]);
-  		query.on("row", function (row, result){
+  		var userquery = client.query("SELECT * from accounts where username = $1", [userName]);
+  		userquery.on("row", function (row, result){
   			result.addRow(row);
+  			console.log("Found user, has id: ", result.rows[0].account_id);
   		});
-  		query.on("end", function (result){
+  		userquery.on("end", function (result){
   			if(result.rowCount == 0){
   				// not found
   				client.end();
@@ -1061,7 +1107,17 @@ app.post('/Server-Master/home/:username', function(req, res) {
   			else {
   				foundUser = true;
   				var theUser = result.rows[0];
-  				if(passWord == theUser.password){
+
+  				console.log("Checking entered password: ", passWord);
+				var passquery = client.query("SELECT (password = crypt($1, password)) AS hashcheck FROM accounts WHERE account_id = $2", [passWord, theUser.account_id]);
+				passquery.on("row", function (row, result){
+					result.addRow(row);
+					//console.log("Hash query is: ", result.rows[0]);
+				});
+				passquery.on("end", function (result){
+					var passchecks = result.rows[0].hashcheck;
+					//console.log("CHECK(" + result.rows[0].hashcheck + "," + true + ")");
+					if(passchecks == true){
   					//Future work: create global userCount variable and add userCount++ here to see how many users are currently logged in
 					console.log("Succesful login of user id: " + theUser.account_id + " of type: " + theUser.permission);
 					var response = {"user" : theUser};
@@ -1073,6 +1129,8 @@ app.post('/Server-Master/home/:username', function(req, res) {
 					res.statusCode = 409;
 					res.send("Username exists but entered password does not match");
 				}
+				});
+
 			}
   		});
 	}
@@ -1386,33 +1444,25 @@ app.put('/Server-Master/account/:account_id', function(req, res) {
 	}
 });
 
-//REST Operation - HTTP DEL for deleting user
+//REST Operation - HTTP DELETE to delete account
 app.del('/Server-Master/account/:id', function(req, res) {
 	var id = req.params.id;
-		console.log("DELETE account: " + id);
+	console.log("DELETE account: " + id);
 
-	if ((id < 0) || (id >= userNextId)){
-		// not found
-		res.statusCode = 404;
-		res.send("User not found.");
-	}
-	else {
-		var target = -1;
-		for (var i=0; i < userList.length; ++i){
-			if (userList[i].id == id){
-				target = i;
-				break;	
-			}
-		}
-		if (target == -1){
-			res.statusCode = 404;
-			res.send("User not found.");			
-		}	
-		else {
-			userList.splice(target, 1);
+	var client = new pg.Client(dbConnInfo);
+	client.connect();
+
+	var query = client.query("UPDATE accounts SET password = $1 WHERE account_id = $2", ["DISABLED", id]);
+	query.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query.on("end", function (result) {
+    		client.end();
+  			console.log("Account has been disabled: " + id);
   			res.json(true);
-  		}		
-	}
+    	//}
+  	});
+
 });
 
 // REST Operation - HTTP GET to get order information
