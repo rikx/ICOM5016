@@ -59,7 +59,7 @@ $(document).on('pagebeforeshow', "#cart", function( event, ui ) {
 				for (var i=0; i < len; ++i){
 					product = Cart[i];
 					total=total+product.instant_price;
-					list.append('<li><a onclick=GetProduct('+product.id+')><h2>'+product.name+'</h2></a>'+
+					list.append('<li><a onclick=GetProduct('+product.product_id+')><h2>'+product.name+'</h2></a>'+
 					'<a onclick=removeFromCart('+i+') data-icon="delete">Delete</a></li>');
 				}
 				

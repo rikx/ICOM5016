@@ -458,6 +458,7 @@ app.get('/Server-Master/product/:id', function(req, res) {
 	// if product is up for auction, third query checks number of bids and adds info to the response
 	var theProduct;
 
+	console.log("Fetching product: "+id);
 	var query = client.query("SELECT * from products natural join (select account_id as seller_id, username from accounts) as seller where product_id = $1", [id]);
 	query.on("row", function (row, result) {
     	result.addRow(row);
