@@ -552,34 +552,33 @@ app.post('/Server-Master/product/:sellerID', function(req, res) {
     		return res.send('Error inserting product to db');
     	}
     	else{*/
-    		var query2 = client.query("SELECT product_id from products order by product_id DESC");
-    		query2.on("row", function (row, result){
-
-    		});
-    		query2.on("end", function (result){
-    			product_id = result.rows[0].product_id;
-    			console.log("New Product: " + product_id);
-
-				if(auction_exist == true){
-					console.log(product_id);
-				  	var new_auction = ""+sellerID+", "+product_id+", "+current_bid+"";
-					var query3 = client.query("INSERT INTO auctions (seller_id, product_id, current_bid) VALUES ("+new_auction+")");
-					query3.on("row", function (row, result){
-						result.addRow(row);
-					});
-					query3.on("end", function (result){
-						console.log("New auction for product "+ name);
-						client.end();
-			  			res.json(true);
-					});
-				}
-				else{
-					client.end();
-					res.json(true);
-				}
-    		});
     	//}
   	});
+    var query2 = client.query("SELECT product_id from products order by product_id DESC");
+	query2.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query2.on("end", function (result){
+		product_id = result.rows[0].product_id;
+		console.log("New Product: " + product_id);
+
+		if(auction_exist == true){
+		  	var new_auction = ""+sellerID+", "+product_id+", "+current_bid+"";
+			var query3 = client.query("INSERT INTO auctions (seller_id, product_id, current_bid) VALUES ("+new_auction+")");
+			query3.on("row", function (row, result){
+				result.addRow(row);
+			});
+			query3.on("end", function (result){
+				console.log("New auction for product "+ name);
+				client.end();
+	  			res.json(true);
+			});
+		}
+		else{
+			client.end();
+			res.json(true);
+		}
+	});
 });
 
 //REST Operation - HTTP PUT to edit product based on its id
