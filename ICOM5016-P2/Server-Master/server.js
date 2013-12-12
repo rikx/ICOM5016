@@ -139,12 +139,12 @@ app.get('/Server-Master/home', function(req, res) {
 // REST Operation - HTTP GET to read a category based on its id to load edit category page info
 app.get('/Server-Master/home/:id', function(req, res) {
 	var id = req.params.id;
-	console.log("GET category (for edit): " + id);
+	console.log("GET category: " + id);
 
     var client = new pg.Client(dbConnInfo);
 	client.connect();
 
-	var query = client.query("SELECT cid as id, cname as name from categories where cid = $1", [id]);
+	var query = client.query("SELECT * from categories where cid = $1", [id]);
 	
 	query.on("row", function (row, result) {
     	result.addRow(row);
@@ -156,7 +156,7 @@ app.get('/Server-Master/home/:id', function(req, res) {
     		res.send("Category not found.");
     	}
     	else {
-			var response = {"category" : result.rows};
+			var response = {"category" : result.rows[0]};
 			client.end();
     		res.json(response);
     	}
@@ -195,37 +195,33 @@ app.post('/Server-Master/admin/add-category', function(req, res) {
 });
 
 // REST Operation - HTTP PUT to updated a category based on its id
-app.put('/Server-Master/home/:id', function(req, res) {
-	var id = req.params.id;
-		console.log("PUT category: " + id);
+app.put('/Server-Master/admin/edit-category/:cid', function(req, res) {
+	var cid = req.params.cid;
+		console.log("PUT category: " + cid);
 
-	if ((id < 0) || (id >= categoryNextId)){
-		// not found
-		res.statusCode = 404;
-		res.send("Category not found.");
-	}
-	else if(!req.body.hasOwnProperty('name')){
+	if(!req.body.hasOwnProperty('edit_cname')){
     	res.statusCode = 400;
     	return res.send('Error: Missing fields for category.');
   	}
 	else {
-		var target = -1;
-		for (var i=0; i < categoryList.length; ++i){
-			if (categoryList[i].id == id){
-				target = i;
-				break;	
-			}
-		}
-		if (target == -1){
-			res.statusCode = 404;
-			res.send("Category not found.");			
-		}	
-		else {
-			var theCategory= categoryList[target];
-			theCategory.name = req.body.name;
-			var response = {"category" : theCategory};
-  			res.json(response);		
-  		}
+			var client = new pg.Client(dbConnInfo);
+  		  	client.connect();
+  		  	
+			var cname = req.body.edit_cname.replace(/'/g,"''");
+			
+			//--Category Update Query--//
+			var query = client.query('UPDATE categories SET cname = $1 WHERE cid = $2',
+			[cname, cid]);
+			
+			query.on("row", function (row, result){
+			result.addRow(row);
+			});
+		
+			query.on("end", function (result){
+			console.log("New Category info: "+ cname);
+			client.end();
+			res.json(true);
+			});
 	}
 });
 
@@ -507,8 +503,9 @@ app.post('/Server-Master/product/:sellerID', function(req, res) {
     	return res.send('Error: Missing fields for product.');
   	}
 
+  	// need boolean for if product is for auction or regular sale
+  	// need boolean for if auction product has buyout price or not
   	// need to take into account if a product being added has the same seller;
-
   	var sellerID = req.params.sellerID;
   	//avoids error with name that has apostrophes
   	var name = req.body.name.replace(/'/g,"''"); 
@@ -517,22 +514,11 @@ app.post('/Server-Master/product/:sellerID', function(req, res) {
 	var description = req.body.description.replace(/'/g,"''");
 	var dimensions = req.body.dimensions.replace(/'/g,"''"); 
 
-	var buyout_price = req.body.buyout_price;
-  	var current_bid = req.body.auc_bid_price;
+  	var new_product = "'"+name+"', "+"'"+model+"', "+"'"+brand+"', "+"'"+description+"', "+req.body.parent_category+
+  	", "+sellerID+", "+req.body.quantity+", '"+dimensions+"'";
 
   	var client = new pg.Client(dbConnInfo);
 	client.connect();
-
-	var auction_exist = false; 
-  	if(current_bid >= 0){
-  		auction_exist = true;
-		buyout_price = req.body.auc_buyout_price;
-  	}
-  	else {
-  		current_bid = 0;
-  	}
-  	var new_product = "'"+name+"', "+"'"+model+"', "+"'"+brand+"', "+"'"+description+"', "+req.body.parent_category+
-  	", "+sellerID+", "+req.body.quantity+", '"+dimensions+"', "+buyout_price+"";
 
 // not sure why this version isnt working. it should woek.
 /*	var query = client.query("INSERT INTO products (name, cid, seller_id) VALUES ($1)", [new_product], function(err, result) {
@@ -540,45 +526,22 @@ app.post('/Server-Master/product/:sellerID', function(req, res) {
 		console.log("New Product: " + new_product);
 		res.json(true);
   	});*/
-	var product_id = 0;
-	var query1 = client.query("INSERT INTO products (name, model, brand, description, cid, seller_id, quantity, dimensions, instant_price) VALUES ("+new_product+")");
-	query1.on("row", function (row, result){
+	var query = client.query("INSERT INTO products (name, model, brand, description, cid, seller_id, quantity, dimensions) VALUES ("+new_product+")");
+	query.on("row", function (row, result){
 		result.addRow(row);
 	});
-	query1.on("end", function (err, result) {
+	query.on("end", function (err, result) {
 		//error handling is also acting funky.
 /*	   	if(err){
 			res.statusCode = 400;
     		return res.send('Error inserting product to db');
     	}
     	else{*/
+    		client.end();
+  			console.log("New Product: " + new_product);
+  			res.json(true);
     	//}
   	});
-    var query2 = client.query("SELECT product_id from products order by product_id DESC");
-	query2.on("row", function (row, result){
-		result.addRow(row);
-	});
-	query2.on("end", function (result){
-		product_id = result.rows[0].product_id;
-		console.log("New Product: " + product_id);
-
-		if(auction_exist == true){
-		  	var new_auction = ""+sellerID+", "+product_id+", "+current_bid+"";
-			var query3 = client.query("INSERT INTO auctions (seller_id, product_id, current_bid) VALUES ("+new_auction+")");
-			query3.on("row", function (row, result){
-				result.addRow(row);
-			});
-			query3.on("end", function (result){
-				console.log("New auction for product "+ name);
-				client.end();
-	  			res.json(true);
-			});
-		}
-		else{
-			client.end();
-			res.json(true);
-		}
-	});
 });
 
 //REST Operation - HTTP PUT to edit product based on its id
@@ -836,24 +799,26 @@ app.put('/Server-Master/account/address/:address_id', function(req, res) {
     	return res.send('Error: Missing fields for address.');
   	}
   	else{
-  	var street_address = req.body.edit_street_address.replace(/'/g,"''");
-	var city = req.body.edit_city.replace(/'/g,"''");
-	var country = req.body.edit_country.replace(/'/g,"''");
-	var state = req.body.edit_state.replace(/'/g,"''");
-	var zipcode = req.body.edit_zipcode.replace(/'/g,"''");
-	
-	var client = new pg.Client(dbConnInfo);
-	client.connect();
-
-	var query = client.query('UPDATE addresses SET street_address = $1, city = $2, country = $3, state = $4, zipcode = $5 WHERE address_id = $6', [street_address,city,country,state,zipcode,address_id]);
-	query.on("row", function (row, result){
-		result.addRow(row);
-	});
-	query.on("end", function (result){
-		console.log("New Address for user "+street_address+": " + city+": " + country+": " + state+": " + zipcode);
-		client.end();
-		res.json(true);
-	});
+  			//--Address Info--//
+		  	var street_address = req.body.edit_street_address.replace(/'/g,"''");
+			var city = req.body.edit_city.replace(/'/g,"''");
+			var country = req.body.edit_country.replace(/'/g,"''");
+			var state = req.body.edit_state.replace(/'/g,"''");
+			var zipcode = req.body.edit_zipcode.replace(/'/g,"''");
+			
+			var client = new pg.Client(dbConnInfo);
+			client.connect();
+			
+			//--Address Update Query--//
+			var query = client.query('UPDATE addresses SET street_address = $1, city = $2, country = $3, state = $4, zipcode = $5 WHERE address_id = $6', [street_address,city,country,state,zipcode,address_id]);
+			query.on("row", function (row, result){
+				result.addRow(row);
+			});
+			query.on("end", function (result){
+				console.log("New Address for user "+street_address+": " + city+": " + country+": " + state+": " + zipcode);
+				client.end();
+				res.json(true);
+			});
 	}
 });
 
@@ -1056,7 +1021,7 @@ app.post('/Server-Master/register', function(req, res) {
   			return res.send('Error: A user by this username already exists.');
 		}
 		else {
-			var values = "'"+req.body.firstname.replace(/'/g,"''")+"', '"+req.body.middleinitial+"', '"+req.body.lastname.replace(/'/g,"''")+"', '"+req.body.email.replace(/'/g,"''")+"', FALSE, "+req.body.username+"', '"+req.body.password+"'";
+			var values = "'"+req.body.firstname+"', '"+req.body.middleinitial+"', '"+req.body.lastname+"', '"+req.body.email+"', FALSE, "+req.body.username+"', '"+req.body.password+"'";
 			var query2 = client.query("INSERT INTO accounts (first_name, middle_initial, last_name, email, permission, username, password) values ($1)", [values]);
 			query2.on("end", function (result){
 				console.log("New User: " + req.body.username);
