@@ -336,6 +336,21 @@ $(document).on('pagebeforeshow', "#edit-product-view", function( event, ui ) {
 	$("#edit_dimensions").val(currentProduct.dimensions);
 });
 
+$(document).on('pagebeforeshow', "#add-payment", function( event, ui ) {
+	
+	var shippingAddresses = currentUser.shippingAddresses;
+	var shipAddressList = $('#address-list');
+	shipAddressList.empty();
+	
+	for(var i=0; i < shippingAddresses.length; ++i){
+						shipAddressList.append('<li><div><center><strong> Address: '+ shippingAddresses[i].street_address +'</strong></center>'+
+						'<center>'+ shippingAddresses[i].city +', '+ shippingAddresses[i].state +' | '+shippingAddresses[i].country+' '+shippingAddresses[i].zipcode+'</center></div></li>'+
+						'<li><div><center><a data-role="button" onclick=SelectAddress('+shippingAddresses[i].address_id+') data-icon="check">SELECT</a></center></div></li>');
+	}
+	//shipAddressList.trigger('create');
+	//shipAddressList.listview("refresh");
+});
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //							    	Enter Button Fixes - Juan										  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -539,7 +554,7 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 			var bids = data.bids;
 			var boughtProducts = data.boughtHistory;
 			var soldProducts = data.soldHistory;
-
+			currentUser.shippingAddresses = shippingAddresses;//Juan Test
 			var shipAddressList = $('#shipaddress-list');
 			var payList = $('#paymentType-list');
 			var ratingsList = $('#ratings-list');
@@ -1508,6 +1523,9 @@ function DeleteAddress(id){
 		});	
 }
 
+function SelectAddress(id){
+	currentAddress.address_id = id;
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //											THE USER PAYMENTS										  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1546,24 +1564,31 @@ $.mobile.loading("show");
 	var formData = form.serializeArray();
 	console.log("form Data: " + formData);
 	var newPayment = ConverToJSON(formData);
+	newPayment.address_id = currentAddress.address_id;
 	console.log("New Payment: " + JSON.stringify(newPayment));
 	var newPaymentJSON = JSON.stringify(newPayment);
-	$.ajax({
-		url : "http://localhost:3412/Server-Master/account/payment/"+currentUser.account_id,
-		method: 'post',
-		data : newPaymentJSON,
-		contentType: "application/json",
-		dataType:"json",
-		success : function(data, textStatus, jqXHR){
-			$.mobile.loading("hide");
-			$.mobile.navigate("#account");
-		},
-		error: function(data, textStatus, jqXHR){
-			console.log("textStatus: " + textStatus);
-			$.mobile.loading("hide");
-			alert("Data could not be added!");
-		}
-	});
+	if(currentAddress.address_id != null){
+		$.ajax({
+			url : "http://localhost:3412/Server-Master/account/payment/"+currentUser.account_id,
+			method: 'post',
+			data : newPaymentJSON,
+			contentType: "application/json",
+			dataType:"json",
+			success : function(data, textStatus, jqXHR){
+				$.mobile.loading("hide");
+				$.mobile.navigate("#account");
+			},
+			error: function(data, textStatus, jqXHR){
+				console.log("textStatus: " + textStatus);
+				$.mobile.loading("hide");
+				alert("Data could not be added!");
+			}
+		});
+	}
+	else{
+		$.mobile.loading("hide");
+		alert("Must Select Address");
+	}
 }
 
 function EditPayment(){
