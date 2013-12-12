@@ -273,8 +273,7 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 
 $(document).on('pagebeforeshow', "#category-view", function( event, ui ) {
 	// currentCategory has been set at this point
-	$("#upd-name").val(currentCategory.cname);
-	
+	$("#edit_cname").val(currentCategory.cname);
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1138,20 +1137,18 @@ function UpdateCategory(){
 	$.mobile.loading("show");
 	var form = $("#category-view-form");
 	var formData = form.serializeArray();
-	console.log("form Data: " + formData);
 	var updCategory = ConverToJSON(formData);
-	updCategory.id = currentCategory.id;
-	console.log("Updated Category: " + JSON.stringify(updCategory));
 	var updCategoryJSON = JSON.stringify(updCategory);
+	
 	$.ajax({
-		url : "http://localhost:3412/Server-Master/home/" + updCategory.id,
+		url : "http://localhost:3412/Server-Master/admin/edit-category/" + currentCategory.cid,
 		method: 'put',
 		data : updCategoryJSON,
 		contentType: "application/json",
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
 			$.mobile.loading("hide");
-			$.mobile.navigate("#home");
+			$.mobile.navigate("#admin");
 		},
 		error: function(data, textStatus, jqXHR){
 			console.log("textStatus: " + textStatus);
