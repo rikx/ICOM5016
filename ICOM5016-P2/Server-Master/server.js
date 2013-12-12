@@ -1399,7 +1399,7 @@ app.get('/Server-Master/account/:id', function(req, res) {
 	});*/
 
 	//returns user payment options 
-	var query9 = client.query("SELECT * FROM payment_options NATURAL JOIN credit_cards NATURAL JOIN addresses WHERE account_id = $1 AND account_id IS NOT NULL", [id]);
+	var query9 = client.query("SELECT * FROM payment_options NATURAL JOIN (SELECT payment_id, card_id, card_number, card_holder, exp_month, exp_year, security_code, address_id street_address, city, country, state, zipcode FROM credit_cards NATURAL JOIN addresses WHERE billing_address = address_id) AS CCs WHERE account_id = $1", [id]);
 	query9.on("row", function (row, result){
 		result.addRow(row);
 	});
