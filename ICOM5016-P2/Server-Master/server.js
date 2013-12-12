@@ -609,42 +609,41 @@ app.del('/Server-Master/product/:id', function(req, res) {
 
 });
 
-//REST Operation - HTTP PUT to update current bid on product by id
-app.put('/Server-Master/home/product/:id/bid', function(req, res) {
-	var id = req.params.id;
-	console.log("PUT bid on product id " + id);
+//REST Operation - HTTP POST to update current bid on product by id
+app.post('/Server-Master/home/product/:id/bid', function(req, res) {
+	var product_id = req.params.id;
+	var auction_id = req.body.auction_id;
+	var bidder_id = req.body.bidder_id;
+	console.log("POST bid on product id " + product_id + " of auction " +  auction_id +" by user " + bidder_id);
 
-	var bid = req.body.bid;
-
-	if ((id < 0) || (id >= productNextId)){
-		// not found
-		res.statusCode = 404;
-		res.send("Product not found.");
-	}
-	else {
-		var target = -1;
-		for (var i=0; i < productList.length; ++i){
-			if (productList[i].id == id){
-				target = i;
-				var currentBid = productList[i].bidPrice;
-				if(currentBid <= bid){
-					currentBid = bid;
-				}
-				else{
-					res.statusCode = 400;
-					res.send("Placed bid is bellow current highest bid");
-				}
-				break;
-			}
-		}
-		if (target == -1){
-			res.statusCode = 404;
-			res.send("Product not found.");
-		}
-		else {
-  			res.json(true);	
-  		}	
-	}
+	var client = new pg.Client(dbConnInfo);
+	client.connect();
+	
+	//-- New Bid Info --//
+	var date_placed = new Date();
+	var dd = date_placed.getDate();
+	var mm = date_placed.getMonth()+1;
+	
+	var yyyy = date_placed.getFullYear();
+	if(dd<10){dd='0'+dd} if(mm<10){mm='0'+mm} date_placed = mm+'/'+dd+'/'+yyyy;
+	
+	var bid_amount = req.body.new_current_bid;
+	
+	//-- New Bid Queries --//
+	var query = client.query("INSERT into placed_bids (bidder_id, auction_id, bid_amount, date_placed) VALUES ('"+bidder_id+"', '"+auction_id+"', '"+bid_amount+"', '"+date_placed+"')");
+  	query.on("row", function (row, result){
+  		result.addRow(row);
+  	});
+	var query2 = client.query('UPDATE auctions SET current_bid = $1 WHERE product_id = $2', [bid_amount, product_id]);
+	query2.on("row", function (row, result) {
+		result.addRow(row);
+	});
+	
+	query2.on("end", function (result) {
+		console.log("POST new Bid on Product " + product_id);
+		client.end();
+		res.json(true);
+	});
 });
 
 //REST Operation - HTTP GET to read bid history of a product by its id

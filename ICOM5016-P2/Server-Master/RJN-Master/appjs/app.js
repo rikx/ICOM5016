@@ -1723,7 +1723,7 @@ else {
 }
 
 function EditProduct(){
-$.mobile.loading("show");
+	$.mobile.loading("show");
 	var form = $("#product-view-form");
 	var formData = form.serializeArray();
 	console.log("form Data: " + formData);
@@ -1779,41 +1779,49 @@ function DeleteProduct(id){
 }
 
 function PlaceBid(id){
-	$.mobile.loading("show");
+	
 	if(currentUser.account_id == null){
 		$.mobile.navigate('#login');
 	}
 	else{
-/*		var form = $('input[name="bidInput"]').val();
+		$.mobile.loading("show");
+		var form = $("#bidInput-form");
 		var formData = form.serializeArray();
-		console.log("form Data: " + formData);
 		var newBid = ConverToJSON(formData);
-		console.log("Updated Bid for product "+id+": " + JSON.stringify(newBid));
-		var newBidJSON = JSON.stringify(newBid);*/
-		$.ajax({
-			url : "http://localhost:3412/Server-Master/home/product/" + id +"/bid",
-			method: 'put',
-			data : JSON.stringify({"bid" : $('input[name="bidInput"]').val()}),
+		newBid.auction_id = currentProduct.auction_id;
+		newBid.bidder_id = currentUser.account_id;
+		var newBidJSON = JSON.stringify(newBid);
+		
+		//alert(newBidJSON);
+		
+		if(parseFloat((newBid.new_current_bid)) > parseFloat((currentProduct.current_bid))){
+			//Replace current bid with new bid and add current to list of bids
+			$.ajax({
+			url : "http://localhost:3412/Server-Master/home/product/"+id+"/bid",
+			method: 'post',
+			data : newBidJSON,
 			contentType: "application/json",
 			dataType:"json",
 			success : function(data, textStatus, jqXHR){
 				$.mobile.loading("hide");
-				$.mobile.navigate("#product-view");
+				$.mobile.navigate("#home");
 			},
 			error: function(data, textStatus, jqXHR){
 				console.log("textStatus: " + textStatus);
 				$.mobile.loading("hide");
-				if(data.status == 404){
-					alert("Product not found.");
-				}
-				else if (data.status == 400){
+				if (data.status == 404){
 					alert("Bid could not be placed!");
 				}
 				else {
 					alert("Internal Server Error.");		
 				}
 			}
-		});
+			});
+		}
+		else{
+			$.mobile.loading("hide");
+			alert("Bid Must Be Higher than Current!");
+		}
 	}
 }
 

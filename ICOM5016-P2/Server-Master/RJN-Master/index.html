@@ -930,9 +930,17 @@
 				<span id="auction-display">
 					<p>Time left on auction: <strong id="auction-timer"></strong></p><!-- <a onclick='AuctionTimer()' data-role="button">Show Time</a> -->
 					<p>Current bid: <strong id="showBidPrice"></strong> &nbsp;|&nbsp; Number of bids: <strong id="numOfBids"></strong></p>
-					<div data-role="fieldcontain" data-theme="a">
-    					<label for="name">Enter your bid: </label>
-						<input name="bidInput" type="text" data-theme="a"/><a id="bidButton" onclick="PlaceBid()" data-role="button" data-inline="true" data-theme="e" data-mini="true">Bid</a>
+					<div data-role="content">
+						<form id="bidInput-form">
+			 				<fieldset data-role="controlgroup">
+			 					<ul>
+				  					<li><label for="new_current_bid">Enter Bid: <input id="new_current_bid" name="new_current_bid" type="text"/></label></li>
+			  			  	  	</ul>
+						 </fieldset>
+						</form>
+						<center>
+							<a id="bidButton" onclick="PlaceBid()" data-role="button" data-inline="true" data-theme="e" data-mini="true">Place Bid</a>
+						</center>
 					</div>
 				</span>
 				<p id="buyout-display">Buyout Price: <strong id="showBuyoutPrice"></strong>
