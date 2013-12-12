@@ -1065,7 +1065,7 @@ app.post('/Server-Master/register', function(req, res) {
 		}
 		else {
 
-			console.log("Entered password: "+req.body.password);
+			//console.log("Entered password: "+req.body.password);
 			var hashquery = client.query("SELECT crypt($1, gen_salt('md5'))", [req.body.password]);
 			hashquery.on("row", function (row, result){
 				result.addRow(row);
@@ -1412,7 +1412,7 @@ app.get('/Server-Master/account/:id', function(req, res) {
 	});
 });
 
-// REST Operation - HTTP PUT to updated an account based on its id
+// REST Operation - HTTP PUT to edit account based on its id
 app.put('/Server-Master/account/:account_id', function(req, res) {
 	var account_id = req.params.account_id;
 	console.log("PUT user account: " + account_id);
@@ -1436,21 +1436,30 @@ app.put('/Server-Master/account/:account_id', function(req, res) {
 			var photo_filename = req.body.edit_photo_filename.replace(/'/g,"''");
 			var email = req.body.edit_email.replace(/'/g,"''");
 			var username = req.body.edit_username.replace(/'/g,"''");
-			var password = req.body.edit_password.replace(/'/g,"''");
 			var description = req.body.edit_description.replace(/'/g,"''");
 			
 			//--Account Update Query--//
-			var query = client.query('UPDATE accounts SET first_name = $1, middle_initial = $2, last_name = $3, photo_filename = $4, email = $5, username = $6, password = $7, description = $8 WHERE account_id = $9',
-			[first_name, middle_initial, last_name, photo_filename, email, username, password, description, account_id]);
-			
-			query.on("row", function (row, result){
-			result.addRow(row);
+
+			console.log("Edited password: "+req.body.edit_password);
+			var hashquery = client.query("SELECT crypt($1, gen_salt('md5'))", [req.body.edit_password]);
+			hashquery.on("row", function (row, result){
+				result.addRow(row);
 			});
-		
-			query.on("end", function (result){
-			console.log("New Product info: "+ first_name +": " + middle_initial +": " + last_name +": " + photo_filename +": " + email +": " + username +": " + password +": " + description);
-			client.end();
-			res.json(true);
+			hashquery.on("end", function (result){
+
+				var passhash = result.rows[0].crypt;
+				console.log("Edited password hash is: "+passhash);
+
+				var password = passhash.replace(/'/g,"''");
+
+				var query = client.query('UPDATE accounts SET first_name = $1, middle_initial = $2, last_name = $3, photo_filename = $4, email = $5, username = $6, password = $7, description = $8 WHERE account_id = $9',
+					[first_name, middle_initial, last_name, photo_filename, email, username, password, description, account_id]);
+			
+				query.on("end", function (result){
+					console.log("New account info: "+ first_name +": " + middle_initial +": " + last_name +": " + photo_filename +": " + email +": " + username +": " + password +": " + description);
+					client.end();
+					res.json(true);
+				});
 			});
 	}
 });
