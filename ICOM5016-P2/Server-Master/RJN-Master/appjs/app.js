@@ -188,7 +188,12 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 		success : function(data, textStatus, jqXHR){
 			//$("#browse-title").html(data.parent);
 			var list = $("#browse-list");
+			var auctions_ul = $("#sorted-auction-list");
+			var sales_ul = $("#sorted-sales-list");
 			list.empty();
+			auctions_ul.empty();
+			sales_ul.empty();
+
 			$(".sort-type").html('');
 			
 			//shows history breadcrumb
@@ -222,6 +227,7 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 				var maxLength = Math.max(auction_list.length, on_sale_list.length);
 				var auction_product, on_sale_product;
 				
+				// add select auction or products buttons
 				// prints list element depending on product type
 				for (var i=0; i < maxLength; ++i){
 					if(i < auction_list.length){
@@ -245,6 +251,7 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 							string1+='</a></li>';
 						}
 						list.append(string1);
+						auctions_ul.append(string1);
 					}
 					if(i < on_sale_list.length){
 						on_sale_product = on_sale_list[i];
@@ -255,7 +262,9 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 					}
 				}
 			}
-			list.listview("refresh");	
+			list.listview("refresh");
+			auctions_ul.listview("refresh");
+			sales_ul.listview("refresh");
 		},
 		error: function(data, textStatus, jqXHR){
 			console.log("textStatus: " + textStatus);
@@ -267,6 +276,14 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 	
 });
 
+function showAuctions(){
+	$('#sorted-sales-list').hide();
+	$('#sorted-auctions-list').show();
+}
+function showSales(){
+	$('#sorted-auctions-list').hide();
+	$('#sorted-sales-list').show();
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //										CATEGORY DETAILS PAGE										  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
