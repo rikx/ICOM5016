@@ -139,12 +139,12 @@ app.get('/Server-Master/home', function(req, res) {
 // REST Operation - HTTP GET to read a category based on its id to load edit category page info
 app.get('/Server-Master/home/:id', function(req, res) {
 	var id = req.params.id;
-	console.log("GET category (for edit): " + id);
+	console.log("GET category: " + id);
 
     var client = new pg.Client(dbConnInfo);
 	client.connect();
 
-	var query = client.query("SELECT cid as id, cname as name from categories where cid = $1", [id]);
+	var query = client.query("SELECT * from categories where cid = $1", [id]);
 	
 	query.on("row", function (row, result) {
     	result.addRow(row);
@@ -156,7 +156,7 @@ app.get('/Server-Master/home/:id', function(req, res) {
     		res.send("Category not found.");
     	}
     	else {
-			var response = {"category" : result.rows};
+			var response = {"category" : result.rows[0]};
 			client.end();
     		res.json(response);
     	}
@@ -195,37 +195,33 @@ app.post('/Server-Master/admin/add-category', function(req, res) {
 });
 
 // REST Operation - HTTP PUT to updated a category based on its id
-app.put('/Server-Master/home/:id', function(req, res) {
-	var id = req.params.id;
-		console.log("PUT category: " + id);
+app.put('/Server-Master/admin/edit-category/:cid', function(req, res) {
+	var cid = req.params.cid;
+		console.log("PUT category: " + cid);
 
-	if ((id < 0) || (id >= categoryNextId)){
-		// not found
-		res.statusCode = 404;
-		res.send("Category not found.");
-	}
-	else if(!req.body.hasOwnProperty('name')){
+	if(!req.body.hasOwnProperty('edit_cname')){
     	res.statusCode = 400;
     	return res.send('Error: Missing fields for category.');
   	}
 	else {
-		var target = -1;
-		for (var i=0; i < categoryList.length; ++i){
-			if (categoryList[i].id == id){
-				target = i;
-				break;	
-			}
-		}
-		if (target == -1){
-			res.statusCode = 404;
-			res.send("Category not found.");			
-		}	
-		else {
-			var theCategory= categoryList[target];
-			theCategory.name = req.body.name;
-			var response = {"category" : theCategory};
-  			res.json(response);		
-  		}
+			var client = new pg.Client(dbConnInfo);
+  		  	client.connect();
+  		  	
+			var cname = req.body.edit_cname.replace(/'/g,"''");
+			
+			//--Category Update Query--//
+			var query = client.query('UPDATE categories SET cname = $1 WHERE cid = $2',
+			[cname, cid]);
+			
+			query.on("row", function (row, result){
+			result.addRow(row);
+			});
+		
+			query.on("end", function (result){
+			console.log("New Category info: "+ cname);
+			client.end();
+			res.json(true);
+			});
 	}
 });
 
@@ -238,17 +234,33 @@ app.del('/Server-Master/home/:id', function(req, res) {
 	client.connect();
 
 	//update all products that have the category as it's parent
-	var query1 = client.query('UPDATE sales SET rating = $1 WHERE order_id = $2 and product_id = $3', [rating, order, product]);
+	var query1 = client.query('UPDATE products SET cid = (SELECT cparent FROM categories WHERE cid = $1) WHERE cid = $1', [id]);
+	query1.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query1.on("end", function (err, result) {
+    		client.end();
+  			console.log("Updated products belonging to that category: " + id);
+  			res.json(true);
+
 	//update all children of the category
+	var query2 = client.query('UPDATE categories SET cparent = (SELECT cparent FROM categories WHERE cid = $1) WHERE cparent = $1', [id]);
+	query2.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query2.on("end", function (err, result) {
+    		client.end();
+  			console.log("Updated children belonging to that category: " + id);
+  			res.json(true);
 
 	//delete the category entry
 	var query3 = client.query("DELETE FROM category WHERE cid = $1", [id]);
-	query.on("row", function (row, result){
+	query3.on("row", function (row, result){
 		result.addRow(row);
 	});
-	query.on("end", function (err, result) {
+	query3.on("end", function (err, result) {
     		client.end();
-  			console.log("Deleted category: " + id);
+  			console.log("Deleting category: " + id);
   			res.json(true);
     	//}
   	});
@@ -631,13 +643,13 @@ app.del('/Server-Master/product/:id', function(req, res) {
 	var client = new pg.Client(dbConnInfo);
 	client.connect();
 
-	var query = client.query("DELETE FROM product WHERE pid = $1", [id]);
+	var query = client.query("DELETE FROM products WHERE product_id = $1", [id]);
 	query.on("row", function (row, result){
 		result.addRow(row);
 	});
 	query.on("end", function (err, result) {
     		client.end();
-  			console.log("Deleted Product: " + id);
+  			console.log("Deleting Product: " + id);
   			res.json(true);
     	//}
   	});
@@ -836,24 +848,26 @@ app.put('/Server-Master/account/address/:address_id', function(req, res) {
     	return res.send('Error: Missing fields for address.');
   	}
   	else{
-  	var street_address = req.body.edit_street_address.replace(/'/g,"''");
-	var city = req.body.edit_city.replace(/'/g,"''");
-	var country = req.body.edit_country.replace(/'/g,"''");
-	var state = req.body.edit_state.replace(/'/g,"''");
-	var zipcode = req.body.edit_zipcode.replace(/'/g,"''");
-	
-	var client = new pg.Client(dbConnInfo);
-	client.connect();
-
-	var query = client.query('UPDATE addresses SET street_address = $1, city = $2, country = $3, state = $4, zipcode = $5 WHERE address_id = $6', [street_address,city,country,state,zipcode,address_id]);
-	query.on("row", function (row, result){
-		result.addRow(row);
-	});
-	query.on("end", function (result){
-		console.log("New Address for user "+street_address+": " + city+": " + country+": " + state+": " + zipcode);
-		client.end();
-		res.json(true);
-	});
+  			//--Address Info--//
+		  	var street_address = req.body.edit_street_address.replace(/'/g,"''");
+			var city = req.body.edit_city.replace(/'/g,"''");
+			var country = req.body.edit_country.replace(/'/g,"''");
+			var state = req.body.edit_state.replace(/'/g,"''");
+			var zipcode = req.body.edit_zipcode.replace(/'/g,"''");
+			
+			var client = new pg.Client(dbConnInfo);
+			client.connect();
+			
+			//--Address Update Query--//
+			var query = client.query('UPDATE addresses SET street_address = $1, city = $2, country = $3, state = $4, zipcode = $5 WHERE address_id = $6', [street_address,city,country,state,zipcode,address_id]);
+			query.on("row", function (row, result){
+				result.addRow(row);
+			});
+			query.on("end", function (result){
+				console.log("New Address for user "+street_address+": " + city+": " + country+": " + state+": " + zipcode);
+				client.end();
+				res.json(true);
+			});
 	}
 });
 
@@ -865,13 +879,13 @@ app.del('/Server-Master/account/address/:id', function(req, res) {
 	var client = new pg.Client(dbConnInfo);
 	client.connect();
 
-	var query = client.query("DELETE FROM address WHERE address_id = $1", [id]);
+	var query = client.query("DELETE FROM addresses WHERE address_id = $1", [id]);
 	query.on("row", function (row, result){
 		result.addRow(row);
 	});
 	query.on("end", function (err, result) {
     		client.end();
-  			console.log("Deleted Address: " + id);
+  			console.log("Deleting Address: " + id);
   			res.json(true);
     	//}
   	});
@@ -1000,7 +1014,7 @@ app.del('/Server-Master/account/payment/:id', function(req, res) {
 	var client = new pg.Client(dbConnInfo);
 	client.connect();
 
-	var query = client.query("DELETE FROM payment_option WHERE payment_id = $1", [id]);
+	var query = client.query("DELETE FROM payment_options WHERE payment_id = $1", [id]);
 	query.on("row", function (row, result){
 		result.addRow(row);
 	});
@@ -1056,7 +1070,7 @@ app.post('/Server-Master/register', function(req, res) {
   			return res.send('Error: A user by this username already exists.');
 		}
 		else {
-			var values = "'"+req.body.firstname.replace(/'/g,"''")+"', '"+req.body.middleinitial+"', '"+req.body.lastname.replace(/'/g,"''")+"', '"+req.body.email.replace(/'/g,"''")+"', FALSE, "+req.body.username+"', '"+req.body.password+"'";
+			var values = "'"+req.body.firstname+"', '"+req.body.middleinitial+"', '"+req.body.lastname+"', '"+req.body.email+"', FALSE, "+req.body.username+"', '"+req.body.password+"'";
 			var query2 = client.query("INSERT INTO accounts (first_name, middle_initial, last_name, email, permission, username, password) values ($1)", [values]);
 			query2.on("end", function (result){
 				console.log("New User: " + req.body.username);
@@ -1425,30 +1439,21 @@ app.put('/Server-Master/account/:account_id', function(req, res) {
 //REST Operation - HTTP DEL for deleting user
 app.del('/Server-Master/account/:id', function(req, res) {
 	var id = req.params.id;
-		console.log("DELETE account: " + id);
+	console.log("DELETE account: " + id);
 
-	if ((id < 0) || (id >= userNextId)){
-		// not found
-		res.statusCode = 404;
-		res.send("User not found.");
-	}
-	else {
-		var target = -1;
-		for (var i=0; i < userList.length; ++i){
-			if (userList[i].id == id){
-				target = i;
-				break;	
-			}
-		}
-		if (target == -1){
-			res.statusCode = 404;
-			res.send("User not found.");			
-		}	
-		else {
-			userList.splice(target, 1);
+	var client = new pg.Client(dbConnInfo);
+	client.connect();
+
+	var query = client.query("UPDATE accounts SET password = $1 WHERE account_id = $2", ["-------------------------------", id]);
+	query.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query.on("end", function (err, result) {
+    		client.end();
+  			console.log("Deleting Account: " + id);
   			res.json(true);
-  		}		
-	}
+    	//}
+  	});
 });
 
 // REST Operation - HTTP GET to get order information
