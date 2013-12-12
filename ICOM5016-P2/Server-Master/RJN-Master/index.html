@@ -441,7 +441,7 @@
 							
 			<div data-role="content">
 				<h3 align="center">Create your personal account</h3>
-				<form id="register_form">
+<!-- 				<form id="register-account-form">
 	 				<fieldset data-role="controlgroup">
 	 					<label for="new-username"> Username: <input id="new-username" name="username" type="text" maxlength="12"/></label>
 	 					<label for="new-firstname"> First Name: <input id="new-firstname" name="firstname" type="text"/></label>
@@ -451,6 +451,20 @@
 	 					<label for="new-description"> Description: <textarea id="new-description" name="description"></textarea></label>
 	 					<label for="new-password"> Password: <input id="new-password" name="new-password" type="password" maxlength="30"/></label>
 	 					<label for="new-confirmpassword"> Confirm Password: <input id="new-confirmpassword" name="confirmpassword" type="password" maxlength="30"/></label>
+				 	</fieldset>
+				</form> -->
+				<form id="register-account-form">
+	 				<fieldset data-role="controlgroup">
+	 					<ul>
+	 					<li><label for="new-username"> Username: <input id="new-username" name="username" type="text" maxlength="12"/></label></li>
+	 					<li><label for="new-firstname"> First Name: <input id="new-firstname" name="firstname" type="text" maxlength="12"/></label></li>
+	 					<li><label for="new-middleinitial"> Middle Initial: <input id="new-middleinitial" name="middleinitial" type="text" maxlength="1"/></label></li>
+	  					<li><label for="new-lastname"> Last Name: <input id="new-lastname" name="lastname" type="text"/></label></li>
+	 					<li><label for="new-email"> Email: <input id="new-email" name="email" type="email"/></label></li>
+	 					<li><label for="new-description"> Description: <textarea id="new-description" name="description"></textarea></label></li>
+	 					<li><label for="new-password"> New Password: <input id="new-password" name="password" type="password" maxlength="30"/></label></li>
+	 					<li><label for="new-confirmpassword"> Confirm Password: <input id="new-confirmpassword" name="confirmpassword" type="password" maxlength="30"/></label></li>
+	  			  		</ul>
 				 	</fieldset>
 				</form>
 			</div>
@@ -547,13 +561,17 @@
 		  					<li><div data-role="fieldcontain">
 							    <fieldset data-role="controlgroup">
 								   <legend>Item up for auction?:</legend>
-								   <input type="checkbox" name="checkbox-auction" id="checkbox-auction" class="custom" />
-								   <label for="checkbox-auction">Yes</label>
+								   <input type="checkbox" name="checkbox_auction" id="checkbox_auction" class="custom" />
+								   <label for="checkbox_auction">Yes</label>
 							    </fieldset>
 							</div></li>
-							
-		  					<li class="product-auction-li" style="display:none"><label for="add-product-bid"> Bid Price $: <input id="add-product-bid" name="bid_price" type="number"/></label></li>
-		  					<li class="product-auction-li" style="display:none"><label for="add-product-auc-buyout"> Buyout Price (Optional) $: <input id="add-product-auc-buyout" name="buyout_price" type="number"/></label></li>
+							<div id="add-product-auction">
+							<li><strong> If product is for auction, leave Buyout Price empty. However, the auction buyout price is optional. If product is not for auction, Buyout price is required </strong></li>
+							<li><label for="add-product-duration"> Duration - Days: <input id="add-product-duration" name="days_duration" type="number"/></label></li>
+							<li><label for="add-product-duration"> Duration - Hours: <input id="add-product-duration" name="hours_duration" type="number"/></label></li>
+		  					<li><label for="add-product-bid"> Auction Bid Price $: <input id="add-product-bid" name="auc_bid_price" type="number"/></label></li>
+		  					<li><label for="add-product-auc-buyout"> Auction Buyout Price (Optional) $: <input id="add-product-auc-buyout" name="auc_buyout_price" type="number"/></label></li>
+		  					</div>
 		  					<li id="add-buyout-li"><label for="add-product-buyout"> Buyout Price $: <input id="add-product-buyout" name="buyout_price" type="number"/></label></li>
 	  			  	  	</ul>
 				 	</fieldset>
