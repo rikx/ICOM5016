@@ -963,8 +963,9 @@ app.post('/Server-Master/account/payment/:id', function(req, res) {
 			query3 = client.query("INSERT INTO bank_accounts (payment_id, account_number, routing_number, b_account_type) VALUES ("+values+")");
 		}
 		else {
-			values = ""+payment_id+", '"+req.body.card_number+"', '"+req.body.card_holder+"', '"+req.body.exp_month+"', '"+req.body.exp_year+"', '"+req.body.security_code+"'";
-			query3 = client.query("INSERT INTO credit_cards (payment_id, card_number, card_holder, exp_month, exp_year, security_code) VALUES ("+values+")");
+			console.log(req.body.address_id);
+			values = ""+payment_id+", '"+req.body.card_number+"', '"+req.body.card_holder+"', '"+req.body.exp_month+"', '"+req.body.exp_year+"', '"+req.body.security_code+"', '"+req.body.address_id+"'";
+			query3 = client.query("INSERT INTO credit_cards (payment_id, card_number, card_holder, exp_month, exp_year, security_code, billing_address) VALUES ("+values+")");
 		}
 		console.log(values);
 		query3.on("row", function (row, result){
@@ -974,7 +975,7 @@ app.post('/Server-Master/account/payment/:id', function(req, res) {
 			console.log("Payment option of type "+payment_type+" added");
 		  	client.end();
 	  		res.json(true);
-		})
+		});
 	});
 });
 
@@ -1429,7 +1430,7 @@ app.get('/Server-Master/account/:id', function(req, res) {
 	});*/
 
 	//returns user payment options 
-	var query9 = client.query("SELECT * FROM payment_options NATURAL JOIN (SELECT payment_id, card_id, card_number, card_holder, exp_month, exp_year, security_code, address_id street_address, city, country, state, zipcode FROM credit_cards FULL OUTER JOIN addresses ON billing_address = address_id) AS CCs WHERE account_id = $1", [id]);
+	var query9 = client.query("SELECT * FROM payment_options NATURAL JOIN (SELECT payment_id, card_id, card_number, card_holder, exp_month, exp_year, security_code, address_id, street_address, city, country, state, zipcode FROM credit_cards FULL OUTER JOIN addresses ON billing_address = address_id) AS CCs WHERE account_id = $1", [id]);
 	query9.on("row", function (row, result){
 		result.addRow(row);
 	});
