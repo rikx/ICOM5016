@@ -1775,19 +1775,37 @@ function AddProduct(){
 }
 
 // Toggle auction fields when adding a product
-/*$('#checkbox-auction').click(function () {
-    $('.product-auction-li').toggle(this.checked);
-    $('#add-buyout-li').toggle();
-});*/
+function auctionForms() {
+	$('#add-buyout-li').val("");
+	$('#add-buyout-li').hide();
+    $("#add-product-auction").show();  // checked
+};
 
-if($("#checkbox_auction").is(':checked')){
+function salesForms() {
+    $('#add-buyout-li').show();
+    $("#add-product-auction").hide();  // checked
+    $('#add-product-bid').val("");
+    $('#add-product-auc-buyout').val("");
+    $('#add-auc-days').val("");
+    $('#add-auc-hours').val("");
+};
+
+/*if($("#checkbox_auction").is(':checked')){
 	$('#add-buyout-li').hide();
     $("#add-product-auction").show();  // checked
 }
 else {
     $('#add-buyout-li').show();
     $("#add-product-auction").hide();  // checked
-}
+}*/
+
+
+$( document ).on( "pageinit", "#add-product", function( event ) {
+	$('#checkbox-auction').click(function () {
+	    $('#add-product-auction').toggle(this.checked);
+	    $('#add-buyout-li').toggle();
+	});
+});
 
 function EditProduct(){
 	$.mobile.loading("show");
@@ -1940,10 +1958,10 @@ function checkout(){
 		if(Cart.length==0){//Buying nothing?
 			alert('Cart Is Empty');
 		}
-		if(invoiceShipAddress == null){
+		else if(invoiceShipAddress == null){
 			alert('Please select a Shipping Address!');
 		}
-		if(invoiceBillAddress == null){
+		else if(invoiceBillAddress == null){
 			alert('Please select a Payment Option!');
 		}
 		else{
