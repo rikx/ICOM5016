@@ -1351,9 +1351,8 @@ function UpdateAccount(){
 	});
 }
 
-function DeleteAccount(){
+function DeleteAccount(id){
 	$.mobile.loading("show");
-	var id = currentUser.id;
 	$.ajax({
 		url : "http://localhost:3412/Server-Master/account/" + id,
 		method: 'delete',
@@ -1361,8 +1360,7 @@ function DeleteAccount(){
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
 			$.mobile.loading("hide");
-			currentUser = {"id": null};
-			$.mobile.navigate("#home");
+			$.mobile.navigate("#admin");
 		},
 		error: function(data, textStatus, jqXHR){
 			console.log("textStatus: " + textStatus);

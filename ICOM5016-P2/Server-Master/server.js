@@ -1445,33 +1445,25 @@ app.put('/Server-Master/account/:account_id', function(req, res) {
 	}
 });
 
-//REST Operation - HTTP DEL for deleting user
+//REST Operation - HTTP DELETE to delete account
 app.del('/Server-Master/account/:id', function(req, res) {
 	var id = req.params.id;
-		console.log("DELETE account: " + id);
+	console.log("DELETE account: " + id);
 
-	if ((id < 0) || (id >= userNextId)){
-		// not found
-		res.statusCode = 404;
-		res.send("User not found.");
-	}
-	else {
-		var target = -1;
-		for (var i=0; i < userList.length; ++i){
-			if (userList[i].id == id){
-				target = i;
-				break;	
-			}
-		}
-		if (target == -1){
-			res.statusCode = 404;
-			res.send("User not found.");			
-		}	
-		else {
-			userList.splice(target, 1);
+	var client = new pg.Client(dbConnInfo);
+	client.connect();
+
+	var query = client.query("UPDATE accounts SET password = $1 WHERE account_id = $2", ["DISABLED", id]);
+	query.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query.on("end", function (result) {
+    		client.end();
+  			console.log("Account has been disabled: " + id);
   			res.json(true);
-  		}		
-	}
+    	//}
+  	});
+
 });
 
 // REST Operation - HTTP GET to get order information
