@@ -126,14 +126,6 @@ $(document).on('pagebeforeshow', "#cart", function( event, ui ) {
 	}//End IF
 });
 
-function showAuctions(){
-	$('#sorted-sales-list').hide();
-	$('#sorted-auctions-list').show();
-}
-function showSales(){
-	$('#sorted-auctions-list').hide();
-	$('#sorted-sales-list').show();
-}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //										INVOICE PAGE											 	 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -277,6 +269,14 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 	
 });
 
+function showAuctions(){
+	$('#sorted-sales-list').hide();
+	$('#sorted-auctions-list').show();
+}
+function showSales(){
+	$('#sorted-auctions-list').hide();
+	$('#sorted-sales-list').show();
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //										CATEGORY DETAILS PAGE										  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
