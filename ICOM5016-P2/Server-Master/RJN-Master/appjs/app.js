@@ -188,7 +188,12 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 		success : function(data, textStatus, jqXHR){
 			//$("#browse-title").html(data.parent);
 			var list = $("#browse-list");
+			var auctions_ul = $("#sorted-auction-list");
+			var sales_ul = $("#sorted-sales-list");
 			list.empty();
+			auctions_ul.empty();
+			sales_ul.empty();
+
 			$(".sort-type").html('');
 			
 			//shows history breadcrumb
@@ -223,7 +228,6 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 				var auction_product, on_sale_product;
 				
 				// add select auction or products buttons
-				list.append('<li><button onclick=showAuctions()>Auctions</button><button onclick=showSales()>Sales</button></li>');
 				// prints list element depending on product type
 				for (var i=0; i < maxLength; ++i){
 					if(i < auction_list.length){
@@ -246,18 +250,20 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 						else {
 							string1+='</a></li>';
 						}
-						list.append(string1);
+						auctions_ul.append(string1);
 					}
 					if(i < on_sale_list.length){
 						on_sale_product = on_sale_list[i];
-						list.append('<li><a onclick=GetProduct('+on_sale_product.product_id+')><h2>'+on_sale_product.name+'</h2>'+
+						sales_ul.append('<li><a onclick=GetProduct('+on_sale_product.product_id+')><h2>'+on_sale_product.name+'</h2>'+
 						'<p><img class="img-size" src="'+on_sale_product.image_filename+'"" /></p>'+ 
 						'<p class=\"ui-li-aside\"><h4>Price: ' + accounting.formatMoney(on_sale_product.instant_price) + '</h4></p>'+
 						'<p class=\"ui-li-aside\"><h4>Quantity: ' + on_sale_product.quantity + '</h4></p></a></li>');	
 					}
 				}
 			}
-			list.listview("refresh");	
+			list.listview("refresh");
+			auctions_ul.listview("refresh");
+			sales_ul.listview("refresh");
 		},
 		error: function(data, textStatus, jqXHR){
 			console.log("textStatus: " + textStatus);
