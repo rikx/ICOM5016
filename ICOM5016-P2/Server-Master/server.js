@@ -139,12 +139,12 @@ app.get('/Server-Master/home', function(req, res) {
 // REST Operation - HTTP GET to read a category based on its id to load edit category page info
 app.get('/Server-Master/home/:id', function(req, res) {
 	var id = req.params.id;
-	console.log("GET category (for edit): " + id);
+	console.log("GET category: " + id);
 
     var client = new pg.Client(dbConnInfo);
 	client.connect();
 
-	var query = client.query("SELECT cid as id, cname as name from categories where cid = $1", [id]);
+	var query = client.query("SELECT * from categories where cid = $1", [id]);
 	
 	query.on("row", function (row, result) {
     	result.addRow(row);
@@ -156,7 +156,7 @@ app.get('/Server-Master/home/:id', function(req, res) {
     		res.send("Category not found.");
     	}
     	else {
-			var response = {"category" : result.rows};
+			var response = {"category" : result.rows[0]};
 			client.end();
     		res.json(response);
     	}
@@ -195,37 +195,35 @@ app.post('/Server-Master/admin/add-category', function(req, res) {
 });
 
 // REST Operation - HTTP PUT to updated a category based on its id
-app.put('/Server-Master/home/:id', function(req, res) {
-	var id = req.params.id;
-		console.log("PUT category: " + id);
+app.put('/Server-Master/admin/edit-category/:cid', function(req, res) {
+	var cid = req.params.cid;
+		console.log("PUT category: " + cid);
 
-	if ((id < 0) || (id >= categoryNextId)){
-		// not found
-		res.statusCode = 404;
-		res.send("Category not found.");
-	}
-	else if(!req.body.hasOwnProperty('name')){
-    	res.statusCode = 400;
-    	return res.send('Error: Missing fields for category.');
-  	}
-	else {
-		var target = -1;
-		for (var i=0; i < categoryList.length; ++i){
-			if (categoryList[i].id == id){
-				target = i;
-				break;	
-			}
-		}
-		if (target == -1){
-			res.statusCode = 404;
-			res.send("Category not found.");			
-		}	
-		else {
-			var theCategory= categoryList[target];
-			theCategory.name = req.body.name;
-			var response = {"category" : theCategory};
-  			res.json(response);		
-  		}
+	if(!req.body.hasOwnProperty('edit_cname')){
+		res.statusCode = 400;
+     	return res.send('Error: Missing fields for category.');
+   	}
+ 	else {
+			var client = new pg.Client(dbConnInfo);
+  		  	client.connect();
+  		  	
+  		  	//--Category Info--//
+			var cname = req.body.edit_cname.replace(/'/g,"''");
+			
+			//--Category Update Query--//
+			var query = client.query('UPDATE categories SET cname = $1 WHERE cid = $2',
+			[cname, cid]);
+			
+			query.on("row", function (row, result){
+			result.addRow(row);
+			});
+		
+			query.on("end", function (result){
+			console.log("New Category info: "+ cname);
+			client.end();
+			res.json(true);
+			});
+
 	}
 });
 
