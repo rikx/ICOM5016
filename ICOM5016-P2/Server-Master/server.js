@@ -554,21 +554,21 @@ app.put('/Server-Master/account/product/:product_id', function(req, res) {
 	||!req.body.hasOwnProperty('edit_quantity')||!req.body.hasOwnProperty('edit_dimensions')){
 				
     	res.statusCode = 400;
-    	return res.send('Error: Missing fields for payment.');
+    	return res.send('Error: Missing fields for product.');
   	}
   	else{
   			var client = new pg.Client(dbConnInfo);
   		  	client.connect();
   		  	
   		  	//--Product Info--//
-  		  	var name = req.body.edit_name(/'/g,"''");
-			var instant_price = req.body.edit_instant_price(/'/g,"''");
-			var model = req.body.edit_model(/'/g,"''");
-			var brand = req.body.edit_brand(/'/g,"''");
-			var description = req.body.edit_description(/'/g,"''");
-			var image_filename = req.body.edit_image_filename(/'/g,"''");
-			var quantity = req.body.edit_quantity(/'/g,"''");
-			var dimensions = req.body.edit_dimensions(/'/g,"''");
+  		  	var name = req.body.edit_name.replace(/'/g,"''");
+			var instant_price = req.body.edit_instant_price.replace(/'/g,"''");
+			var model = req.body.edit_model.replace(/'/g,"''");
+			var brand = req.body.edit_brand.replace(/'/g,"''");
+			var description = req.body.edit_description.replace(/'/g,"''");
+			var image_filename = req.body.edit_image_filename.replace(/'/g,"''");
+			var quantity = req.body.edit_quantity.replace(/'/g,"''");
+			var dimensions = req.body.edit_dimensions.replace(/'/g,"''");
 			
 			//--Product Update Query--//
 			var query = client.query('UPDATE products SET name = $1, instant_price = $2, model = $3, brand = $4, description = $5, image_filename = $6, quantity = $7, dimensions = $8 WHERE product_id = $9',
@@ -922,16 +922,16 @@ app.put('/Server-Master/account/payment/:payment_id', function(req, res) {
   		  	client.connect();
   		  	
   		  	//--Card Info--//
-  		  	var card_number = req.body.edit_card_number(/'/g,"''");
-			var card_holder = req.body.edit_card_holder(/'/g,"''");
-			var exp_month = req.body.edit_exp_month(/'/g,"''");
-			var exp_year = req.body.edit_exp_year(/'/g,"''");
-			var security_code = req.body.edit_security_code(/'/g,"''");
+  		  	var card_number = req.body.edit_card_number.replace(/'/g,"''");
+			var card_holder = req.body.edit_card_holder.replace(/'/g,"''");
+			var exp_month = req.body.edit_exp_month.replace(/'/g,"''");
+			var exp_year = req.body.edit_exp_year.replace(/'/g,"''");
+			var security_code = req.body.edit_security_code.replace(/'/g,"''");
 			
 			//--Bank Info--//
-			var account_number = req.body.edit_account_number(/'/g,"''");
-			var routing_number = req.body.edit_routing_number(/'/g,"''");
-			var b_account_type = req.body.edit_b_account_type(/'/g,"''");
+			var account_number = req.body.edit_account_number.replace(/'/g,"''");
+			var routing_number = req.body.edit_routing_number.replace(/'/g,"''");
+			var b_account_type = req.body.edit_b_account_type.replace(/'/g,"''");
 			
 			//--Card Update Query--//
 			var query = client.query('UPDATE credit_cards SET card_number = $1, card_holder = $2, exp_month = $3, exp_year = $4, security_code = $5 WHERE payment_id = $6',
@@ -1345,41 +1345,45 @@ app.get('/Server-Master/account/:id', function(req, res) {
 });
 
 // REST Operation - HTTP PUT to updated an account based on its id
-app.put('/Server-Master/account/:id', function(req, res) {
-	var id = req.params.id;
-		console.log("PUT user account: " + id);
-	//Future Work: Take into account changing username, and that the new username might already be taken
-	if ((id < 0) || (id >= userNextId)){
-		// not found
-		res.statusCode = 404;
-		res.send("User not found.");
-	}
-	//Future Work: Take into consideration the being able to change username and password in Phase 2
-	else if(!req.body.hasOwnProperty('firstname') || !req.body.hasOwnProperty('lastname') ||
-		    !req.body.hasOwnProperty('email')){
+app.put('/Server-Master/account/:account_id', function(req, res) {
+	var account_id = req.params.account_id;
+	console.log("PUT user account: " + account_id);
+	//Future Work: Take into account changing username, and that the new username might already be taken and require old password to change password
+	
+	if(!req.body.hasOwnProperty('edit_first_name')||!req.body.hasOwnProperty('edit_middle_initial')||!req.body.hasOwnProperty('edit_last_name')
+	||!req.body.hasOwnProperty('edit_photo_filename')||!req.body.hasOwnProperty('edit_email')||!req.body.hasOwnProperty('edit_username')
+	||!req.body.hasOwnProperty('edit_password')||!req.body.hasOwnProperty('edit_description')){
+				
     	res.statusCode = 400;
-    	return res.send('Error: Missing fields for user account.');
+    	return res.send('Error: Missing fields for account.');
   	}
-	else {
-		var target = -1;
-		for (var i=0; i < userList.length; ++i){
-			if (userList[i].id == id){
-				target = i;
-				break;	
-			}
-		}
-		if (target == -1){
-			res.statusCode = 404;
-			res.send("User not found.");			
-		}	
-		else {
-			var theUser= userList[target];
-			theUser.firstname = req.body.firstname;
-			theUser.lastname = req.body.lastname;
-			theUser.email = req.body.email;
-			var response = {"user" : theUser};
-  			res.json(response);		
-  		}
+  	else{
+  			var client = new pg.Client(dbConnInfo);
+  		  	client.connect();
+  		  	
+  		  	//--Account Info--//
+  		  	var first_name = req.body.edit_first_name.replace(/'/g,"''");
+			var middle_initial = req.body.edit_middle_initial.replace(/'/g,"''");
+			var last_name = req.body.edit_last_name.replace(/'/g,"''");
+			var photo_filename = req.body.edit_photo_filename.replace(/'/g,"''");
+			var email = req.body.edit_email.replace(/'/g,"''");
+			var username = req.body.edit_username.replace(/'/g,"''");
+			var password = req.body.edit_password.replace(/'/g,"''");
+			var description = req.body.edit_description.replace(/'/g,"''");
+			
+			//--Account Update Query--//
+			var query = client.query('UPDATE accounts SET first_name = $1, middle_initial = $2, last_name = $3, photo_filename = $4, email = $5, username = $6, password = $7, description = $8 WHERE account_id = $9',
+			[first_name, middle_initial, last_name, photo_filename, email, username, password, description, account_id]);
+			
+			query.on("row", function (row, result){
+			result.addRow(row);
+			});
+		
+			query.on("end", function (result){
+			console.log("New Product info: "+ first_name +": " + middle_initial +": " + last_name +": " + photo_filename +": " + email +": " + username +": " + password +": " + description);
+			client.end();
+			res.json(true);
+			});
 	}
 });
 

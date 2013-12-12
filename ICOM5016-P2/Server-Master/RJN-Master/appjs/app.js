@@ -277,6 +277,22 @@ $(document).on('pagebeforeshow', "#category-view", function( event, ui ) {
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
+//										ACCOUNT DETAILS PAGE										  //
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$(document).on('pagebeforeshow', "#update-account", function( event, ui ) {
+	// currentUser has been set at this point
+	$("#edit_first_name").val(currentUser.first_name);
+	$("#edit_middle_initial").val(currentUser.middle_initial);
+	$("#edit_last_name").val(currentUser.last_name);
+	$("#edit_photo_filename").val(currentUser.photo_filename);
+	$("#edit_email").val(currentUser.email);
+	$("#edit_username").val(currentUser.username);
+	$("#edit_password").val(currentUser.password);
+	$("#edit_description").val(currentUser.description);
+});
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 //										ADDRESS DETAILS PAGE										  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 $(document).on('pagebeforeshow', "#edit-address-view", function( event, ui ) {
@@ -1310,20 +1326,17 @@ function UpdateAccount(){
 	$.mobile.loading("show");
 	var form = $('#update-account-form');
 	var formData = form.serializeArray();
-	console.log("form Data: " + formData);
 	var updAccount = ConverToJSON(formData);
-	updAccount.id = currentUser.id;
-	console.log("Updated account: " + JSON.stringify(updAccount));
 	var updAccountJSON = JSON.stringify(updAccount);
 	$.ajax({
-		url : "http://localhost:3412/Server-Master/account/" + updAccount.id,
+		url : "http://localhost:3412/Server-Master/account/" + currentUser.account_id,
 		method: 'put',
 		data : updAccountJSON,
 		contentType: "application/json",
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
 			$.mobile.loading("hide");
-			$.mobile.navigate("#account");
+			$.mobile.navigate("#home");
 		},
 		error: function(data, textStatus, jqXHR){
 			console.log("textStatus: " + textStatus);
@@ -1399,7 +1412,6 @@ function GetAddress(id){
 		dataType:"json",
 		success : function(data, textStatus, jqXHR){
 			currentAddress = data.address;
-			//alert(JSON.stringify(currentAddress));
 			$.mobile.loading("hide");
 			$.mobile.navigate("#edit-address-view");
 		},
@@ -1515,7 +1527,6 @@ function GetPayment(id){
 		success : function(data, textStatus, jqXHR){
 			currentPayment = data.payment;
 			currentPayment.payment_id = id;
-			//alert(JSON.stringify(data.payment));
 			$.mobile.loading("hide");
 			$.mobile.navigate("#edit-payment-view");
 		},
