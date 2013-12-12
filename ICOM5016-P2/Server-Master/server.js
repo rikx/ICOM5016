@@ -931,21 +931,50 @@ app.get('/Server-Master/account/payment/:id', function(req, res) {
 });
 
 // REST Operation - HTTP POST to add a new payment
-app.post('/Server-Master/account/payment/:userId', function(req, res) {
+app.post('/Server-Master/account/payment/:id', function(req, res) {
 	console.log("POST payment");
 	
-  	if(!req.body.hasOwnProperty('type')||!req.body.hasOwnProperty('cNumber')||!req.body.hasOwnProperty('billAddress')){
-				
-    	res.statusCode = 400;
-    	return res.send('Error: Missing fields for payment.');
+	var client = new pg.Client(dbConnInfo);
+  	client.connect();
+  	
+  	var payment_type = "1";
+  	if(req.body.account_number != ""){
+  		payment_type = "2";
   	}
-
-  	var newPayment = new PaymentType(userId,req.body.type,req.body.cNumber,req.body.billAddress);
-  								 
-  	console.log("New Payment: " + JSON.stringify(newPayment));
-  	newPayment.id = paymentNextId++;
-  	payTypeList.push(newPayment);
-  	res.json(true);
+  	var account_id = req.params.id;
+	var query1 = client.query("INSERT INTO payment_options (account_id, payment_type) VALUES ("+account_id+", '"+payment_type+"')");
+	query1.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query1.on("end", function (result){
+		//error code
+	});
+	var query2 = client.query("SELECT payment_id FROM payment_options ORDER BY payment_id DESC");
+	query2.on("row", function (row, result){
+		result.addRow(row);
+	});
+	query2.on("end", function (result){
+		var payment_id = result.rows[0].payment_id;
+		var query3;
+		var values;
+		if(payment_type == "2"){
+			values = ""+payment_id+", '"+req.body.account_number+"', '"+req.body.routing_number+"', '"+req.body.b_account_type+"'";
+			query3 = client.query("INSERT INTO bank_accounts (payment_id, account_number, routing_number, b_account_type) VALUES ("+values+")");
+		}
+		else {
+			values = ""+payment_id+", '"+req.body.card_number+"', '"+req.body.card_holder+"', '"+req.body.exp_month+"', '"+req.body.exp_year+"', '"+req.body.security_code+"'";
+			query3 = client.query("INSERT INTO credit_cards (payment_id, card_number, card_holder, exp_month, exp_year, security_code) VALUES ("+values+")");
+		}
+		console.log(values);
+		query3.on("row", function (row, result){
+			result.addRow(row);
+		});
+		query3.on("end", function (result){
+			console.log("Payment option of type "+payment_type+" added");
+		  	client.end();
+	  		res.json(true);
+		})
+	});
 });
 
 //REST Operation - HTTP PUT to edit payment based on its id
@@ -1399,7 +1428,7 @@ app.get('/Server-Master/account/:id', function(req, res) {
 	});*/
 
 	//returns user payment options 
-	var query9 = client.query("SELECT * FROM payment_options NATURAL JOIN (SELECT payment_id, card_id, card_number, card_holder, exp_month, exp_year, security_code, address_id street_address, city, country, state, zipcode FROM credit_cards NATURAL JOIN addresses WHERE billing_address = address_id) AS CCs WHERE account_id = $1", [id]);
+	var query9 = client.query("SELECT * FROM payment_options NATURAL JOIN (SELECT payment_id, card_id, card_number, card_holder, exp_month, exp_year, security_code, address_id street_address, city, country, state, zipcode FROM credit_cards FULL OUTER JOIN addresses ON billing_address = address_id) AS CCs WHERE account_id = $1", [id]);
 	query9.on("row", function (row, result){
 		result.addRow(row);
 	});

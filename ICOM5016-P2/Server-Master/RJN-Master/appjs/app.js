@@ -1542,14 +1542,14 @@ function GetPayment(id){
 
 function AddPayment(){
 $.mobile.loading("show");
-	var form = $("#addPayment-form");// Not Implemented in This Phase
+	var form = $("#add-payment-form");
 	var formData = form.serializeArray();
 	console.log("form Data: " + formData);
 	var newPayment = ConverToJSON(formData);
 	console.log("New Payment: " + JSON.stringify(newPayment));
 	var newPaymentJSON = JSON.stringify(newPayment);
 	$.ajax({
-		url : "http://localhost:3412/Server-Master/payment/"+currentUser.id,
+		url : "http://localhost:3412/Server-Master/account/payment/"+currentUser.account_id,
 		method: 'post',
 		data : newPaymentJSON,
 		contentType: "application/json",
