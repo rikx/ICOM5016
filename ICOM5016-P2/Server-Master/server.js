@@ -292,7 +292,7 @@ app.get('/Server-Master/home/categories/:id/:SortType', function(req, res) {
 			console.log("GET products of category " +id+ ", sorted by " + SortType);
 
 		 	// returns products that are being auctioned get auction id and current bid if product is up for auction
-			var query1 = client.query("SELECT product_id, name, instant_price, cid as parent, image_filename, cname as parent_name, current_bid, auction_id from auctions natural join products natural join categories where cid = $1", [id]);
+			var query1 = client.query("SELECT product_id, name, instant_price, cid as parent, image_filename, cname as parent_name, current_bid, auction_id from auctions natural join products natural join categories where cid = $1 AND cid IS NOT NULL", [id]);
 			query1.on("row", function (row, result) {
 		    	result.addRow(row);
 			    //get number of bids for this product
@@ -563,7 +563,7 @@ app.post('/Server-Master/product/:sellerID', function(req, res) {
     	else{*/
     	//}
   	});
-    var query2 = client.query("SELECT product_id from products order by product_id DESC");
+    var query2 = client.query("SELECT product_id FROM products WHERE cid IS NOT NULL ORDER BY product_id DESC");
 	query2.on("row", function (row, result){
 		result.addRow(row);
 	});
@@ -640,7 +640,7 @@ app.del('/Server-Master/product/:id', function(req, res) {
 	var client = new pg.Client(dbConnInfo);
 	client.connect();
 
-	var query = client.query("DELETE FROM product WHERE pid = $1", [id]);
+	var query = client.query("UPDATE products SET cid = DEFAULT WHERE product_id = $1", [id]);
 	query.on("row", function (row, result){
 		result.addRow(row);
 	});
@@ -718,7 +718,7 @@ app.get('/Server-Master/search/:input', function(req, res) {
   	var client = new pg.Client(dbConnInfo);
 	client.connect();
 
-	var query = client.query("SELECT product_id, name, instant_price, image_filename, current_bid from products natural join auctions where name ILIKE '%"+search_input+"%'");
+	var query = client.query("SELECT product_id, name, instant_price, image_filename, current_bid from products natural join auctions WHERE name ILIKE '%"+search_input+"%'AND cid IS NOT NULL");
 	
 	query.on("row", function (row, result) {
     	result.addRow(row);
@@ -866,14 +866,14 @@ app.put('/Server-Master/account/address/:address_id', function(req, res) {
 });
 
 //REST Operation - HTTP DELETE to delete address based on its id
-app.del('/Server-Master/account/address/:id', function(req, res) {
+app.del('/Server-Master/address/:id', function(req, res) {
 	var id = req.params.id;
 	console.log("DELETE address: " + id);
 
 	var client = new pg.Client(dbConnInfo);
 	client.connect();
 
-	var query = client.query("DELETE FROM address WHERE address_id = $1", [id]);
+	var query = client.query("UPDATE addresses SET account_id = DEFAULT WHERE address_id = $1", [id]);
 	query.on("row", function (row, result){
 		result.addRow(row);
 	});
@@ -1001,14 +1001,14 @@ app.put('/Server-Master/account/payment/:payment_id', function(req, res) {
 });
 
 //REST Operation - HTTP DELETE to delete payment based on its id
-app.del('/Server-Master/account/payment/:id', function(req, res) {
+app.del('/Server-Master/payment/:id', function(req, res) {
 	var id = req.params.id;
 	console.log("DELETE payment: " + id);
 
 	var client = new pg.Client(dbConnInfo);
 	client.connect();
 
-	var query = client.query("DELETE FROM payment_option WHERE payment_id = $1", [id]);
+	var query = client.query("UPDATE payment_options SET account_id = DEFAULT WHERE payment_id = $1", [id]);
 	query.on("row", function (row, result){
 		result.addRow(row);
 	});
@@ -1206,13 +1206,13 @@ app.get('/Server-Master/admin/:id/report/:reportType', function(req, res){
 	var query, theReport;
 	//
 	if(reportType == "by Total Sales"){
-		query = client.query("SELECT purchase_date, count(*) as sales from sales natural join orders group by purchase_date order by purchase_date DESC");
+		query = client.query("SELECT purchase_date, count(*) as sales from sales natural join orders WHERE cid IS NOT NULL group by purchase_date order by purchase_date DESC");
 	}
 	else if (reportType == "by Products") {
-		query = client.query("SELECT name, count(product_id) as sales from sales natural join orders natural join products group by name order by sales DESC");
+		query = client.query("SELECT name, count(product_id) as sales from sales natural join orders natural join products WHERE cid IS NOT NULL group by name order by sales DESC");
 	}
 	else {
-		query = client.query("SELECT purchase_date, sum(purchase_price) as revenue, count(order_id) as sales from sales natural join orders group by purchase_date order by purchase_date DESC");
+		query = client.query("SELECT purchase_date, sum(purchase_price) as revenue, count(order_id) as sales from sales natural join orders WHERE cid IS NOT NULL group by purchase_date order by purchase_date DESC");
 	}
 	query.on('row', function (row, result){
 		result.addRow(row);
@@ -1260,7 +1260,7 @@ app.get('/Server-Master/seller/:id', function(req, res) {
 	});
 
 	// Query to get products being sold by this seller
-	var query3 = client.query("SELECT product_id, name, quantity from products where seller_id = $1", [id]);
+	var query3 = client.query("SELECT product_id, name, quantity from products where seller_id = $1 AND cid IS NOT NULL", [id]);
 	query3.on("row", function (row, result){
 		result.addRow(row);
 	});
@@ -1353,7 +1353,7 @@ app.get('/Server-Master/account/:id', function(req, res) {
 	});
 
 	//returns products being sold by user
-	var query4 = client.query("SELECT product_id, name, quantity from products where seller_id = $1",[id]);
+	var query4 = client.query("SELECT product_id, name, quantity from products where seller_id = $1 AND cid IS NOT NULL",[id]);
 	query4.on('row', function (row, result){
 		result.addRow(row);
 	});
@@ -1399,7 +1399,7 @@ app.get('/Server-Master/account/:id', function(req, res) {
 	});*/
 
 	//returns user payment options 
-	var query9 = client.query("SELECT * from payment_options natural join credit_cards natural join addresses where account_id = $1", [id]);
+	var query9 = client.query("SELECT * FROM payment_options NATURAL JOIN credit_cards NATURAL JOIN addresses WHERE account_id = $1 AND account_id IS NOT NULL", [id]);
 	query9.on("row", function (row, result){
 		result.addRow(row);
 	});

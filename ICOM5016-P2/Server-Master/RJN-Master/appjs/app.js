@@ -1485,8 +1485,7 @@ $.mobile.loading("show");
 }
 
 function DeleteAddress(id){
-$.mobile.loading("show");
-	var id = currentAddress.id;
+		$.mobile.loading("show");
 		$.ajax({
 			url : "http://localhost:3412/Server-Master/address/" + id,
 			method: 'delete',
@@ -1599,8 +1598,7 @@ $.mobile.loading("show");
 }
 
 function DeletePayment(id){
-$.mobile.loading("show");
-	var id = currentPayment.id;
+		$.mobile.loading("show");
 		$.ajax({
 			url : "http://localhost:3412/Server-Master/payment/" + id,
 			method: 'delete',
@@ -1753,7 +1751,6 @@ function EditProduct(){
 }
 function DeleteProduct(id){
 	$.mobile.loading("show");
-	var id = currentProduct.product_id;
 		$.ajax({
 			url : "http://localhost:3412/Server-Master/product/" + id,
 			method: 'delete',
