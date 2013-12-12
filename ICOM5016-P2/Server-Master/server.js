@@ -1093,11 +1093,12 @@ app.post('/Server-Master/home/:username', function(req, res) {
   		var client = new pg.Client(dbConnInfo);
   		client.connect();
 
-  		var query = client.query("SELECT * from accounts where username = $1", [userName]);
-  		query.on("row", function (row, result){
+  		var userquery = client.query("SELECT * from accounts where username = $1", [userName]);
+  		userquery.on("row", function (row, result){
   			result.addRow(row);
+  			console.log("Found user, has id: ", result.rows[0].account_id);
   		});
-  		query.on("end", function (result){
+  		userquery.on("end", function (result){
   			if(result.rowCount == 0){
   				// not found
   				client.end();
@@ -1107,7 +1108,17 @@ app.post('/Server-Master/home/:username', function(req, res) {
   			else {
   				foundUser = true;
   				var theUser = result.rows[0];
-  				if(passWord == theUser.password){
+
+  				console.log("Checking entered password: ", passWord);
+				var passquery = client.query("SELECT (password = crypt($1, password)) AS hashcheck FROM accounts WHERE account_id = $2", [passWord, theUser.account_id]);
+				passquery.on("row", function (row, result){
+					result.addRow(row);
+					//console.log("Hash query is: ", result.rows[0]);
+				});
+				passquery.on("end", function (result){
+					var passchecks = result.rows[0].hashcheck;
+					//console.log("CHECK(" + result.rows[0].hashcheck + "," + true + ")");
+					if(passchecks == true){
   					//Future work: create global userCount variable and add userCount++ here to see how many users are currently logged in
 					console.log("Succesful login of user id: " + theUser.account_id + " of type: " + theUser.permission);
 					var response = {"user" : theUser};
@@ -1119,6 +1130,8 @@ app.post('/Server-Master/home/:username', function(req, res) {
 					res.statusCode = 409;
 					res.send("Username exists but entered password does not match");
 				}
+				});
+
 			}
   		});
 	}
