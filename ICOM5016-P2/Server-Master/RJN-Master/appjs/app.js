@@ -126,6 +126,14 @@ $(document).on('pagebeforeshow', "#cart", function( event, ui ) {
 	}//End IF
 });
 
+function showAuctions(){
+	$('#sorted-sales-list').hide();
+	$('#sorted-auctions-list').show();
+}
+function showSales(){
+	$('#sorted-auctions-list').hide();
+	$('#sorted-sales-list').show();
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //										INVOICE PAGE											 	 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -222,6 +230,8 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 				var maxLength = Math.max(auction_list.length, on_sale_list.length);
 				var auction_product, on_sale_product;
 				
+				// add select auction or products buttons
+				list.append('<li><button onclick=showAuctions()>Auctions</button><button onclick=showSales()>Sales</button></li>');
 				// prints list element depending on product type
 				for (var i=0; i < maxLength; ++i){
 					if(i < auction_list.length){
