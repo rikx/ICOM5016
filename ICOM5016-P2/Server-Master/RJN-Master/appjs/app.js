@@ -451,7 +451,7 @@ $(document).ready(function() {
 	                var len = productList.length;
 					var list = $("#category-list");
 					var list2 = $("#browse-list");
-					$(".sort-type").html('<button onclick=sortByType("name")>SortByName</button><button onclick=sortByType("brand")>SortByBrand</button><button onclick=sortByType("price")>SortByPrice</button>').trigger('create');
+					$(".sort-type").html('<button onclick=sortByType("name") data-mini="true" data-theme="c">SortByName</button><button onclick=sortByType("brand") data-mini="true" data-theme="c">SortByBrand</button><button onclick=sortByType("price") data-mini="true" data-theme="c">SortByPrice</button>').trigger('create');
 	                if (len == 1) {
 	                	GetProduct(productList[0].product_id);
 	                }
