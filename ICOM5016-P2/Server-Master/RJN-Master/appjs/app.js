@@ -718,7 +718,7 @@ $(document).on('pagebeforeshow', "#account", function( event, ui ) {
 
 			// These buttons are for adding a new address,payment type or product for sale and are added
 			// to the end of the list
-			shipAddressList.append('<li><a href="#add-address" data-role="button">Add new shipping address</a></li>');
+			shipAddressList.append('<li><a href="#add-address" data-role="button">Add new address</a></li>');
 			payList.append('<li><a href="#add-payment" data-role="button">Add new payment option</a></li>');
 			sellingList.append('<li><a href="#add-product" data-role="button">Add new sale</a></li>');
 
