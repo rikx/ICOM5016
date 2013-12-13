@@ -343,69 +343,6 @@ app.get('/Server-Master/subCategory/:id', function(req, res) {
  	});
 });
 
-/*==================================================================*/
-/*								Products							*/
-/*==================================================================*/
-
-var Product = modules.Product;
-
-//Product: name,parent,sellerId,instant_price,bidPrice,description,model,brand,dimensions,numOfBids
-var productList = new Array(
-	new Product("MyPhone", 13, 0, 500, 400, "Brand new, still in box Myphone.", "MyPhone5X", "Mapple", '10"x8"x0.5"',0),
-    new Product("Viperus", 38, 0, 901, 700, "Honyota Viperus Wheels. Its so fast your skin flies off.", "Viperus XLR", "Honyota", '15" diameter with 2" thickness',0),
-    new Product("Test Product 1", 41, 1, 9001, 42, "Test of product printing", "model", "brand", "dimensions",2),
-	new Product("Test Product 7", 7, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 8", 8, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 9", 9, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 10", 10, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 11", 11, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 12", 12, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 13", 13, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 14", 14, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 15", 15, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 16", 16, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 17", 17, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 18", 18, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 19", 19, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 20", 20, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 31", 31, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 32", 32, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 33", 33, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 34", 34, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 35", 35, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 36", 36, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 37", 37, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 38", 38, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 39", 39, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 40", 40, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 27", 27, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 28", 28, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 29", 29, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 30", 30, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 23", 23, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 24", 24, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 25", 25, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2)
-	);
-
-var productNextId = 0;
-
-for (var i=0; i < productList.length;++i){
-	productList[i].id = productNextId++;
-}
-
-var ProductBid = modules.ProductBid;
-
-//ProductBid: productId, bidderId, bidPrice
-var productBidsList = new Array(
-	new ProductBid("2","0",42),
-	new ProductBid("2","2",38)
-	);
-var productBidsNextId = 0;
-
-for (var i=0; i < productBidsList.length;++i){
-	productBidsList[i].id = productBidsNextId++;
-}
-
 // REST Operation - HTTP GET to read a product based on its id
 app.get('/Server-Master/product/:id', function(req, res) {
 	var id = req.params.id;
