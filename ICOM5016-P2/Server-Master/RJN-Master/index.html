@@ -73,11 +73,17 @@
 				<!-- Sort Buttons -->
 				<div class="sort-type" data-role="controlgroup" data-type="horizontal">		
 				</div><!-- Sort Buttons End-->
+				<div id="browse-results-buttons">
+					<button id="auc-results-button" onclick="showAuctions()" data-mini="true" type="button">Auctions</button>
+		  			<button id="sale-results-button" onclick="showSales()" data-mini="true" type="button">Regular sales</button>
+				</div>
 				<ul id="browse-list" data-role="listview" data-inset="true">
 				</ul>
+				<h3 id="sorted-sales-title">Sorted Sales</h3>
 				<ul id="sorted-sales-list" data-role="listview" data-inset="true">
 				</ul>
-				<ul id="auctions-sales-list" data-role="listview" data-inset="true">
+				<h3 id="sorted-auctions-title">Sorted Auctions</h3>
+				<ul id="sorted-auctions-list" data-role="listview" data-inset="true">
 				</ul>
 			</div><!-- /content -->
 		</div><!-- /page -->
@@ -510,6 +516,7 @@
 	 				<fieldset data-role="controlgroup">
 	 					<ul>
 		  					<li><label for="add-product-name"> Name: <input id="add-product-name" name="name" type="text"/></label></li>
+		  					<li>Categories: </li>
 		  					<li><label for="product-parent-category" class="select"> Category: </label>
 					        <select id="product-parent-category" name="parent_category">
 					            <!-- <option value="7">Children Books</option>

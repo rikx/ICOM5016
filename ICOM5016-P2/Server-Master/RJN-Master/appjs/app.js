@@ -187,8 +187,9 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 		contentType: "application/json",
 		success : function(data, textStatus, jqXHR){
 			//$("#browse-title").html(data.parent);
+			$('#sorted-auctions-title, #sorted-sales-title, #browse-results-buttons').hide();
 			var list = $("#browse-list");
-			var auctions_ul = $("#sorted-auction-list");
+			var auctions_ul = $("#sorted-auctions-list");
 			var sales_ul = $("#sorted-sales-list");
 			list.empty();
 			auctions_ul.empty();
@@ -221,7 +222,8 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 			//when data contains products
 			else {
 				// adds sort buttons and initilializes them
-				$(".sort-type").html('<button onclick=sortByType("name")>SortByName</button><button onclick=sortByType("brand")>SortByBrand</button><button onclick=sortByType("price")>SortByPrice</button>').trigger('create');
+				$(".sort-type").html('<button onclick=sortByType("name") data-mini="true" data-theme="c">SortByName</button><button onclick=sortByType("brand") data-mini="true" data-theme="c">SortByBrand</button><button onclick=sortByType("price") data-mini="true" data-theme="c">SortByPrice</button>').trigger('create');
+				$('#browse-results-buttons').show();
 				var auction_list = data.auction_products;
 				var on_sale_list = data.sale_products;
 				var maxLength = Math.max(auction_list.length, on_sale_list.length);
@@ -231,6 +233,7 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 				// prints list element depending on product type
 				for (var i=0; i < maxLength; ++i){
 					if(i < auction_list.length){
+						$('#sorted-auctions-title').show();
 						auction_product = auction_list[i];
 /*						list.append('<li><a onclick=GetProduct('+auction_product.product_id+')><h2>'+auction_product.name+'</h2>'+
 						'<p><img class="img-size" src="'+auction_product.image_filename+'"" /></p>'+ 
@@ -250,12 +253,14 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 						else {
 							string1+='</a></li>';
 						}
-						list.append(string1);
+						//$("#browse-list, #sorted-auction-list").append(string1);
 						auctions_ul.append(string1);
 					}
 					if(i < on_sale_list.length){
+						$('#sorted-sales-title').show();
 						on_sale_product = on_sale_list[i];
-						list.append('<li><a onclick=GetProduct('+on_sale_product.product_id+')><h2>'+on_sale_product.name+'</h2>'+
+						//$("#browse-list, #sorted-sales-list")
+						sales_ul.append('<li><a onclick=GetProduct('+on_sale_product.product_id+')><h2>'+on_sale_product.name+'</h2>'+
 						'<p><img class="img-size" src="'+on_sale_product.image_filename+'"" /></p>'+ 
 						'<p class=\"ui-li-aside\"><h4>Price: ' + accounting.formatMoney(on_sale_product.instant_price) + '</h4></p>'+
 						'<p class=\"ui-li-aside\"><h4>Quantity: ' + on_sale_product.quantity + '</h4></p></a></li>');	
@@ -277,13 +282,13 @@ $(document).on('pagebeforeshow', "#browse", function( event, ui ) {
 });
 
 function showAuctions(){
-	$('#sorted-sales-list').hide();
-	$('#sorted-auctions-list').show();
-}
+	$('#sorted-sales-title, #sorted-sales-list, #browse-list').hide();
+	$('#sorted-auctions-title, #sorted-auctions-list').show();
+};
 function showSales(){
-	$('#sorted-auctions-list').hide();
-	$('#sorted-sales-list').show();
-}
+	$('#sorted-auctions-title, #sorted-auctions-list, #browse-list').hide();
+	$('#sorted-sales-title, #sorted-sales-list').show();
+};
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //										CATEGORY DETAILS PAGE										  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
