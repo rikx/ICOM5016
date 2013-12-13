@@ -202,11 +202,11 @@ app.post('/Server-Master/admin/add-category', function(req, res) {
 	client.connect();
 
 	var query;
-	if(req.body.parent_category == -1){
-		query = client.query("INSERT INTO categories (cname) VALUES ($1)", [req.body.name]);
+	if(req.body.parent_category != null && req.body.parent_category != 'NONE'){
+		query = client.query("INSERT INTO categories (cname, cparent) VALUES ('"+req.body.name+"', "+req.body.parent_category+")");
 	}
 	else {
-		query = client.query("INSERT INTO categories (cname, cparent) VALUES ('"+req.body.name+"', "+req.body.parent_category+")");
+		query = client.query("INSERT INTO categories (cname) VALUES ($1)", [req.body.name]);
 	}
 	query.on("row", function (row, result) {
     	result.addRow(row);
@@ -1228,7 +1228,7 @@ app.get('/Server-Master/admin/:id', function(req, res){
 		}
 	});*/
 
-	var query2 = client.query("SELECT cid, cname from categories");
+	var query2 = client.query("SELECT names.cname AS parent, categories.cname AS name, categories.cid AS id FROM categories full outer join (select cid, cname from categories) AS names ON categories.cparent = names.cid WHERE categories.cid IS NOT NULL ORDER BY parent NULLS FIRST, name");
 	query2.on("row", function (row, result){
 		result.addRow(row);
 	});
@@ -1473,11 +1473,11 @@ app.put('/Server-Master/account/:account_id', function(req, res) {
 	//Future Work: Take into account changing username, and that the new username might already be taken and require old password to change password
 	
 	if(!req.body.hasOwnProperty('edit_first_name')||!req.body.hasOwnProperty('edit_middle_initial')||!req.body.hasOwnProperty('edit_last_name')
-	||!req.body.hasOwnProperty('edit_photo_filename')||!req.body.hasOwnProperty('edit_email')||!req.body.hasOwnProperty('edit_username')
-	||!req.body.hasOwnProperty('edit_password')||!req.body.hasOwnProperty('edit_description')){
+		||!req.body.hasOwnProperty('edit_photo_filename')||!req.body.hasOwnProperty('edit_email')||!req.body.hasOwnProperty('edit_username')||!req.body.hasOwnProperty('edit_old_password')
+		||!req.body.hasOwnProperty('edit_password')||!req.body.hasOwnProperty('edit_confirm_password')||!req.body.hasOwnProperty('edit_description')) {
 				
     	res.statusCode = 400;
-    	return res.send('Error: Missing fields for account.');
+    	return res.send('Error: Missing or invalid fields for account.');
   	}
   	else{
   			var client = new pg.Client(dbConnInfo);
@@ -1494,27 +1494,45 @@ app.put('/Server-Master/account/:account_id', function(req, res) {
 			
 			//--Account Update Query--//
 
-			//console.log("Edited password: "+req.body.edit_password);
-			var hashquery = client.query("SELECT crypt($1, gen_salt('md5'))", [req.body.edit_password]);
-			hashquery.on("row", function (row, result){
-				result.addRow(row);
-			});
-			hashquery.on("end", function (result){
-
-				var passhash = result.rows[0].crypt;
-				console.log("Edited password hash is: "+passhash);
-
-				var password = passhash.replace(/'/g,"''");
-
-				var query = client.query('UPDATE accounts SET first_name = $1, middle_initial = $2, last_name = $3, photo_filename = $4, email = $5, username = $6, password = $7, description = $8 WHERE account_id = $9',
-					[first_name, middle_initial, last_name, photo_filename, email, username, password, description, account_id]);
-			
-				query.on("end", function (result){
-					console.log("New account info: "+ first_name +": " + middle_initial +": " + last_name +": " + photo_filename +": " + email +": " + username +": " + password +": " + description);
-					client.end();
-					res.json(true);
+				//Query for correct password
+				var passquery = client.query("SELECT (password = crypt($1, password)) AS hashcheck FROM accounts WHERE account_id = $2", [req.body.edit_old_password, account_id]);
+				passquery.on("row", function (row, result){
+					result.addRow(row);
+					console.log("Hash query is: ", result.rows[0]);
 				});
-			});
+				passquery.on("end", function (result){
+					var passchecks = result.rows[0].hashcheck;
+					if(passchecks == true){
+
+						//Query for getting new password hash
+  						var hashquery = client.query("SELECT crypt($1, gen_salt('md5'))", [req.body.edit_password]);
+						hashquery.on("row", function (row, result){
+							result.addRow(row);
+						});
+						hashquery.on("end", function (result){
+
+							var passhash = result.rows[0].crypt;
+							//console.log("Edited password hash is: "+passhash);
+
+							var password = passhash.replace(/'/g,"''");
+
+							//Query to update the account data
+							var query = client.query('UPDATE accounts SET first_name = $1, middle_initial = $2, last_name = $3, photo_filename = $4, email = $5, username = $6, password = $7, description = $8 WHERE account_id = $9',
+								[first_name, middle_initial, last_name, photo_filename, email, username, password, description, account_id]);
+			
+							query.on("end", function (result){
+								console.log("New account info: "+ first_name +": " + middle_initial +": " + last_name +": " + photo_filename +": " + email +": " + username +": " + password +": " + description);
+								client.end();
+								res.json(true);
+							});
+						});
+  					}
+					else {
+						client.end();
+						res.statusCode = 401;
+						res.send("The password you entered is incorrect");
+					}
+				});
 	}
 });
 
