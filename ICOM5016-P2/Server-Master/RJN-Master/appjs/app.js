@@ -328,6 +328,36 @@ $(document).on('pagebeforeshow', "#add-product", function( event, ui ) {
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
+//										   	ADD PRODUCT PAGE										  //
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$(document).on('pagebeforeshow', "#add-category", function( event, ui ) {
+	$.ajax({
+				url : "http://localhost:3412/Server-Master/categories/all",
+				method: 'get',
+				contentType: "application/json",
+				dataType:"json",
+				success : function(data, textStatus, jqXHR){
+					var categories_all = data.categories;
+					var categories_select = $("#add-parent-category");
+					categories_select.append("<option value='null'>NONE</option>");
+					for (var i = 0; i < categories_all.length; i++){
+						if(categories_all[i].parent == null) {
+							categories_select.append("<option value='"+categories_all[i].id+"'>"+categories_all[i].name+"</option>");
+						}
+						else {
+							categories_select.append("<option value='"+categories_all[i].id+"'>"+categories_all[i].parent+" - "+categories_all[i].name+"</option>");
+						}
+					}
+				},
+				error: function(data, textStatus, jqXHR){
+					console.log("textStatus: " + textStatus);
+					alert("No categories found.");
+				}
+	});
+});
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 //										ACCOUNT DETAILS PAGE										  //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -339,7 +369,6 @@ $(document).on('pagebeforeshow', "#update-account", function( event, ui ) {
 	$("#edit_photo_filename").val(currentUser.photo_filename);
 	$("#edit_email").val(currentUser.email);
 	$("#edit_username").val(currentUser.username);
-	$("#edit_password").val(currentUser.password);
 	$("#edit_description").val(currentUser.description);
 });
 
@@ -900,13 +929,20 @@ $(document).on('pagebeforeshow', "#admin", function( event, ui ) {
 
 			for(var i=0; i < maxLength; ++i){
 				if(i < categories.length){
-					categoryList.append('<li><strong>Category name: '+ categories[i].cname +'</strong>'+
-					'<a onclick=EditCategory('+categories[i].cid+') data-icon="gear">Edit</a>'+
-					'<a onclick=DeleteCategory('+categories[i].cid+') data-icon="trash">Delete</a></li>'
-					);
+					if(categories[i].parent == null) {
+						categoryList.append('<li><strong>'+categories[i].name +'</strong>'+
+						'<a onclick=EditCategory('+categories[i].id+') data-icon="gear">Edit</a>'+
+						'<a onclick=DeleteCategory('+categories[i].id+') data-icon="trash">Delete</a></li>');
+					}
+					else {
+						categoryList.append('<li><strong>'+categories[i].parent+' - '+ categories[i].name +'</strong>'+
+						'<a onclick=EditCategory('+categories[i].id+') data-icon="gear">Edit</a>'+
+						'<a onclick=DeleteCategory('+categories[i].id+') data-icon="trash">Delete</a></li>');
+					}
+
 				}
 				if(i < users.length){
-					userList.append('<li><strong>User name: '+ users[i].username +'</strong>'+
+					userList.append('<li><strong>'+users[i].username +'</strong>'+
 					'<a onclick=EditAccount('+users[i].account_id+') data-icon="gear">Edit</a>'+
 					'<a onclick=DeleteAccount('+users[i].account_id+') data-icon="trash">Delete</a></li>'
 					);
@@ -1389,32 +1425,43 @@ function RegisterAccount(){
 
 //NOT finished yet
 function UpdateAccount(){
-	$.mobile.loading("show");
-	var form = $('#update-account-form');
-	var formData = form.serializeArray();
-	var updAccount = ConverToJSON(formData);
-	var updAccountJSON = JSON.stringify(updAccount);
-	$.ajax({
-		url : "http://localhost:3412/Server-Master/account/" + currentUser.account_id,
-		method: 'put',
-		data : updAccountJSON,
-		contentType: "application/json",
-		dataType:"json",
-		success : function(data, textStatus, jqXHR){
-			$.mobile.loading("hide");
-			$.mobile.navigate("#home");
-		},
-		error: function(data, textStatus, jqXHR){
-			console.log("textStatus: " + textStatus);
-			$.mobile.loading("hide");
-			if (data.status == 404){
-				alert("Account data could not be updated!");
+	if($('#edit_password').val() == "" || $('#edit_confirm_password').val() == ""){
+		alert("Password fields cannot be blank. Please choose a password of at least 6 characters");
+	}
+	else if( $('#edit_password').val() != $('#edit_confirm_password').val()){
+		alert("Password fields do not match. Please type them again.");
+	}
+	else {
+		$.mobile.loading("show");
+		var form = $('#update-account-form');
+		var formData = form.serializeArray();
+		var updAccount = ConverToJSON(formData);
+		var updAccountJSON = JSON.stringify(updAccount);
+		$.ajax({
+			url : "http://localhost:3412/Server-Master/account/" + currentUser.account_id,
+			method: 'put',
+			data : updAccountJSON,
+			contentType: "application/json",
+			dataType:"json",
+			success : function(data, textStatus, jqXHR){
+				$.mobile.loading("hide");
+				$.mobile.navigate("#home");
+			},
+			error: function(data, textStatus, jqXHR){
+				console.log("textStatus: " + textStatus);
+				$.mobile.loading("hide");
+				if (data.status == 409){
+					alert("Account data could not be updated, check for incorrect or invalid fields!");
+				}
+				else if (data.status == 401) {
+					alert("Old password incorrect");		
+				}
+				else {
+					alert("An error has occured");
+				}
 			}
-			else {
-				alert("Internal Error.");		
-			}
-		}
-	});
+		});
+	}	
 }
 
 function DeleteAccount(id){

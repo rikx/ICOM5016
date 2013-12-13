@@ -29,72 +29,6 @@ var dbConnInfo = "pg://rjnadmin:database@localhost:5432/rjnbaydb";
 
 var modules = require("./modules.js");
 
-/*==================================================================*/
-/*								Categories							*/
-/* This array emulates the category entity in the database.
-/*==================================================================*/
-var Category = modules.Category;
-//var categoryList = modules.categoryList;
-
-var categoryList = new Array(
-	//Category: function (id, name, parent)
-	new Category(1, "Books", null),
-	new Category(2, "Electronics", null),
-	new Category(3, "Computers", null),
-	new Category(4, "Clothing", null),
-	new Category(5, "Shoes", null),
-	new Category(6, "Sports", null),
-	new Category(41, "Other", null),
-
-	new Category(7, "Children", 1),
-	new Category(8, "Fiction", 1),
-	new Category(9, "Technology", 1),
-	new Category(10, "Business", 1),
-
-	new Category(11, "TV", 2),
-	new Category(12, "Audio", 2),
-	new Category(13, "Phones", 2),
-	new Category(14, "Cameras", 2),
-	new Category(15, "Video", 2),
-
-	new Category(16, "Laptops", 3),
-	new Category(17, "Desktops", 3),
-	new Category(18, "Tablets", 3),
-	new Category(19, "Printers", 3),
-	
-	new Category(20, "Children",4),
-	new Category(21, "Men", 4),
-	new Category(22, "Women", 4),
-
-	new Category(23, "Children", 5),
-	new Category(24, "Men", 5),
-	new Category(25, "Women", 5),
-
-	new Category(26, "Bicycles", 6),
-	new Category(27, "Fishing", 6),
-	new Category(28, "Baseball", 6),
-	new Category(29, "Gulf", 6),
-	new Category(30, "Basketball", 6),
-
-	new Category(31, "Shirts", 21),
-	new Category(32, "Pants", 21),
-	new Category(33, "Socks", 21),
-
-	new Category(34, "Shirts", 22),
-	new Category(35, "Pants", 22),
-	new Category(36, "Dresses", 22),
-
-	new Category(37, "Frames", 26),
-	new Category(38, "Wheels", 26),
-	new Category(39, "Helmet", 26),
-	new Category(40, "Parts", 26)
-	);
-
-var categoryNextId = 42; 
-
-/*for (var i=0; i < categoryList.length;++i){
-	categoryList[i].id = categoryNextId++;
-}*/
 
 // REST Operations
 // Idea: Data is created, read, updated, or deleted through a URL that 
@@ -202,11 +136,11 @@ app.post('/Server-Master/admin/add-category', function(req, res) {
 	client.connect();
 
 	var query;
-	if(req.body.parent_category == -1){
-		query = client.query("INSERT INTO categories (cname) VALUES ($1)", [req.body.name]);
+	if(req.body.parent_category != null && req.body.parent_category != 'NONE'){
+		query = client.query("INSERT INTO categories (cname, cparent) VALUES ('"+req.body.name+"', "+req.body.parent_category+")");
 	}
 	else {
-		query = client.query("INSERT INTO categories (cname, cparent) VALUES ('"+req.body.name+"', "+req.body.parent_category+")");
+		query = client.query("INSERT INTO categories (cname) VALUES ($1)", [req.body.name]);
 	}
 	query.on("row", function (row, result) {
     	result.addRow(row);
@@ -408,69 +342,6 @@ app.get('/Server-Master/subCategory/:id', function(req, res) {
   		}
  	});
 });
-
-/*==================================================================*/
-/*								Products							*/
-/*==================================================================*/
-
-var Product = modules.Product;
-
-//Product: name,parent,sellerId,instant_price,bidPrice,description,model,brand,dimensions,numOfBids
-var productList = new Array(
-	new Product("MyPhone", 13, 0, 500, 400, "Brand new, still in box Myphone.", "MyPhone5X", "Mapple", '10"x8"x0.5"',0),
-    new Product("Viperus", 38, 0, 901, 700, "Honyota Viperus Wheels. Its so fast your skin flies off.", "Viperus XLR", "Honyota", '15" diameter with 2" thickness',0),
-    new Product("Test Product 1", 41, 1, 9001, 42, "Test of product printing", "model", "brand", "dimensions",2),
-	new Product("Test Product 7", 7, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 8", 8, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 9", 9, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 10", 10, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 11", 11, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 12", 12, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 13", 13, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 14", 14, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 15", 15, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 16", 16, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 17", 17, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 18", 18, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 19", 19, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 20", 20, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 31", 31, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 32", 32, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 33", 33, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 34", 34, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 35", 35, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 36", 36, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 37", 37, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 38", 38, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 39", 39, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 40", 40, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 27", 27, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 28", 28, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 29", 29, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 30", 30, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 23", 23, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 24", 24, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2),
-	new Product("Test Product 25", 25, 1, 9001, 390, "product description goes here", "model goes here", "brand goes here", "dimensions go here",2)
-	);
-
-var productNextId = 0;
-
-for (var i=0; i < productList.length;++i){
-	productList[i].id = productNextId++;
-}
-
-var ProductBid = modules.ProductBid;
-
-//ProductBid: productId, bidderId, bidPrice
-var productBidsList = new Array(
-	new ProductBid("2","0",42),
-	new ProductBid("2","2",38)
-	);
-var productBidsNextId = 0;
-
-for (var i=0; i < productBidsList.length;++i){
-	productBidsList[i].id = productBidsNextId++;
-}
 
 // REST Operation - HTTP GET to read a product based on its id
 app.get('/Server-Master/product/:id', function(req, res) {
@@ -755,42 +626,6 @@ app.get('/Server-Master/search/:input', function(req, res) {
  	});
 });
 //JUAN SEARCH TESTING END
-
-/*==================================================================*/
-/*								Users								*/
-/*==================================================================*/
-var User = modules.User;
-
-//type, username, password, firstname, lastname, email, shipAddress, billAddress
-var userList = new Array(
-	new User("user", "user1", "password", "FirstName", "LastName", "user1@rjn.com", "wat 123 Guaynabo, PR", "wat 123 Guaynabo, PR"),
-	new User("user", "user2", "password", "FirstName", "LastName", "user2@rjn.com", "123 Mayawest, PR", "alextown 53 apt 1 San Juan, PR"),
-	new User("user", "user3", "password", "FirstName", "LastName", "user3@rjn.com", "5 OPNESS Texas, USA", "5 OPNESS Texas, USA"),
-	new User("admin", "admin1", "password", "FirstName", "LastName", "admin1@rjn.com")
-	);
-var userNextId = 0;
-
-for (var i=0; i < userList.length;++i){
-	userList[i].id = userNextId++;
-}
-
-/* Shipping Address List */
-var ShipAddress = modules.ShippingAddress;
-
-//user id, address
-var shipAddressList = new Array(
-	new ShipAddress(0, "wat 123 Guaynabo, PR"),
-	new ShipAddress(2, "5 OPNESS Texas, USA"),
-	new ShipAddress(1, "123 Mayawest, PR")
-	);
-
-var shipAddressNextId = 0;
-
-for (var i=0; i < shipAddressList.length;++i){
-	shipAddressList[i].id = shipAddressNextId++;
-}
-
-//SHIPADDRESS REST CALLS
 
 // REST Operation - HTTP GET to read an address information based on its id
 app.get('/Server-Master/account/address/:id', function(req, res) {
@@ -1228,7 +1063,7 @@ app.get('/Server-Master/admin/:id', function(req, res){
 		}
 	});*/
 
-	var query2 = client.query("SELECT cid, cname from categories");
+	var query2 = client.query("SELECT names.cname AS parent, categories.cname AS name, categories.cid AS id FROM categories full outer join (select cid, cname from categories) AS names ON categories.cparent = names.cid WHERE categories.cid IS NOT NULL ORDER BY parent NULLS FIRST, name");
 	query2.on("row", function (row, result){
 		result.addRow(row);
 	});
@@ -1473,11 +1308,11 @@ app.put('/Server-Master/account/:account_id', function(req, res) {
 	//Future Work: Take into account changing username, and that the new username might already be taken and require old password to change password
 	
 	if(!req.body.hasOwnProperty('edit_first_name')||!req.body.hasOwnProperty('edit_middle_initial')||!req.body.hasOwnProperty('edit_last_name')
-	||!req.body.hasOwnProperty('edit_photo_filename')||!req.body.hasOwnProperty('edit_email')||!req.body.hasOwnProperty('edit_username')
-	||!req.body.hasOwnProperty('edit_password')||!req.body.hasOwnProperty('edit_description')){
+		||!req.body.hasOwnProperty('edit_photo_filename')||!req.body.hasOwnProperty('edit_email')||!req.body.hasOwnProperty('edit_username')||!req.body.hasOwnProperty('edit_old_password')
+		||!req.body.hasOwnProperty('edit_password')||!req.body.hasOwnProperty('edit_confirm_password')||!req.body.hasOwnProperty('edit_description')) {
 				
     	res.statusCode = 400;
-    	return res.send('Error: Missing fields for account.');
+    	return res.send('Error: Missing or invalid fields for account.');
   	}
   	else{
   			var client = new pg.Client(dbConnInfo);
@@ -1494,27 +1329,45 @@ app.put('/Server-Master/account/:account_id', function(req, res) {
 			
 			//--Account Update Query--//
 
-			//console.log("Edited password: "+req.body.edit_password);
-			var hashquery = client.query("SELECT crypt($1, gen_salt('md5'))", [req.body.edit_password]);
-			hashquery.on("row", function (row, result){
-				result.addRow(row);
-			});
-			hashquery.on("end", function (result){
-
-				var passhash = result.rows[0].crypt;
-				console.log("Edited password hash is: "+passhash);
-
-				var password = passhash.replace(/'/g,"''");
-
-				var query = client.query('UPDATE accounts SET first_name = $1, middle_initial = $2, last_name = $3, photo_filename = $4, email = $5, username = $6, password = $7, description = $8 WHERE account_id = $9',
-					[first_name, middle_initial, last_name, photo_filename, email, username, password, description, account_id]);
-			
-				query.on("end", function (result){
-					console.log("New account info: "+ first_name +": " + middle_initial +": " + last_name +": " + photo_filename +": " + email +": " + username +": " + password +": " + description);
-					client.end();
-					res.json(true);
+				//Query for correct password
+				var passquery = client.query("SELECT (password = crypt($1, password)) AS hashcheck FROM accounts WHERE account_id = $2", [req.body.edit_old_password, account_id]);
+				passquery.on("row", function (row, result){
+					result.addRow(row);
+					console.log("Hash query is: ", result.rows[0]);
 				});
-			});
+				passquery.on("end", function (result){
+					var passchecks = result.rows[0].hashcheck;
+					if(passchecks == true){
+
+						//Query for getting new password hash
+  						var hashquery = client.query("SELECT crypt($1, gen_salt('md5'))", [req.body.edit_password]);
+						hashquery.on("row", function (row, result){
+							result.addRow(row);
+						});
+						hashquery.on("end", function (result){
+
+							var passhash = result.rows[0].crypt;
+							//console.log("Edited password hash is: "+passhash);
+
+							var password = passhash.replace(/'/g,"''");
+
+							//Query to update the account data
+							var query = client.query('UPDATE accounts SET first_name = $1, middle_initial = $2, last_name = $3, photo_filename = $4, email = $5, username = $6, password = $7, description = $8 WHERE account_id = $9',
+								[first_name, middle_initial, last_name, photo_filename, email, username, password, description, account_id]);
+			
+							query.on("end", function (result){
+								console.log("New account info: "+ first_name +": " + middle_initial +": " + last_name +": " + photo_filename +": " + email +": " + username +": " + password +": " + description);
+								client.end();
+								res.json(true);
+							});
+						});
+  					}
+					else {
+						client.end();
+						res.statusCode = 401;
+						res.send("The password you entered is incorrect");
+					}
+				});
 	}
 });
 
