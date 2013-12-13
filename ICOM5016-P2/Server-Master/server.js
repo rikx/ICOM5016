@@ -627,42 +627,6 @@ app.get('/Server-Master/search/:input', function(req, res) {
 });
 //JUAN SEARCH TESTING END
 
-/*==================================================================*/
-/*								Users								*/
-/*==================================================================*/
-var User = modules.User;
-
-//type, username, password, firstname, lastname, email, shipAddress, billAddress
-var userList = new Array(
-	new User("user", "user1", "password", "FirstName", "LastName", "user1@rjn.com", "wat 123 Guaynabo, PR", "wat 123 Guaynabo, PR"),
-	new User("user", "user2", "password", "FirstName", "LastName", "user2@rjn.com", "123 Mayawest, PR", "alextown 53 apt 1 San Juan, PR"),
-	new User("user", "user3", "password", "FirstName", "LastName", "user3@rjn.com", "5 OPNESS Texas, USA", "5 OPNESS Texas, USA"),
-	new User("admin", "admin1", "password", "FirstName", "LastName", "admin1@rjn.com")
-	);
-var userNextId = 0;
-
-for (var i=0; i < userList.length;++i){
-	userList[i].id = userNextId++;
-}
-
-/* Shipping Address List */
-var ShipAddress = modules.ShippingAddress;
-
-//user id, address
-var shipAddressList = new Array(
-	new ShipAddress(0, "wat 123 Guaynabo, PR"),
-	new ShipAddress(2, "5 OPNESS Texas, USA"),
-	new ShipAddress(1, "123 Mayawest, PR")
-	);
-
-var shipAddressNextId = 0;
-
-for (var i=0; i < shipAddressList.length;++i){
-	shipAddressList[i].id = shipAddressNextId++;
-}
-
-//SHIPADDRESS REST CALLS
-
 // REST Operation - HTTP GET to read an address information based on its id
 app.get('/Server-Master/account/address/:id', function(req, res) {
 	var id = req.params.id;
