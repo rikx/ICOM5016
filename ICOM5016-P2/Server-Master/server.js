@@ -613,7 +613,7 @@ app.get('/Server-Master/search/:input', function(req, res) {
   	var client = new pg.Client(dbConnInfo);
 	client.connect();
 
-	var query = client.query("SELECT product_id, name, instant_price, image_filename, current_bid from products natural join auctions WHERE name ILIKE '%"+search_input+"%'AND cid IS NOT NULL");
+	var query = client.query("SELECT products.product_id, name, instant_price, image_filename, current_bid from products FULL OUTER JOIN auctions ON name ILIKE '%"+search_input+"%' AND products.product_id = auctions.product_id AND cid IS NOT NULL");
 	
 	query.on("row", function (row, result) {
     	result.addRow(row);
